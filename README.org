@@ -15,14 +15,14 @@
 #+OPTIONS: timestamp:nil toc:nil num:nil
 :END:
 
-#+COLUMNS: %50ITEM %Theorie{+} %Praxis{+} %Optional:
+#+COLUMNS: %50ITEM %THEORIE(Th){+} %PRAXIS(Pr){+}
 
 #+TITLE: Inhalt
 #+SUBTITLE: ITS-Net-Lin
 #+AUTHOR: Sebastian Meisel
 
-
-* Einführung und Historie 
+* Stundenplanung
+** Einführung und Historie 
 :PROPERTIES:
 :Theorie: 2
 :Praxis: 2
@@ -30,35 +30,37 @@
 :END:
   - Ziele: Gemeinsames Erarbeiten der Kursziele, Debian-Download und Installation in Hyper-V über DefaultSwitch
   - Themen: Überblick über Testumgebung, Debian-Installation
-    
-* Geschichte der Betriebssysteme
+
+  - [[file:Einführung.pdf]]
+
+** Geschichte der Betriebssysteme
 :PROPERTIES:
-:Theorie: 2
+:THEORIE:  4
 :Praxis: 4
 :Optional: nil
 :END:
   - Themen: Linux-Geschichte, Vorteile von Linux, Linux-Distributionen
   - Aufgaben: Soll-Ist-Vergleich, Kundeninformation
 
-* Grundlegende Befehle
+** Grundlegende Befehle
 :PROPERTIES:
-:Theorie: 4
-:Praxis: 4
+:THEORIE:  2
+:PRAXIS:   2
 :Optional: nil
 :END:
   - Themen: Debian, Verzeichnisstruktur, grundlegende Linux-Befehle (pwd, ls, mkdir, etc.)
   - Aufgaben: Praktische Übungen mit den grundlegenden Linux-Befehlen
 
-* Grundlegende Befehle 2
+** Grundlegende Befehle 2
 :PROPERTIES:
-:Theorie: 4
-:Praxis: 4
+:THEORIE:  2
+:PRAXIS:   2
 :Optional: nil
 :END:
   - Themen: Terminal, Kommandozeile, Paketinstallation (dpkg, apt)
   - Aufgaben: Übungen zu weiteren Linux-Kommandos
 
-* Interne Abläufe
+** Interne Abläufe
 :PROPERTIES:
 :Theorie: 2
 :Praxis: 2
@@ -67,50 +69,52 @@
   - Themen: Multitasking, Eingabe und Ausgabe, Kommando lsblk, lspci
   - Aufgaben: Erkennen von Geräten, Speicherinformationen
 
-* Virtualisierung
-:PROPERTIES:
-:Theorie: 4
-:Praxis: 4
-:Optional: t
-:END: 
-  - Themen: Virtualisierungstechniken, Hypervisor Grundlagen
-  - Aufgaben: Virtualisierungsgrundlagen, Unterschiede zwischen Desktop- und Netzwerkvirtualisierung
+# * Virtualisierung
+# :PROPERTIES:
+# :Theorie: 4
+# :Praxis: 4
+# :Optional: t
+# :END: 
+#   - Themen: Virtualisierungstechniken, Hypervisor Grundlagen
+#   - Aufgaben: Virtualisierungsgrundlagen, Unterschiede zwischen Desktop- und Netzwerkvirtualisierung
 
-* SSH
+** SSH
 :PROPERTIES:
-:Theorie: 10
-:Praxis: 10
-:Optional: t
+:THEORIE:  10
+:PRAXIS:   10
+:Optional: nil
 :END: 
   - Themen: SSH-Server einrichten, RSA-Verschlüsselung, TCP Handshake
   - Aufgaben: SSH-Client einrichten, Fernwartung mit SSH, Verwendung von Putty
 
-* Fortgeschrittene SSH-Techniken
+** Fortgeschrittene SSH-Techniken
 :PROPERTIES:
 :Theorie: 4
 :Praxis: 4
-:Optional: nil
+:Optional: t
 :END:
   - Themen: SSH mit Schlüsseln, Alias für SSH-Management
   - Aufgaben: Einrichten und Verwenden von SSH-Schlüsseln und Aliases
 
-* Rechteverwaltung
+** Rechteverwaltung
 :PROPERTIES:
-:Theorie: 6
-:Praxis: 6
+:THEORIE:  4
+:PRAXIS:   4
+:Optional: nil
 :END:
   - Themen: Rechte in Linux (User, Gruppen, Verzeichnisse), Rechteverwaltung mit Symbolen und Zahlen
   - Aufgaben: Benutzerverwaltung, Rechtezuweisung, Kontrolle der Rechtevergabe
 
-* Samba
+** Samba
 :PROPERTIES:
 :Theorie: 6
 :Praxis: 6
+:Optional: nil
 :END:
   - Themen: Samba Installation, Konfiguration, Freigaben
   - Aufgaben: Samba-Server einrichten, Netzlaufwerke verbinden
 
-* Backups
+** Backups
 :PROPERTIES:
 :Theorie: 6
 :Praxis: 6
@@ -119,16 +123,16 @@
   - Themen: Backup-Strategien, cronjobs, Sicherungsprogramme
   - Aufgaben: Backups planen und durchführen, Verwendung von find für Sicherungen
 
-* Skripte erstellen
-:PROPERTIES:
-:Theorie: 8
-:Praxis: 8
-:Optional: t
-:END: 
-  - Themen: Bash-Skripte, Variablen, Schleifen, if-else-Anweisungen
-  - Aufgaben: Skripte zur Automatisierung von Aufgaben, Beispiel: Benutzer anlegen, Cronjobs einrichten
+# * Skripte erstellen
+# :PROPERTIES:
+# :Theorie: 8
+# :Praxis: 8
+# :Optional: t
+# :END: 
+#   - Themen: Bash-Skripte, Variablen, Schleifen, if-else-Anweisungen
+#   - Aufgaben: Skripte zur Automatisierung von Aufgaben, Beispiel: Benutzer anlegen, Cronjobs einrichten
 
-* Firewall
+** Firewall
 :PROPERTIES:
 :Theorie: 2
 :Praxis: 2
@@ -137,15 +141,15 @@
   - Themen: Linux-Firewalls, iptables, ufw
   - Aufgaben: Firewall für SSH und Samba einrichten
 
-* Apache-Web-Server im Intranet
-:PROPERTIES:
-:Theorie: 2
-:Praxis: 2
-:Optional: t
-:END:
+# * Apache-Web-Server im Intranet
+# :PROPERTIES:
+# :Theorie: 2
+# :Praxis: 2
+# :Optional: t
+# :END:
   
-  - Themen: Apache-Installation, Erstellung einer Homepage im Intranet
-  - Aufgaben: Webserver einrichten, Seiten erstellen und anpassen
+#   - Themen: Apache-Installation, Erstellung einer Homepage im Intranet
+#   - Aufgaben: Webserver einrichten, Seiten erstellen und anpassen
 
 **Abschluss und Projekttage**
   - Durchführung und Nachbesprechung einer Leistungskontrolle
