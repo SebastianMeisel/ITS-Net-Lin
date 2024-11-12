@@ -1,0 +1,122 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Debian VM-Installation unter HyperV
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Debian-Netinstaller-Image herunterladen
+
+Lade die ISO-Datei von [[https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-12.8.0-amd64-netinst.iso][Debian 12.8.0]] (631 MB).
+Öffne die Powershell und gebe folgende Befehle ein:
+
+#+BEGIN_SRC Powershell
+cd ~\Downloads\
+Get-FileHash -Algorithm SHA256 .\debian-12.8.0-amd64-netinst.iso
+#+END_SRC
+
+Die Ausgabe sollte exakt so aussehen:
+
+#+BEGIN_EXAMPLE
+
+Algorithm       Hash                                                                   Path
+---------       ----                                                                   ----
+SHA256          04396D12B0F377958A070C38A923C227832FA3B3E18DDC013936ECF492E9FBB3       C:\Users\Captiva\Downloads\debian-12.8.0-amd64-netinst.iso
+#+END_EXAMPLE
+
+
+* Starten des HyperV Servers
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-1.png]]
+
+Nach dem Starten von HyperV müssen Sie eventuell zunächst mit HyperV-Manager verbinden.
+Dazu gibt des zwei Möglichkeiten:
+
+  1) Rechsklick auf ~HyperV-Manager → Verbindung mit dem Server herstellen…~
+  2) Rechts unter ~Aktionen~ auf ~Verbindung mit dem Server herstellen…~
+
+* Virtuelle Maschine (VM) erstellen
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-2.png]]
+
+Im folgenden Dialog:
+
+  1) ~Lokaler Computer~ auswählen.
+  2) Mit ~OK~ bestätigen.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .45\linewidth
+#+ATTR_ORG: :width 500
+[[file:Bilder/HyperV-3.png]]
+
+Rechts unter ~Aktionen~:
+  1) ~Neu~ auswählen.
+  2) Im Untermenü ~Virtueller Computer…~ auswählen.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-04.png]]
+
+Im nächsten Fenster:
+  1) Lege einen Namen für die VM fest.
+  2) Klicke ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-05.png]]
+
+Unter ~Generation angeben~:
+  1) Wähle ~Generation 2~ für UEFI-Unterstützung aus.
+  2) Bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-06.png]]
+
+Unter ~Speicher zuweisen~:
+  1) Reserviere ~2048 MB Arbeitsspeicher beim Start~.
+  2) Wähle ~Dynamische Arbeitsspeicher für diesen Virtuellen Computer verwenden~.
+  3) Bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-07.png]]
+
+Lege unter ~Netzwerk konfigurieren~:
+  1) den ~Default Switch~ als ~Verbindung~ und bestätige
+  2) mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-08.png]]
+
+Wähle unter ~Installationsoption~:
+  1) Das ~Betriebssystem von einer startbaren Imagedatei installieren~.
+  2) ~Durchsuche~ deinen Download Ordner und wähle die Datei ~debian-12.8.0-amd64-netinst.iso~ aus.
+  3) Bestätige mit ~Weiter~.
+
