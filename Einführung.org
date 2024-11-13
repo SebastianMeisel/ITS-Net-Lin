@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 :LaTeX_PROPERTIES:
 #+LANGUAGE: de
 #+OPTIONS: d:nil todo:nil pri:nil tags:nil
@@ -137,3 +138,157 @@
 - Dominanz im Server- und Cloud-Segment
 - Wichtige Rolle in der KI-Entwicklung
 - Kontinuierliche Verbesserung der Benutzerfreundlichkeit
+=======
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Einführung und Geschichte
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+
+*  Geschichte 
+
+** Die Anfänge
+#+ATTR_HTML: :width 20% :class right
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/LinusTorvalds.jpg]]
+
+#+ATTR_HTML: :class left
+- 1991 begann der finnische Student Linus Torvalds die Entwicklung eines freien Unix-ähnlichen Betriebssystemkernels
+- Ursprünglich als Hobbyprojekt gedacht, um ein alternatives System zu MINIX zu schaffen
+- Der Name "Linux" ist eine Kombination aus "Linus" und "Unix"
+#+CAPTION: Von Krd (photo)Von Sprat (crop/extraction), CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=54706023
+
+** Die GNU/Linux-Verbindung
+#+ATTR_HTML: :width 20% :class right
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/RichardStallman.jpg]]
+
+#+ATTR_HTML: :class left
+- Linux wurde mit GNU-Software kombiniert, die bereits seit 1984 unter Richard Stallman entwickelt wurde
+- Die GNU General Public License (GPL) wurde als Lizenz gewählt
+- Dies ermöglichte die freie Verteilung und Modifikation des Quellcodes
+
+#+REVEAL: split
+#+ATTR_HTML: :width 100%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/Unix.png]]
+
+** Entwicklung zur Gegenwart
+- Rasantes Wachstum durch weltweite Entwicklergemeinschaft
+- Einsatz von verteilten Versionskontrollsystemen (erst CVS, dann Git)
+- Heute: Millionen von Entwicklern weltweit beteiligt
+
+* Hauptmerkmale von Linux
+
+** Technische Eigenschaften
+- Multitasking-fähig
+- Multiuser-System
+- Hohe Stabilität und Sicherheit
+- Modularer Aufbau
+- Hardware-unabhängig
+
+** Philosophie
+- Open Source
+- Freie Software
+- Community-getrieben
+- Transparenz
+- Sicherheit durch Offenheit
+
+* Die wichtigsten Distributionsfamilien
+
+** Debian-Familie
+- Debian GNU/Linux
+  - Einer der ältesten Distributionen
+  - Stark community-orientiert
+  - Bekannt für Stabilität
+- Ubuntu
+  - Basiert auf Debian
+  - Benutzerfreundlich
+  - Große Community
+  - Verschiedene Varianten (Kubuntu, Xubuntu, etc.)
+#+REVEAL: split
+- Linux Mint
+  - Basiert auf Ubuntu
+  - Fokus auf Benutzerfreundlichkeit
+  - Traditionelle Desktop-Umgebung
+
+** Red Hat-Familie
+- Red Hat Enterprise Linux (RHEL)
+  - Kommerzielle Distribution
+  - Fokus auf Unternehmenseinsatz
+  - Lange Support-Zeiträume
+- Fedora
+  - Community-Version von Red Hat
+  - Bleeding Edge Technologie
+  - Testplattform für RHEL
+#+REVEAL: split
+- CentOS
+  - Freier RHEL-Klon
+  - Beliebt für Server
+  - Stream-Version als Rolling Release
+
+** SUSE-Familie
+- SUSE Linux Enterprise
+  - Kommerzielles Angebot
+  - Fokus auf Geschäftskunden
+- openSUSE
+  - Community-Version
+  - Zwei Editionen:
+    - Leap (stabil)
+    - Tumbleweed (Rolling Release)
+
+** Arch-Familie
+- Arch Linux
+  - Rolling Release
+  - Minimalistisch
+  - "Do it yourself"-Ansatz
+- Manjaro
+  - Benutzerfreundliche Arch-Variante
+  - Vorkonfigurierte Desktop-Umgebungen
+  - Stabilere Paketbasis
+
+* Einsatzgebiete
+
+** Desktop
+- Private Nutzung
+- Office-Arbeitsplätze
+- Entwicklungsumgebungen
+- Markteanteil 2–4% beträgt (je nach Quelle).
+  
+** Server
+- Webserver
+- Datenbankserver
+- Cloud-Computing
+- Markteanteil 70% - 80% (90& Cloud)
+
+** Embedded Systems
+- IoT-Geräte
+- Smartphones (Android)
+- Smart Home
+- Marktanteil > 90%.
+
+* Zukunftsperspektiven
+- Wachsender Marktanteil im Desktop-Bereich
+- Dominanz im Server- und Cloud-Segment
+- Wichtige Rolle in der KI-Entwicklung
+- Kontinuierliche Verbesserung der Benutzerfreundlichkeit
+>>>>>>> e722c86 (Bilder in Einführung (Torvald/Stalman))
