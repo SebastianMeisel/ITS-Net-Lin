@@ -86,15 +86,17 @@ ul.con {
   left: -150px;
   width: 60%;
   height: 100%;
-  transform: translateY(25%);
+  transform: translateY(5em);
   display: flex;
 }
 
 .right {
   float: right;
   margin-left: 20px; /* Adjust the margin to create space between the image and the text */
-  width: 35%;
+  /* width: 35%; */
   height: auto; /* Adjust the height automatically to maintain the aspect ratio */
+  transform: translateY(3.5em);
+  display: flex;
 }
 
 

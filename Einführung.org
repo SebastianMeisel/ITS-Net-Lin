@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 :LaTeX_PROPERTIES:
 #+LANGUAGE: de
 #+OPTIONS: d:nil todo:nil pri:nil tags:nil
@@ -12,147 +11,7 @@
 #+REVEAL_REVEAL_JS_VERSION: 4
 #+REVEAL_THEME: league
 #+REVEAL_EXTRA_CSS: ./mystyle.css
-#+REVEAL_HLEVEL: 2
-#+OPTIONS: timestamp:nil toc:nil num:nil
-:END:
-
-#+TITLE: Einführung
-#+SUBTITLE: ITS-Net-Lin
-#+AUTHOR: Sebastian Meisel
-
-
-*  Geschichte 
-
-** Die Anfänge
-- 1991 begann der finnische Student Linus Torvalds die Entwicklung eines freien Unix-ähnlichen Betriebssystemkernels
-- Ursprünglich als Hobbyprojekt gedacht, um ein alternatives System zu MINIX zu schaffen
-- Der Name "Linux" ist eine Kombination aus "Linus" und "Unix"
-
-** Die GNU/Linux-Verbindung
-- Linux wurde mit GNU-Software kombiniert, die bereits seit 1984 unter Richard Stallman entwickelt wurde
-- Die GNU General Public License (GPL) wurde als Lizenz gewählt
-- Dies ermöglichte die freie Verteilung und Modifikation des Quellcodes
-
-#+REVEAL: split
-#+ATTR_HTML: :width 50%
-#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
-#+ATTR_ORG: :width 700
-[[file:Bilder/Unix.png]]
-
-** Entwicklung zur Gegenwart
-- Rasantes Wachstum durch weltweite Entwicklergemeinschaft
-- Einsatz von verteilten Versionskontrollsystemen (erst CVS, dann Git)
-- Heute: Millionen von Entwicklern weltweit beteiligt
-
-* Hauptmerkmale von Linux
-
-** Technische Eigenschaften
-- Multitasking-fähig
-- Multiuser-System
-- Hohe Stabilität und Sicherheit
-- Modularer Aufbau
-- Hardware-unabhängig
-
-** Philosophie
-- Open Source
-- Freie Software
-- Community-getrieben
-- Transparenz
-- Sicherheit durch Offenheit
-
-* Die wichtigsten Distributionsfamilien
-
-** Debian-Familie
-- Debian GNU/Linux
-  - Einer der ältesten Distributionen
-  - Stark community-orientiert
-  - Bekannt für Stabilität
-- Ubuntu
-  - Basiert auf Debian
-  - Benutzerfreundlich
-  - Große Community
-  - Verschiedene Varianten (Kubuntu, Xubuntu, etc.)
-#+REVEAL: split
-- Linux Mint
-  - Basiert auf Ubuntu
-  - Fokus auf Benutzerfreundlichkeit
-  - Traditionelle Desktop-Umgebung
-
-** Red Hat-Familie
-- Red Hat Enterprise Linux (RHEL)
-  - Kommerzielle Distribution
-  - Fokus auf Unternehmenseinsatz
-  - Lange Support-Zeiträume
-- Fedora
-  - Community-Version von Red Hat
-  - Bleeding Edge Technologie
-  - Testplattform für RHEL
-#+REVEAL: split
-- CentOS
-  - Freier RHEL-Klon
-  - Beliebt für Server
-  - Stream-Version als Rolling Release
-
-** SUSE-Familie
-- SUSE Linux Enterprise
-  - Kommerzielles Angebot
-  - Fokus auf Geschäftskunden
-- openSUSE
-  - Community-Version
-  - Zwei Editionen:
-    - Leap (stabil)
-    - Tumbleweed (Rolling Release)
-
-** Arch-Familie
-- Arch Linux
-  - Rolling Release
-  - Minimalistisch
-  - "Do it yourself"-Ansatz
-- Manjaro
-  - Benutzerfreundliche Arch-Variante
-  - Vorkonfigurierte Desktop-Umgebungen
-  - Stabilere Paketbasis
-
-* Einsatzgebiete
-
-** Desktop
-- Private Nutzung
-- Office-Arbeitsplätze
-- Entwicklungsumgebungen
-- Markteanteil 2–4% beträgt (je nach Quelle).
-  
-** Server
-- Webserver
-- Datenbankserver
-- Cloud-Computing
-- Markteanteil 70% - 80% (90& Cloud)
-
-** Embedded Systems
-- IoT-Geräte
-- Smartphones (Android)
-- Smart Home
-- Marktanteil > 90%.
-
-* Zukunftsperspektiven
-- Wachsender Marktanteil im Desktop-Bereich
-- Dominanz im Server- und Cloud-Segment
-- Wichtige Rolle in der KI-Entwicklung
-- Kontinuierliche Verbesserung der Benutzerfreundlichkeit
-=======
-:LaTeX_PROPERTIES:
-#+LANGUAGE: de
-#+OPTIONS: d:nil todo:nil pri:nil tags:nil
-#+OPTIONS: H:4
-#+LaTeX_CLASS: orgstandard
-#+LaTeX_CMD: xelatex
-:END:
-
-:REVEAL_PROPERTIES:
-#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
-#+REVEAL_REVEAL_JS_VERSION: 4
-#+REVEAL_THEME: league
-#+REVEAL_EXTRA_CSS: ./mystyle.css
-#+REVEAL_HLEVEL: 2
+#+REVEAL_HLEVEL: 1
 #+OPTIONS: timestamp:nil toc:nil num:nil
 :END:
 
@@ -162,6 +21,14 @@
 
 
 *  Geschichte 
+
+#+ATTR_HTML: :width 60% 
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/CaveTux.png]]
+
+#+ATTR_HTML: :class left
+
 
 ** Die Anfänge
 #+ATTR_HTML: :width 20% :class right
@@ -199,21 +66,32 @@
 
 * Hauptmerkmale von Linux
 
-** Technische Eigenschaften
-- Multitasking-fähig
-- Multiuser-System
-- Hohe Stabilität und Sicherheit
-- Modularer Aufbau
-- Hardware-unabhängig
+#+ATTR_HTML: :class left :width 50%
+- Technische Eigenschaften ::
+  - Multitasking-fähig
+  - Multiuser-System
+  - Hohe Stabilität und Sicherheit
+  - Modularer Aufbau
+  - Hardware-unabhängig
 
-** Philosophie
-- Open Source
-- Freie Software
-- Community-getrieben
-- Transparenz
-- Sicherheit durch Offenheit
+#+ATTR_HTML: :class right :width 50%
+- Philosophie ::
+  - Open Source
+  - Freie Software
+  - Community-getrieben
+  - Transparenz
+  - Sicherheit durch Offenheit
 
 * Die wichtigsten Distributionsfamilien
+
+Eine Linux-Distribution (kurz: Distro) ist ein Betriebssystem, das auf dem Linux-Kernel basiert und zusätzlich eine Sammlung von Softwarepaketen enthält, um eine vollständige und benutzerfreundliche Umgebung bereitzustellen.
+
+Zu den Komponenten gehören:
+ - der Kernel.
+ - Systemtools.
+ - Bibliotheken.
+ - Anwendungssoftware.
+ - optional: ein Desktop-Environment. 
 
 ** Debian-Familie
 - Debian GNU/Linux
@@ -268,27 +146,55 @@
 
 * Einsatzgebiete
 
+Linux hat sich aufgrund seiner Flexibilität und Open-Source-Natur in verschiedenen Bereichen etabliert und ist inzwischen das insgesamt am meisten verbreitete Betriebssystem.
+
 ** Desktop
+#+ATTR_HTML: :width 20% :class right
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/Desktop.png]]
+
+#+#+ATTR_HTML: :class left
 - Private Nutzung
 - Office-Arbeitsplätze
 - Entwicklungsumgebungen
 - Markteanteil 2–4% beträgt (je nach Quelle).
   
 ** Server
+#+ATTR_HTML: :width 20% :class right
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/Server.png]]
+
+#+#+ATTR_HTML: :class left
 - Webserver
 - Datenbankserver
 - Cloud-Computing
 - Markteanteil 70% - 80% (90& Cloud)
 
 ** Embedded Systems
+#+ATTR_HTML: :width 20% :class right
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/Embedded.png]]
+
+#+#+ATTR_HTML: :class left
 - IoT-Geräte
 - Smartphones (Android)
 - Smart Home
 - Marktanteil > 90%.
+
+** Weltall
+#+ATTR_HTML: :width 20% :class right
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/SpaceTux.png]]
+
+#+#+ATTR_HTML: :class left
+Linux wird im All für die Steuerung von Raumfahrzeugen, Satelliten und Bodenkontrollsystemen eingesetzt. Beispiele sind der Mars-Rover „Perseverance“ und verschiedene Satelliten. Seine Anpassungsfähigkeit und Stabilität machen es zur bevorzugten Wahl in der Raumfahrt.
 
 * Zukunftsperspektiven
 - Wachsender Marktanteil im Desktop-Bereich
 - Dominanz im Server- und Cloud-Segment
 - Wichtige Rolle in der KI-Entwicklung
 - Kontinuierliche Verbesserung der Benutzerfreundlichkeit
->>>>>>> e722c86 (Bilder in Einführung (Torvald/Stalman))
