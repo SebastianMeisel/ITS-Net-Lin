@@ -44,7 +44,7 @@ SHA256          04396D12B0F377958A070C38A923C227832FA3B3E18DDC013936ECF492E9FBB3
 #+ATTR_HTML: :width 50%
 #+ATTR_LATEX: :width .65\linewidth
 #+ATTR_ORG: :width 700
-[[file:Bilder/HyperV-1.png]]
+[[file:Bilder/HyperV-01.png]]
 
 Nach dem Starten von HyperV müssen Sie eventuell zunächst mit HyperV-Manager verbinden.
 Dazu gibt des zwei Möglichkeiten:
@@ -57,7 +57,7 @@ Dazu gibt des zwei Möglichkeiten:
 #+ATTR_HTML: :width 50%
 #+ATTR_LATEX: :width .65\linewidth
 #+ATTR_ORG: :width 700
-[[file:Bilder/HyperV-2.png]]
+[[file:Bilder/HyperV-02.png]]
 
 Im folgenden Dialog:
 
@@ -67,7 +67,7 @@ Im folgenden Dialog:
 #+ATTR_HTML: :width 50%
 #+ATTR_LATEX: :width .45\linewidth
 #+ATTR_ORG: :width 500
-[[file:Bilder/HyperV-3.png]]
+[[file:Bilder/HyperV-03.png]]
 
 Rechts unter ~Aktionen~:
   1) ~Neu~ auswählen.
@@ -120,3 +120,267 @@ Wähle unter ~Installationsoption~:
   2) ~Durchsuche~ deinen Download Ordner und wähle die Datei ~debian-12.8.0-amd64-netinst.iso~ aus.
   3) Bestätige mit ~Weiter~.
 
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
++ATTR_ORG: :width 700
+[[file:Bilder/HyperV-09.png]]
+
+Wenn die Zusammenfassung so aussieht, bestätige mit ~Ferigstellen~.
+
+** Weitere Einstellungen
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-10.png]]
+
+Wähle nun unten Links den Menüpunkt ~Einstellungen~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-11.png]]
+
+Im neuen Fenster gehe zu:
+  1) ~Sicherheit~ und
+  2) entferne das Häkchen bei ~Sicheren Start aktivieren~.
+  3) Übernehme die Einstellungen mit ~Anwenden~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-12.png]]
+
+1) Aktiviere unter  ~Integrationsdienste~
+2) den letzten Punkt ~Gastdienste~.
+3) Schließe das Fenster mit ~OK~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-13.png]]
+
+Verbinde dich nun im Menü unten rechts mit ~Verbinden…~
+
+** Debian installieren
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-14.png]]
+
+Nun musst du die VM 1) ~Starten~ und sofort mehrfach die ~[Leertaste]~ drücken.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-15.png]]
+
+Wähle nun 1) ~Graphical install~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-16.png]]
+
+Wähle nun 2) deine Muttersprache. Wenn du ~Deutsch~ wählst kannst du zwar dem Weiteren besser folgen, aber deine Muttersprache macht es einfacher Dinge selbst auszuprobieren.
+
+Übernehme die Einstellungen mit 2) ~Continue~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-17.png]]
+
+Wähle nun als 1) Zeitzone ~Deutschland~ und bestätige mit 2) ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-18.png]]
+
+Als 1) Tastaturlayout wähle ~Deutsch~ und bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-19.png]]
+
+Nun vergib einen 1) Hostnamen wie ~debian~ (nur Kleinbuchstaben) und bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-20.png]]
+
+Den Domainnamen lassen wir vorerst frei und überspringen mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-21.png]]
+
+Als nächstes muss du ein
+  1) ~Root Passwort~ festlegen. Dieser Passwort gibt dir Superuser-Rechte, das heißt, du kann alles auf deinem Rechner ändern und damit potentiell auch zerstören. Darum sollte es bei einem echten PC mindesten 16 Zeichen lang sein. Bei dieser VM ist dies aber egal.
+  2) Wiederholen dieses Passwort und bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-22.png]]
+
+Trage 1) deinen (oder einen beliebigen) ~Völlständigen Namen~ ein und bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-23.png]]
+
+Wähle einen
+  1) ~Benutzernamen~ (oder übernehme den vorgeschlagenen). Benutze ausschließlich Kleinbuchstaben. Dieser Benutzer hat eingeschränkte Rechte.
+  2) Bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-24.png]]
+
+Für den Nutzer mit eingeschränkten Rechten musst du nun
+  1) ebenfalls ein ~Passwort~ festlegen und
+  2) zur Bestätigung wiederholen.
+  3) Bestätige das Passwort mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-25.png]]
+
+Unter ~Festplatten partitionieren~ wähle
+  1) ~Geführt - vollständige Festplatte verwenden~.
+  2) Bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 40%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-26.png]]
+
+Wähle
+  1) die ~VirtualDisk~ (Vorauswahl).
+  2) Bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-27.png]]
+
+Wähle unter ~Festplatten partitionieren~
+  1) ~Seperater /home-, /var- und /tmp-Partitionen~.
+  2) Bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-28.png]]
+
+Bestätige den nächsten Bildschirm
+  1) mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-29.png]]
+
+Auf dem nächsten Bildschirm musst du aus Sicherheitsgründen
+  1) mit ~Ja~ bestätige, dass du den gesamten Inhalt der Festplatte löschen möchtest.
+  2) Bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-30.png]]
+
+Ein Basissystem wird nun installiert.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-31.png]]
+
+Auf dem nächsten Bildschirm bestätige
+  1) die Vorauswahl ~Nein~
+  2) mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-32.png]]
+
+Wähle
+  1) ~Deutschland~ als Standort für den Spiegelserver (den Server von dem wir weitere Software beziehen).
+  2) Bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-33.png]]
+
+Nun kannst du
+  1) einen Server in der Nähe (z. B. TU-Dresden) wählen und einfach die Vorauswahl ~deb.debian.org~.
+  2) Bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-34.png]]
+
+  1) Trage keinen ~HTTP-Proxy~ ein.
+  2) Bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-35.png]]
+
+Nun werden weitere Softwarepakte heruntergelanden und instaliert.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-36.png]]
+
+Da wir "nur" eine VM-Installation macht es keinen Sinn Telemetrie zu übertragen.
+  1) Übernimm das ~Nein~.
+  2) Bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-37.png]]
+
+
+  1) Bestätige ~Gnome~ als Desktop-Umgebung. Du kannst auch einen anderen Desktop wählen, wenn du weißt, was du tust.
+  2) Wähle ~SSH-Server~ zur Installation aus.
+  3) Bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-38.png]]
+
+Die ausgewählten Softwarepakete werden installiert.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-39.png]]
+
+Debian ist nun instaliert.
+  1) Bestätige mit ~Weiter~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth
+#+ATTR_ORG: :width 700
+[[file:Bilder/HyperV-40.png]]
+
+Die VM starten nun neu. Du kannst
+  1) dich nun mit deinem Passwort anmelden, oder
+  2) mit dem orangenen Symbol ~speichern~. 
