@@ -4,6 +4,7 @@
 #+OPTIONS: H:4
 #+LaTeX_CLASS: orgstandard
 #+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
 :END:
 
 :REVEAL_PROPERTIES:
@@ -19,6 +20,7 @@
 #+SUBTITLE: ITS-Net-Lin
 #+AUTHOR: Sebastian Meisel
 
+
 #+BEGIN_SRC emacs-lisp :exports none
 (require 'ox-latex)
 (setq org-latex-listings 'listings)
@@ -28,24 +30,24 @@
         ("showspaces" "false")
         ("basicstyle" "\\small\\ttfamily")
         ("keywordstyle" "\\color{blue}")
-        ("commentstyle" "\\color{green}")
+        ("commentstyle" "\\color{gray}")
         ("stringstyle" "\\color{red}")
         ("numbers" "left")
         ("numberstyle" "\\tiny")
-        ("frame" "single")))
+        ("frame" "tb")))
 #+END_SRC
 
 #+RESULTS:
-| breaklines   | true            |
-| language     | bash            |
-| showspaces   | false           |
-| basicstyle   | \small\ttfamily |
-| keywordstyle | \color{blue}    |
-| commentstyle | \color{green}   |
-| stringstyle  | \color{red}     |
-| numbers      | left            |
-| numberstyle  | \tiny           |
-| frame        | single          |
+| breaklines   | true             |
+| language     | bash             |
+| showspaces   | false            |
+| basicstyle   | \small\ttfamily  |
+| keywordstyle | \color{blue}     |
+| commentstyle | \color{darkGrey} |
+| stringstyle  | \color{red}      |
+| numbers      | left             |
+| numberstyle  | \tiny            |
+| frame        | tb               |
 
 
 * Navigation und Dateisystem
@@ -73,7 +75,7 @@ ls                  # Einfache Auflistung
 ls -l               # Detaillierte Auflistung
 ls -a               # Zeigt auch versteckte Dateien
 ls -h               # Menschenlesbare Größenangaben
-ls -R               # Rekursive Auflistung
+ls -R               # Rekursive Auflistung 
 ls -lah             # Kombination aus l, a und h
 #+END_SRC
 

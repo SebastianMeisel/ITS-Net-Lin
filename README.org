@@ -53,6 +53,8 @@
   - Themen: Debian, Verzeichnisstruktur, grundlegende Linux-Befehle (pwd, ls, mkdir, etc.)
   - Aufgaben: Praktische Übungen mit den grundlegenden Linux-Befehlen
 
+  - [[file:GrundlegendeBefehle1.pdf][Grundlegende Befehler - Teil 1 (PDF)]]
+
 ** Grundlegende Befehle 2
 :PROPERTIES:
 :THEORIE:  2
