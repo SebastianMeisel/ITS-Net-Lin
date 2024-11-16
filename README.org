@@ -31,7 +31,7 @@
   - Ziele: Gemeinsames Erarbeiten der Kursziele, Debian-Download und Installation in Hyper-V über DefaultSwitch
   - Themen: Überblick über Testumgebung, Debian-Installation
 
-  - [[file:Einführung.pdf]]
+  - [[file:VM-Installation.pdf][Installation von Debian-Gnu/Linux als HyperV VM (PDF)]]
 
 ** Geschichte der Betriebssysteme
 :PROPERTIES:
@@ -41,6 +41,8 @@
 :END:
   - Themen: Linux-Geschichte, Vorteile von Linux, Linux-Distributionen
   - Aufgaben: Soll-Ist-Vergleich, Kundeninformation
+
+  - [[file:Einführung.pdf][Einführung und Geschichte (PDF)]]
 
 ** Grundlegende Befehle
 :PROPERTIES:
