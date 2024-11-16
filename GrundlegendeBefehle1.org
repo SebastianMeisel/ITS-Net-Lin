@@ -1,0 +1,208 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Grundlegende Bash-Befehle 
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+#+BEGIN_SRC emacs-lisp :exports none
+(require 'ox-latex)
+(setq org-latex-listings 'listings)
+(setq org-latex-listings-options
+      '(("breaklines" "true")
+        ("language" "bash")
+        ("showspaces" "false")
+        ("basicstyle" "\\small\\ttfamily")
+        ("keywordstyle" "\\color{blue}")
+        ("commentstyle" "\\color{green}")
+        ("stringstyle" "\\color{red}")
+        ("numbers" "left")
+        ("numberstyle" "\\tiny")
+        ("frame" "single")))
+#+END_SRC
+
+#+RESULTS:
+| breaklines   | true            |
+| language     | bash            |
+| showspaces   | false           |
+| basicstyle   | \small\ttfamily |
+| keywordstyle | \color{blue}    |
+| commentstyle | \color{green}   |
+| stringstyle  | \color{red}     |
+| numbers      | left            |
+| numberstyle  | \tiny           |
+| frame        | single          |
+
+
+* Navigation und Dateisystem
+
+** pwd (Print Working Directory)
+Zeigt das aktuelle Arbeitsverzeichnis an.
+#+BEGIN_SRC bash
+pwd
+#+END_SRC
+
+** cd (Change Directory)
+Wechselt das Verzeichnis.
+#+BEGIN_SRC bash
+cd /pfad/zum/verzeichnis   # Absoluter Pfad
+cd verzeichnis             # Relativer Pfad
+cd ..                      # Ein Verzeichnis zurück
+cd ~                       # Zum Home-Verzeichnis
+cd -                       # Zum vorherigen Verzeichnis
+#+END_SRC
+
+** ls (List)
+Listet Verzeichnisinhalte auf.
+#+BEGIN_SRC bash
+ls                  # Einfache Auflistung
+ls -l               # Detaillierte Auflistung
+ls -a               # Zeigt auch versteckte Dateien
+ls -h               # Menschenlesbare Größenangaben
+ls -R               # Rekursive Auflistung
+ls -lah             # Kombination aus l, a und h
+#+END_SRC
+
+* Datei- und Verzeichnisoperationen
+
+** mkdir (Make Directory)
+Erstellt neue Verzeichnisse.
+#+BEGIN_SRC bash
+mkdir verzeichnis           # Einzelnes Verzeichnis
+mkdir -p pfad/zum/ordner   # Erstellt auch übergeordnete Verzeichnisse
+#+END_SRC
+
+** rmdir (Remove Directory)
+Löscht leere Verzeichnisse.
+#+BEGIN_SRC bash
+rmdir verzeichnis          # Löscht leeres Verzeichnis
+rmdir -p pfad/zum/ordner  # Löscht auch übergeordnete leere Verzeichnisse
+#+END_SRC
+
+** touch
+Erstellt leere Dateien oder aktualisiert Zeitstempel.
+#+BEGIN_SRC bash
+touch datei.txt           # Erstellt neue Datei oder aktualisiert Zeitstempel
+touch -a datei.txt       # Aktualisiert nur Zugriffszeitstempel
+touch -m datei.txt       # Aktualisiert nur Änderungszeitstempel
+#+END_SRC
+
+** rm (Remove)
+Löscht Dateien und Verzeichnisse.
+#+BEGIN_SRC bash
+rm datei.txt             # Löscht eine Datei
+rm -r verzeichnis        # Löscht Verzeichnis rekursiv
+rm -f datei.txt          # Erzwingt Löschung ohne Nachfrage
+rm -i datei.txt          # Fragt vor dem Löschen nach
+#+END_SRC
+
+* Textausgabe und -verarbeitung
+
+** echo
+Gibt Text aus oder zeigt Variableninhalte an.
+#+BEGIN_SRC bash
+echo "Hallo Welt"        # Einfache Textausgabe
+echo -n "Ohne Newline"   # Ausgabe ohne Zeilenumbruch
+echo -e "Mit\tTabs"      # Interpretiert Escape-Sequenzen
+#+END_SRC
+
+** cat (Concatenate)
+Zeigt Dateiinhalte an oder verkettet Dateien.
+#+BEGIN_SRC bash
+cat datei.txt            # Zeigt Dateiinhalt
+cat -n datei.txt        # Zeigt Zeilennummern
+cat datei1 datei2       # Verkettet und zeigt mehrere Dateien
+#+END_SRC
+
+** HEREDOC
+Mehrzeilige Texteingabe in Skripten oder auf der Kommandozeile.
+#+BEGIN_SRC bash
+cat << EOF > datei.txt
+Hier kommt
+mehrzeiliger
+Text
+EOF
+#+END_SRC
+
+* Suchoperationen
+
+** grep (Global Regular Expression Print)
+Durchsucht Dateien nach Textmustern.
+#+BEGIN_SRC bash
+grep "muster" datei.txt     # Sucht nach "muster"
+grep -i "Muster" datei.txt  # Ignoriert Groß/Kleinschreibung
+grep -r "muster" .          # Rekursive Suche
+grep -v "muster" datei.txt  # Zeigt nicht-matchende Zeilen
+grep -n "muster" datei.txt  # Zeigt Zeilennummern
+#+END_SRC
+
+* Terminal-Steuerung
+
+** clear
+Leert den Bildschirm, behält aber Scrollback-Buffer.
+#+BEGIN_SRC bash
+clear
+#+END_SRC
+
+** reset
+Setzt das Terminal komplett zurück.
+#+BEGIN_SRC bash
+reset
+#+END_SRC
+
+* Wichtige Tastenkombinationen
+
+- ~[Ctrl + C]~: Bricht aktuellen Prozess ab
+- ~[Ctrl + D]~: Sendet EOF (Ende der Eingabe)
+- ~[Ctrl + L]~: Leert den Bildschirm (wie clear)
+- ~[Ctrl + A]~: Springt zum Zeilenanfang
+- ~[Ctrl + E]~: Springt zum Zeilenende
+- ~[Ctrl + U]~: Löscht alles vom Cursor bis zum Zeilenanfang
+- ~[Ctrl + K]~: Löscht alles vom Cursor bis zum Zeilenende
+- ~[Ctrl + W]~: Löscht das Wort vor dem Cursor
+- ~[Ctrl + R]~: Durchsucht den Befehlsverlauf
+- ~[Alt + .]~: Fügt das letzte Argument des vorherigen Befehls ein
+
+* Bash-Completion
+
+Die Bash-Completion ist eine mächtige Funktion zur automatischen Vervollständigung von:
+- Befehlen
+- Datei- und Verzeichnisnamen
+- Programmoptionen
+- Variablen
+
+Wichtige Tasten:
+- ~[Tab]~: Einmalig drücken für Vervollständigung
+- ~[Tab Tab]~: Zweimal drücken zeigt alle Möglichkeiten
+- ~[Tab]~ bei teilweiser Eingabe vervollständigt bis zur Mehrdeutigkeit
+
+Installation zusätzlicher Completion-Funktionen:
+#+BEGIN_SRC bash
+# Auf Ubuntu/Debian
+sudo apt install bash-completion
+
+# Auf RedHat/CentOS
+sudo yum install bash-completion
+#+END_SRC
+
+Die Bash-Completion kann in der ~[.bashrc]~ aktiviert werden:
+#+BEGIN_SRC bash
+# Bash-Completion aktivieren
+if [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+fi
+#+END_SRC
