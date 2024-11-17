@@ -93,6 +93,12 @@ Zu den Komponenten gehören:
  - Anwendungssoftware.
  - optional: ein Desktop-Environment. 
 
+#+REVEAL: split
+#+ATTR_HTML: :width 100%
+#+ATTR_LATEX: :width 1\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/Distributionen.png]]
+
 ** Debian-Familie
 - Debian GNU/Linux
   - Einer der ältesten Distributionen
