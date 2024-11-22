@@ -170,6 +170,8 @@ Leert den Bildschirm, behält aber Scrollback-Buffer.
 clear
 #+END_SRC
 
+Dasselbe erreicht die Tastenkombinationen ~[Ctrl + L]~.
+
 ** reset
 Setzt das Terminal komplett zurück.
 #+BEGIN_SRC bash
