@@ -53,18 +53,18 @@
 * Navigation und Dateisystem
 
 ** pwd (Print Working Directory)
-Zeigt das aktuelle Arbeitsverzeichnis an.
+Zeigt das aktuelle Arbeitsverzeichnis, also das Verzeichnis, in dem man gerade arbeitet an.
 #+BEGIN_SRC bash
 pwd
 #+END_SRC
 
 ** cd (Change Directory)
-Wechselt das Verzeichnis.
+Wechselt das Verzeichnis. 
 #+BEGIN_SRC bash
 cd /pfad/zum/verzeichnis   # Absoluter Pfad
 cd verzeichnis             # Relativer Pfad
 cd ..                      # Ein Verzeichnis zurück
-cd ~                       # Zum Home-Verzeichnis
+cd ~                       # Zum Home-Verzeichnis = Benutzer-Verzeichnis
 cd -                       # Zum vorherigen Verzeichnis
 #+END_SRC
 
@@ -86,7 +86,17 @@ Erstellt neue Verzeichnisse.
 #+BEGIN_SRC bash
 mkdir verzeichnis           # Einzelnes Verzeichnis
 mkdir -p pfad/zum/ordner   # Erstellt auch übergeordnete Verzeichnisse
+mkdir -p pfad/Projekt{1..4}/{src,test}  
 #+END_SRC
+
+Der letzte Befehl erstellt vier Verzeichnis im Unterverzeichnis ~pfad~:
+ - ~Projekt1~
+ - ~Projekt2~
+ - ~Projekt3~
+ - ~Projekt4~
+In jedem dieser Verzeichnisse werden zwei Unterverzeichnisse erstellt:
+ - ~src~
+ - ~usr~
 
 ** rmdir (Remove Directory)
 Löscht leere Verzeichnisse.
@@ -133,11 +143,11 @@ cat datei1 datei2       # Verkettet und zeigt mehrere Dateien
 ** HEREDOC
 Mehrzeilige Texteingabe in Skripten oder auf der Kommandozeile.
 #+BEGIN_SRC bash
-cat << EOF > datei.txt
+cat << . > datei.txt
 Hier kommt
 mehrzeiliger
 Text
-EOF
+.
 #+END_SRC
 
 * Suchoperationen
