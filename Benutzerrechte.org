@@ -1,0 +1,92 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Benutzer- und Gruppenrechte in Linux
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+
+* 1. Grundlegendes Konzept der Rechte in Linux
+In Linux wird der Zugriff auf Dateien und Verzeichnisse über ein Rechte-System gesteuert:
+- Besitzer (=u=) :: Der Benutzer, der die Datei erstellt hat.
+- Gruppe (=g=) :: Benutzergruppe, die Zugriff auf die Datei hat.
+- Andere (=o=) :: Alle anderen Benutzer.
+
+Rechte werden in drei Kategorien unterteilt:
+- Lesen (=r=)
+- Schreiben (=w=)
+- Ausführen (=x=) - bei Verzeichnissen betreten.
+
+Beispiel für Rechteanzeige:
+: -rwxr-xr--
+
+Hier hat:
+
+- Der Nutzer :: Lese- (~r~), Schreib- (~w~) und Ausführungs- (~x~) ~rechte.
+- Die Gruppe :: Lese- (~r~), *keine* Schreib (~-~) aber Ausführungs- (~x~) ~rechte.
+- Andere :: Nur Lese- (~r~) aber *keine* Schreib (~–~) oder Ausführungs- (~–~) ~rechte.
+
+* 2. Der Befehl =chmod=
+Mit =chmod= können Rechte für Dateien und Verzeichnisse geändert werden. Es gibt zwei Methoden:
+- Symbolisch :: Rechte werden durch Symbole geändert.
+  - Beispiel :: =chmod u+rwx,g+r,o-rw datei.txt=
+- Numerisch :: Rechte werden durch Oktalwerte angegeben.
+  - Beispiel :: =chmod 754 datei.txt=
+
+| Symbol | Bedeutung       | Zahl | Bits | Rechte | Bedeutung                   |
+|--------+-----------------+------+------+--------+-----------------------------|
+| =u+=     | Nutzer bekommt  |    7 | ~111~  | =rwx=    | Lesen, Schreiben, Ausführen |
+| =g+=     | Gruppe bekommt  |    5 | ~101~  | =r-x=    | Lesen, Ausführen            |
+| =o+=     | Andere bekommen |    4 | ~100~  | =r--=    | Lesen                       |
+
+Wenn man beim symbolischen Ansatz statt =+= ein =–= benutzt, können damit Rechte entzogen werden.
+- Beispiel :: =chmod g-x datei.txt= entfernt die Ausführungsrechte für Gruppenmitglieder
+
+* 3. Verwaltung von Benutzern
+** =useradd=
+Mit =useradd= wird ein neuer Benutzer erstellt:
+: useradd  <optionen> <benutzername>
+
+Optionen:
+- =-m=: Erstellt ein Home-Verzeichnis.
+- =-s=: Setzt die Standard-Shell (z. B. =/bin/bash=).
+- =-G=: Fügt den Benutzer zu Gruppen hinzu (z. B. =sudo=).
+
+** =usermod=
+=usermod= dient zur Änderung von Benutzereigenschaften:
+: usermod <optionen> <benutzername>
+
+Optionen:
+- =-G=: Gruppen ändern.
+- =-L=: Benutzer sperren.
+- =-U=: Benutzer entsperren.
+
+* 4. Verwaltung von Gruppen
+** =groupadd=
+Erstellt eine neue Gruppe:
+: groupadd <optionen> <gruppenname>
+
+Optionen:
+- =-g <GID>=: Setzt die Gruppen-ID.
+
+** =groupmod=
+Modifiziert bestehende Gruppen:
+: groupmod <optionen> <gruppenname>
+
+Optionen:
+- =-n=: Ändert den Gruppennamen.
+- =-g=: Ändert die Gruppen-ID.

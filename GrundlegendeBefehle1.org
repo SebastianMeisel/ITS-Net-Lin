@@ -73,9 +73,9 @@ Listet Verzeichnisinhalte auf.
 #+BEGIN_SRC bash
 ls                  # Einfache Auflistung
 ls -l               # Detaillierte Auflistung
-ls -a               # Zeigt auch versteckte Dateien
+ls -a               # Zeigt auch versteckte Dateien, die mit einem Punkt beginnen.
 ls -h               # Menschenlesbare Größenangaben
-ls -R               # Rekursive Auflistung 
+ls -R               # Rekursive Auflistung mit Unterverzeichnissen
 ls -lah             # Kombination aus l, a und h
 #+END_SRC
 
@@ -86,7 +86,7 @@ Erstellt neue Verzeichnisse.
 #+BEGIN_SRC bash
 mkdir verzeichnis           # Einzelnes Verzeichnis
 mkdir -p pfad/zum/ordner   # Erstellt auch übergeordnete Verzeichnisse
-mkdir -p pfad/Projekt{1..4}/{src,test}  
+mkdir -p pfad/Projekt{1..4}/{src,test}
 #+END_SRC
 
 Der letzte Befehl erstellt vier Verzeichnis im Unterverzeichnis ~pfad~:
