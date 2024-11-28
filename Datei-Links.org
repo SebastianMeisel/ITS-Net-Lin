@@ -1,0 +1,71 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Hard- und Soft-Links
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* 1. Grundlagen: Hard- und Soft-Links
+Links in Linux ermöglichen es, Dateien oder Verzeichnisse auf flexible Weise zu referenzieren. Es gibt zwei Haupttypen von Links: *Hard-Links* und *Soft-Links*. In dieser Einführung werden die Unterschiede und die Befehle zur Erstellung und Verwaltung von Links erläutert.
+
+** Hard-Links
+- Ein Hard-Link ist ein direkter Verweis auf die gleiche Datei im Dateisystem.
+- Alle Hard-Links einer Datei teilen sich denselben Inode[fn:1].
+- Änderungen an der Datei sind durch alle Hard-Links sichtbar.
+- Einschränkungen: Keine Verknüpfung mit Verzeichnissen oder über Dateisystemgrenzen (Partionen) hinweg.
+
+**  Der Befehl `ln` für Hard-Links
+Der Befehl `ln` wird verwendet, um einen Hard-Link zu erstellen.
+
+: ln <zieldatei> <hardlinkname>
+
+Beispiel:
+: ln datei.txt hardlink.txt
+
+Ergebnis:
+- Beide Dateien (Original und Link) teilen denselben Inode.
+- Änderungen an einer Datei wirken sich auf die andere aus.
+
+* Soft-Links (Symbolische Links)
+- Ein Soft-Link ist eine Verknüpfung, die auf den Pfad einer Datei oder eines Verzeichnisses zeigt.
+- Soft-Links haben einen eigenen Inode und speichern den Zielpfad als Inhalt.
+- Kann über Dateisystemgrenzen hinweg verwendet werden.
+- Funktioniert nicht, wenn die Zieldatei gelöscht wird (Broken Link).
+
+** Der Befehl `ln -s` für Soft-Links
+Mit dem Befehl `ln -s` können Sie einen Soft-Link erstellen.
+
+: ln -s <zielpfad> <softlinkname>
+
+Beispiel:
+: ln -s /home/user/datei.txt softlink.txt
+
+Ergebnis:
+- `softlink.txt` verweist auf `/home/user/datei.txt`.
+- Wenn `datei.txt` gelöscht wird, zeigt der Soft-Link ins Leere.
+
+* Vergleich: Hard-Links vs. Soft-Links
+| Eigenschaft                         | Hard-Link | Soft-Link          |
+|-------------------------------------+-----------+--------------------|
+| Inode geteilt?                      | Ja        | Nein               |
+| Funktioniert bei Zieldateilöschung? | Ja        | Nein (Broken Link) |
+| Über Dateisystemgrenzen?            | Nein      | Ja                 |
+| Verzeichnisunterstützung?           | Nein      | Ja                 |
+
+* Footnotes
+
+[fn:1] Eine Inode ist ein Datensatz im Dateisystem, der alle wichtigen Informationen über eine Datei enthält, wie zum Beispiel, wo die Datei auf der Festplatte gespeichert ist. Sie beschreibt also nicht die Datei selbst, sondern ihre Metadaten und den Speicherort.

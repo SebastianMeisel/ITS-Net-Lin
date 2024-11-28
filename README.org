@@ -54,7 +54,7 @@
   - Aufgaben: Praktische Übungen mit den grundlegenden Linux-Befehlen
 
   - [[file:GrundlegendeBefehle1.pdf][Grundlegende Befehler - Teil 1 (PDF)]]
-  - [[file:Benutzerrechte.pdf][Benutzerrechte (PDF)]]
+  - [[file:Datei-Links.pdf][Hard- und Softlinks (PDF)]] 
 
 ** Grundlegende Befehle 2
 :PROPERTIES:
@@ -109,6 +109,7 @@
 :END:
   - Themen: Rechte in Linux (User, Gruppen, Verzeichnisse), Rechteverwaltung mit Symbolen und Zahlen
   - Aufgaben: Benutzerverwaltung, Rechtezuweisung, Kontrolle der Rechtevergabe
+  - [[file:Benutzerrechte.pdf][Benutzerrechte (PDF)]]
 
 ** Samba
 :PROPERTIES:
