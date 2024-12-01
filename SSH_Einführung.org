@@ -1,0 +1,97 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Installation und Nutzung von SSH
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+
+#+BEGIN_QUOTE
+Open Secure Shell (OSS) ist eine kostenlose und offene Implementierung des Secure Shell-Protokolls. Es bietet sichere Remote-Zugriff auf Ihren Server oder Arbeitsplatz, der es ermöglicht, von überall aus mit SSH-Clients wie PuTTY auf Windows zu verbinden.
+#+END_QUOTE
+
+* Open Secure Shell installieren
+:PROPERTIES:
+:ID: Install-OSS
+:END:
+
+  - System aktualisieren :: Bringen Sie zunächst die Systemquellen und das gesamte System auf den aktuellsten Stand:
+#+BEGIN_SRC bash
+sudo apt update && sudo apt full-upgrade -y
+#+END_SRC
+
+  - OSS-Paket holen :: Installieren Sie das OSS-Paket mit dem folgenden Befehl:
+#+BEGIN_SRC bash
+sudo apt install openssh-server -y
+#+END_SRC
+Das =-y= am Ende besagt, dass wir zustimmen, alle vorgeschlagenen Paket zu installieren. Ohne diese Option, müssen Sie später noch die Installation der benötigten Abhängigkeiten bestätigen.
+
+* Verbindung mit SSH von Windows aus mittels Powershell
+:PROPERTIES:
+:ID: SSH-Verbindung-Powershell
+:END:
+
+  - Powershell öffnen :: Starte die PowerShell-Anwendung auf Ihrem Windows-Rechner.
+  - Verbindung herstellen :: Geben Sie den folgenden Befehl ein, um eine Verbindung herzustellen:
+#+BEGIN_SRC powershell
+ssh username@openssh-server-ip-address -p 22
+#+END_SRC
+
+Ersetzen Sie =username= durch Ihren Benutzernamen unter Linux und =openssh-server-ip-address= durch die IP-Adresse die Linuxrechners.
+
+* Datenübertragung mit SCP
+  :PROPERTIES:
+  :ID: SCP-Übertragung
+  :END:
+
+  - SCP-Befehl :: Geben Sie den folgenden Befehl ein, um eine Datei von Ihrem lokalen Rechner auf den entfernten Server zu kopieren:
+#+BEGIN_SRC powershell
+scp C:\Path\ToLocalFile.txt username@openssh-server-ip-address:/remote/path/
+#+END_SRC
+
+Ersetzen Sie wieder =username= durch Ihren Benutzernamen unter Linux und =openssh-server-ip-address= durch die IP-Adresse die Linuxrechners.
+
+  - SCP-Befehl (Gegenrichtung) :: Um eine Datei von dem entfernten Server auf Ihren lokalen Rechner zu kopieren:
+#+BEGIN_SRC powershell
+scp username@openssh-server-ip-address:/remote/file.txt C:\Path\ToLocalFile.txt
+#+END_SRC
+
+Ersetzen Sie auch diesmal =username= durch Ihren Benutzernamen unter Linux und =openssh-server-ip-address= durch die IP-Adresse die Linuxrechners.
+
+* Verbindung mit SSH von Windows aus mittels PuTTY
+  :PROPERTIES:
+  :ID: SSH-Verbindung-PuTTY
+  :END:
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/Putty.png]]
+
+Tragen Sie …
+  1) … =username@openssh-server-ip-address= ein und ersetzen Sie dabei  =username= durch Ihren Benutzernamen unter Linux und =openssh-server-ip-address= durch die IP-Adresse die Linuxrechners.
+  2) … den Port =22= ein.
+  3) Bestätigen Sie mit =OK=.
+
+* Tipps und Fehlerbehebung
+  :PROPERTIES:
+  :ID: Tips-Fehlerbehebung
+  :END:
+
+Stellen Sie sicher, dass SSH-Verbindungen auf Ihrem OpenSecureShell-Server aktiviert sind.
+Überprüfen Sie, ob Ihr Windows-Clients die notwendigen Abhängigkeiten installiert hat (z.B. PuTTY oder OpenSSL).
+Wenn Sie Verbindungsausnahmen begegnen, überprüfen Sie Ihre Firewall-Einstellungen und stellen Sie sicher, dass Port 22 offen ist.

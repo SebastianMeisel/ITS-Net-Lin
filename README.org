@@ -91,6 +91,7 @@
 :END: 
   - Themen: SSH-Server einrichten, RSA-Verschlüsselung, TCP Handshake
   - Aufgaben: SSH-Client einrichten, Fernwartung mit SSH, Verwendung von Putty
+  - [[file:SSH_Einführung.pdf][Einführung SSH (PDF)]]
 
 ** Fortgeschrittene SSH-Techniken
 :PROPERTIES:
