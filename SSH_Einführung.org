@@ -53,17 +53,67 @@ ssh username@openssh-server-ip-address -p 22
 
 Ersetzen Sie =username= durch Ihren Benutzernamen unter Linux und =openssh-server-ip-address= durch die IP-Adresse die Linuxrechners.
 
-* Datenübertragung mit SCP
+** Config Datei
+
+Ein bequemerer Weg SSH zu nutzen, ist es für jeden Host, mit dem Sie sich verbinden wollen, einen Eintrag in der config-Datei von OSS zu machen.
+
+Dafür brauchen wir zunächst das Verzeichnis =.ssh= im Nutzer Verzeichnis. Dies erstellen wir unter Windows in der Powershell oder unter Linux in der Bash mit demselben Befehl:
+
+#+BEGIN_SRC powershell
+mkdir .ssh
+cd .ssh
+#+END_SRC
+
+Mit dem zweiten Befehl wechseln Sie in das Verzeichnis. Nun müssen wir config-Datei erstellen. Unter Windows, geht dies am einfachsten mit dem Editor. Erstellen Sie eine Datei mit folgendem Inhalt
+
+#+BEGIN_SRC config.txt
+Host Debian debian deb
+    HostName 	debian
+    User 	meinlinuxuser
+#+END_SRC
+
+Ersetzen Sie dabei =meinlinuxuser= durch Ihren Benutzernamen unter Linux.
+
+#+begin_quote
+Tipp: Deaktivieren Sie Autokorrektur im Editor.
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/Editor-01.png]]
+Klicken Sie dazu auf das Zahnrad (1) …
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/Editor-02.png]]
+und deaktivieren Sie dann die Autokorrektur.
+#+end_quote
+
+Speichern Sie nun die =Datei -> Speichern unter= im Verzeichnis =C:\Benutzer\<Nutzername>\.ssh\config.txt=.
+
+Nun müssen Sie die Datei in der Powershell kopieren:
+
+#+BEGIN_SRC powershell
+cp .\config.txt .\config
+#+END_SRC
+
+Achten Sie darauf, dass Sie im Verzeichnis =.ssh= sind.
+Nun können Sie sich mit einem der Namen, die Sie unter Host angegeben haben, per ~ssh~ mit dem Host verbinden.
+
+#+BEGIN_SRC powershell
+ssh debian
+#+END_SRC
+
+** Datenübertragung mit SCP
   :PROPERTIES:
   :ID: SCP-Übertragung
   :END:
 
   - SCP-Befehl :: Geben Sie den folgenden Befehl ein, um eine Datei von Ihrem lokalen Rechner auf den entfernten Server zu kopieren:
 #+BEGIN_SRC powershell
-scp C:\Path\ToLocalFile.txt username@openssh-server-ip-address:/remote/path/
+scp C:\Path\ToLocalFile.txt debian:/remote/path/
 #+END_SRC
 
-Ersetzen Sie wieder =username= durch Ihren Benutzernamen unter Linux und =openssh-server-ip-address= durch die IP-Adresse die Linuxrechners.
+Ersetzen Sie wieder =username= durch Ihren Benutzernamen unter Linux und =debian= durch den Hostnamen Ihres Linuxrechners, wie Sie ihn in der config-Datei definiert haben.
 
   - SCP-Befehl (Gegenrichtung) :: Um eine Datei von dem entfernten Server auf Ihren lokalen Rechner zu kopieren:
 #+BEGIN_SRC powershell
@@ -86,6 +136,8 @@ Tragen Sie …
   1) … =username@openssh-server-ip-address= ein und ersetzen Sie dabei  =username= durch Ihren Benutzernamen unter Linux und =openssh-server-ip-address= durch die IP-Adresse die Linuxrechners.
   2) … den Port =22= ein.
   3) Bestätigen Sie mit =OK=.
+
+
 
 * Tipps und Fehlerbehebung
   :PROPERTIES:
