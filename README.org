@@ -101,6 +101,7 @@
 :END:
   - Themen: SSH mit Schlüsseln, Alias für SSH-Management
   - Aufgaben: Einrichten und Verwenden von SSH-Schlüsseln und Aliases
+  - [[file:SSH-Schlüsselgenerierung.pdf][SSH-Schlüsselgenerierung (PDF)]]
 
 ** Rechteverwaltung
 :PROPERTIES:
