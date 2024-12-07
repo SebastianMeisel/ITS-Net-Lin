@@ -64,6 +64,7 @@
 :END:
   - Themen: Terminal, Kommandozeile, Paketinstallation (dpkg, apt)
   - Aufgaben: Übungen zu weiteren Linux-Kommandos
+  - [[file:Paketverwaltung.pdf][Software installieren und Verwalten mit einer Paketverwaltung (PDF)]]
 
 ** Interne Abläufe
 :PROPERTIES:
