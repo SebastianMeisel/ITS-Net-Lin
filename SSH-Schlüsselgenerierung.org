@@ -94,7 +94,7 @@
 
 * Zugriff testen
    Nach der Einrichtung kann der Zugriff mit dem neuen Schlüssel getestet werden:
-   #+BEGIN_SRC
+   #+BEGIN_SRC bash
    ssh -i ~/.ssh/<server> <benutzername>@<server>
    #+END_SRC
 
@@ -104,10 +104,10 @@
 *** Beispielkonfiguration
    Hier ein Beispiel für einen Eintrag in =~/.ssh/config=:
 
-   #+BEGIN_SRC text
+   #+BEGIN_SRC 
    Host Debian debian deb
        HostName       debian
-       User 	      benutzername
+       User           benutzername
        IdentityFile   ~/.ssh/debian
    #+END_SRC
 

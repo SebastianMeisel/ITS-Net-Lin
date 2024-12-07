@@ -66,7 +66,7 @@ cd .ssh
 
 Mit dem zweiten Befehl wechseln Sie in das Verzeichnis. Nun müssen wir config-Datei erstellen. Unter Windows, geht dies am einfachsten mit dem Editor. Erstellen Sie eine Datei mit folgendem Inhalt
 
-#+BEGIN_SRC config.txt
+#+BEGIN_SRC 
 Host Debian debian deb
     HostName 	debian
     User 	meinlinuxuser

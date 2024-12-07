@@ -1,0 +1,103 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Pipes und Text-Befehle
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+
+
+*  Pipes und Text-Befehle
+
+In Linux und anderen Unix-ähnlichen Betriebssystemen können Pipes verwendet werden, um die Ausgabe eines Befehls direkt als Eingabe für einen anderen Befehl zu nutzen. Pipes ermöglichen es, mehrere Befehle miteinander zu verketten und so komplexe Aufgaben effizient und flexibel zu lösen.
+
+** Pipes in der Praxis
+Eine Pipe wird durch das Symbol =|= dargestellt und verbindet die Ausgabe eines Befehls mit der Eingabe eines anderen. Zum Beispiel:
+
+#+BEGIN_SRC bash
+ls -l | grep "txt"
+#+END_SRC
+
+In diesem Beispiel listet der Befehl =ls -l= die Dateien im aktuellen Verzeichnis auf, und die Ausgabe wird an =grep= weitergeleitet, das nur die Zeilen mit dem Text ="txt"= anzeigt.
+
+* Wichtige Befehle
+
+- =cat= :: Der Befehl =cat= wird häufig verwendet, um den Inhalt von Dateien anzuzeigen oder mehrere Dateien zusammenzuführen. Ein einfaches Beispiel ist:
+
+#+BEGIN_SRC bash
+cat datei.txt
+#+END_SRC
+
+- =grep= :: =grep= wird verwendet, um nach einem bestimmten Muster in einer Datei oder der Ausgabe eines Befehls zu suchen. Beispiel:
+
+#+BEGIN_SRC bash
+cat datei.txt | grep "Suchbegriff"
+#+END_SRC
+
+- =sort= :: Mit =sort= können die Zeilen einer Datei oder Eingabe alphabetisch oder numerisch sortiert werden. Beispiel:
+
+#+BEGIN_SRC bash
+cat datei.txt | sort
+#+END_SRC
+
+
+** Ersetzen von Text mit =sed= 
+Der Befehl =sed= ist ein Stream-Editor, der es ermöglicht, Text in der Eingabe zu bearbeiten. Ein häufiger Anwendungsfall ist die Ersetzung von Mustern.
+  - Einmalige Ersetzung: :
+    Um ein Muster einmal zu ersetzen, verwendet man:
+    #+BEGIN_SRC bash
+    sed 's/pattern/replace/' datei.txt
+    #+END_SRC
+    Dieser Befehl ersetzt das erste Vorkommen von "pattern" mit "replace" in jeder Zeile.
+
+  - Globale Ersetzung: :
+    Mit der Option =g= kann man alle Vorkommen in einer Zeile ersetzen:
+    #+BEGIN_SRC bash
+    sed 's/pattern/replace/g' datei.txt
+    #+END_SRC
+    Dieser Befehl ersetzt jedes Vorkommen von "pattern" mit "replace" in jeder Zeile.
+
+  - Zeilen adressieren ::
+    Man kann mit =sed= auch bestimmte Zeilen ansprechen, um dort Text zu ersetzen:
+    - 1,4 :: Ersetzt in den Zeilen 1 bis 4:
+      #+BEGIN_SRC bash
+      sed '1,4s/pattern/replace/g' datei.txt
+      #+END_SRC
+    - 3,$ :: Ersetzt von Zeile 3 bis zum Ende der Datei:
+      #+BEGIN_SRC bash
+      sed '3,$s/pattern/replace/g' datei.txt
+      #+END_SRC
+    - 5,+4 :: Ersetzt in Zeile 5 und den nächsten 4 Zeilen:
+      #+BEGIN_SRC bash
+      sed '5,+4s/pattern/replace/g' datei.txt
+      #+END_SRC
+    - /pattern/,/pattern/ :: Ersetzt zwischen den Zeilen, die mit dem ersten und dem zweiten "pattern" übereinstimmen:
+      #+BEGIN_SRC bash
+      sed '/pattern1/,/pattern2/s/pattern/replace/g' datei.txt
+      #+END_SRC
+
+** Beispiel für die Verwendung von Pipes mit mehreren Befehlen
+Angenommen, wir möchten eine Datei nach einem bestimmten Muster durchsuchen, das Ergebnis sortieren und dann die Duplikate entfernen:
+
+#+BEGIN_SRC bash
+cat datei.txt | grep "Muster" | sort | uniq
+#+END_SRC
+
+Hierbei wird der Inhalt von =datei.txt= nach dem Muster "Muster" durchsucht, dann nach alphabetischer Reihenfolge sortiert und schließlich werden doppelte Zeilen entfernt.
+
+** Fazit
+Pipes und die Kombination von Befehlen wie =cat=, =grep=, =sort= und =sed= bieten leistungsstarke Möglichkeiten zur Verarbeitung von Textdaten in Linux. Durch das Erlernen und Anwenden dieser Werkzeuge kann man Daten effizient durchsuchen, filtern und bearbeiten.
