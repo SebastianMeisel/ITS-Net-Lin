@@ -1,0 +1,88 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Systembefehle
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Verzeichnisstruktur und Laufwerke
+:PROPERTIES:
+:header-args:bash: :exports results :results verbatim :dir /ssh:debian:~
+:END:
+
+Unixoide Systeme, wie Linux, verwenden eine baumartige Verzeichnisstruktur. Diese beginnt mit dem Verzeichnis =/=. Dieses Verzeichnis wird auch Root-Verzeichnis genannt. Von dort aus verzweigen sich alle weiteren Verzeichnisse.
+
+#+begin_example
+/
+├── bin -> usr/bin       # Programme des Paketmanagers für alle Benutzer.
+├── boot                 # Bootloader und Dateien für den Bootprozess.
+├── dev                  # Schnittstellen zu Geräten über Pseudo-Dateien.
+├── etc                  # Systemweite Konfigurationsdateien.
+├── home                 # Verzeichnisse der Benutzer.
+├── lib -> usr/lib       # 32-Bit-Bibliotheken.
+├── lib64 -> usr/lib64   # 64-Bit-Bibliotheken.
+├── mnt                  # Mountpoint für externe Dateisysteme.
+├── opt                  # Große Programme von Drittanbietern.
+├── proc                 # Pseudo-Dateien mit Systeminformationen.
+├── root                 # Heimatverzeichnis des Root-Benutzers.
+├── run                  # Laufzeitdateien.
+├── sbin -> usr/sbin     # Superuser-Programme des Paketmanagers.
+├── sys                  # Geräteinformationen als Pseudo-Dateien.
+├── tmp                  # Temporäre Dateien, die nach Neustart gelöscht werden.
+├── usr                  # Nicht direkt benötigte Systemkomponenten.
+└── var                  # Logs, Cache-Dateien und dynamische Inhalte.
+#+end_example
+
+Anders als bei Windows zeigt ein Verzeichnis nicht an, auf welchem Laufwerk es liegt. In Linux können Laufwerke an beliebigen Stellen in dieser Baumstruktur eingehängt werden.
+
+** =lsblk=
+Der Befehl =lsblk= listet die verfügbaren Laufwerke (Blockgeräte) und zeigt an, wo sie im Verzeichnisbaum eingehängt sind.
+
+Zum Beispiel könnte das Verzeichnis =/home= auf der zweiten Partition der ersten Festplatte (=sda6=) liegen.
+#+LATEX: \clearpage{}
+#+BEGIN_EXAMPLE
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sda    254:0    0   50G  0 disk 
+├─sda1 254:1    0  512M  0 part /boot/efi
+├─sda2 254:2    0  9.5G  0 part /
+├─sda3 254:3    0  3.5G  0 part /var
+├─sda4 254:4    0  977M  0 part [SWAP]
+├─sda5 254:5    0  680M  0 part /tmp
+└─sda6 254:6    0 34.9G  0 part /home
+sr0     11:0    1 1024M  0 rom
+#+END_EXAMPLE
+
+** =df=
+Mit dem Befehl =df= kann überprüft werden, wie viel Speicherplatz auf den Dateisystemen verfügbar oder belegt ist. Mit der Option =-h= (human-readable) werden die Ergebnisse in leicht lesbaren Größen (z. B. MiB oder GiB) angezeigt.
+
+#+begin_example
+Filesystem      Size  Used Avail Use% Mounted on
+udev            947M     0  947M   0% /dev
+tmpfs           195M  1.4M  194M   1% /run
+/dev/vda2       9.3G  4.4G  4.5G  50% /
+tmpfs           974M     0  974M   0% /dev/shm
+tmpfs           5.0M  8.0K  5.0M   1% /run/lock
+/dev/vda3       3.4G  420M  2.8G  13% /var
+/dev/vda6        35G  1.1G   32G   4% /home
+/dev/vda5       652M  124K  605M   1% /tmp
+/dev/vda1       511M  5.9M  506M   2% /boot/efi
+tmpfs           195M   80K  195M   1% /run/user/1000
+#+end_example
+
+Dabei werden auch virtuelle Dateisysteme angezeigt:
+- =tmpfs=: Temporäre Dateisysteme im RAM.
+- =udev=: Virtuelles Dateisystem für Gerätekommunikation.

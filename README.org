@@ -54,7 +54,7 @@
   - Aufgaben: Praktische Übungen mit den grundlegenden Linux-Befehlen
 
   - [[file:GrundlegendeBefehle1.pdf][Grundlegende Befehle - Teil 1 (PDF)]]
-  - [[file:Datei-Links.pdf][Hard- und Softlinks (PDF)]] 
+  - [[file:Datei-Links.pdf][Hard- und Softlinks (PDF)]]
 
 ** Grundlegende Befehle 2
 :PROPERTIES:
@@ -73,6 +73,7 @@
 :END:
   - Themen: Multitasking, Eingabe und Ausgabe, Kommando lsblk, lspci
   - Aufgaben: Erkennen von Geräten, Speicherinformationen
+  - [[file:LaufwerkeUndDateisysteme.pdf][Laufwerke und Dateisystem (PDF)]]
 
 # * Virtualisierung
 # :PROPERTIES:
