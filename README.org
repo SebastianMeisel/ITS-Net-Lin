@@ -162,7 +162,10 @@
 #   - Themen: Apache-Installation, Erstellung einer Homepage im Intranet
 #   - Aufgaben: Webserver einrichten, Seiten erstellen und anpassen
 
-**Abschluss und Projekttage**
+** Abschluss und Projekttage
   - Durchführung und Nachbesprechung einer Leistungskontrolle
   - Projekttage zur Vertiefung
 
+* Anhang - für FIAE:
+
+  - [[file:Geany.pdf][Python- und C#-IDE: Geany (PDF)]]

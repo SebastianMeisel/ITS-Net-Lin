@@ -1,0 +1,106 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Geany als IDE unter Debian
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Einführung in Geany
+:PROPERTIES:
+:header-args:bash: :results verbatim
+:END:
+
+Geany ist ein leichtgewichtiger und schneller Texteditor, der sich hervorragend für die Programmierung eignet. Mit seiner breiten Unterstützung für verschiedene Programmiersprachen, einschließlich Python und ~C#~, ist Geany eine ideale Wahl für Entwickler, die eine einfache, aber leistungsstarke IDE suchen.
+
+In dieser Anleitung zeigen wir Ihnen, wie Sie Geany unter Debian installieren und für die Entwicklung mit Python und ~C#~ konfigurieren können.
+
+** Geany installieren
+
+Geany lässt sich einfach über die Paketverwaltung von Debian installieren. Führen Sie den folgenden Befehl aus, um Geany zu installieren:
+
+#+BEGIN_SRC bash
+sudo apt update            # Wenn nicht schon vorher aufgerufen
+sudo apt install geany -y  # -y um weitere Nachfragen automatisch zu bejahen.
+#+END_SRC
+
+Nach der Installation können Sie Geany starten, indem Sie im Terminal den Befehl =geany= eingeben.
+
+** Konfiguration von Geany als Python-IDE
+
+Geany unterstützt Python nativ. Um Geany optimal für die Python-Entwicklung zu konfigurieren, gehen Sie wie folgt vor:
+
+*** Python-Interpreter einstellen:
+   Geany erkennt automatisch den Python-Interpreter, wenn Python bereits auf Ihrem System installiert ist. Um sicherzustellen, dass Geany den richtigen Interpreter verwendet, gehen Sie zu  *Bearbeiten → Einstellungen → Werkzeuge → Python* und überprüfen Sie, ob der Pfad zum Python-Interpreter korrekt ist.
+
+*** Python-Syntaxhighlighting aktivieren:
+   Standardmäßig wird Python in Geany unterstützt. Wenn Sie Python-Code schreiben, sollte Geany die Syntax automatisch hervorheben.
+
+*** Erstellen eines Python-Projekts:
+   Erstellen Sie eine neue Datei mit der Endung =.py=, um ein Python-Projekt zu starten. Geany wird automatisch das passende Syntax-Highlighting und die richtigen Tastenkürzel verwenden.
+
+***  *Ausführen von Python-Code*
+   Geany bietet eine einfache Möglichkeit, Python-Code auszuführen. Gehen Sie zu  *Werkzeuge → Befehlswerkzeuge* und klicken Sie auf "Python ausführen". Der Python-Code wird im eingebauten Terminal ausgeführt.
+
+** Konfiguration von Geany als ~C#~-IDE
+
+Für die Entwicklung mit ~C#~ unter Geany ist es notwendig, das ~.NET SDK~ und die entsprechenden Plugins zu installieren.
+
+1.  *Installation von Mono und ~.NET SDK~:*
+   Geany benötigt Mono oder das ~.NET SDK~, um ~C#~-Code auszuführen. Installieren Sie ~Mono~ mit folgendem Befehl:
+
+   #+BEGIN_SRC bash
+   sudo apt install mono-complete -y
+   #+END_SRC
+
+   Alternativ können Sie das ~.NET SDK~ installieren, wenn Sie die neueste Version von ~.NET~ verwenden möchten:
+
+   #+BEGIN_SRC bash
+   sudo apt install dotnet-sdk-7.0
+   #+END_SRC
+
+2.  ~C#~-Syntaxhighlighting aktivieren:*
+   Geany bietet von Haus aus Unterstützung für ~C#~-Syntax. Gehen Sie zu  *Bearbeiten → Einstellungen → Werkzeuge → C#*, um sicherzustellen, dass das Syntax-Highlighting und die ~C#~-spezifischen Optionen aktiviert sind.
+
+3.  *Erstellen eines ~C#~-Projekts:*
+   Erstellen Sie eine neue Datei mit der Endung =.cs=, um ein ~C#~-Projekt zu starten. Geany wird automatisch die richtige Syntaxhervorhebung anwenden.
+
+4.  *Ausführen von ~C#~-Code:*
+   Um ~C#~-Code auszuführen, gehen Sie zu  *Werkzeuge → Befehlswerkzeuge* und wählen Sie den ~C#~-Compiler aus:
+   - Bei Verwendung von ~Mono~: 
+     #+BEGIN_SRC bash
+     mcs -out:programm.exe programm.cs && mono programm.exe
+     #+END_SRC
+   - Bei Verwendung des ~.NET SDK~:
+     #+BEGIN_SRC bash
+     dotnet new console -n Programm
+     dotnet build
+     dotnet run
+     #+END_SRC
+
+   Der ~C#~-Code wird entweder mit ~Mono~ oder dem ~.NET SDK~ im Terminal ausgeführt.
+
+** Zusätzliche Plugins für Geany
+
+Geany unterstützt verschiedene Plugins, die die Funktionalität der IDE erweitern. Besonders nützlich für Python- und ~C#~-Entwicklung sind:
+-  *GeanyPy*: Ein Plugin, das Python-Skripting innerhalb von Geany ermöglicht.
+-  *Geany~C#~*: Ein ~C#~-Plugin, das zusätzliche Funktionen und das Verwalten von Projekten für ~C#~ bietet.
+
+Um Plugins zu installieren, gehen Sie zu  *Werkzeuge → Plugins* und wählen Sie die gewünschten Plugins aus.
+
+** Fazit
+
+Geany ist eine großartige IDE für die Entwicklung mit Python und ~C#~, besonders wenn Sie eine einfache und schnelle Umgebung benötigen. Die Konfiguration ist unkompliziert, und durch die Nutzung von Plugins lässt sich Geany an Ihre spezifischen Bedürfnisse anpassen. Ob für kleine Skripte oder größere Projekte – Geany ist eine leistungsfähige Lösung für Entwickler unter Debian.
