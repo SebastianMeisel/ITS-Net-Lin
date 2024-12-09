@@ -28,13 +28,17 @@ Links in Linux ermöglichen es, Dateien oder Verzeichnisse auf flexible Weise zu
 - Änderungen an der Datei sind durch alle Hard-Links sichtbar.
 - Einschränkungen: Keine Verknüpfung mit Verzeichnissen oder über Dateisystemgrenzen (Partionen) hinweg.
 
-**  Der Befehl `ln` für Hard-Links
-Der Befehl `ln` wird verwendet, um einen Hard-Link zu erstellen.
+**  Der Befehl =ln= für Hard-Links
+Der Befehl =ln= wird verwendet, um einen Hard-Link zu erstellen.
 
-: ln <zieldatei> <hardlinkname>
+#+BEGIN_SRC bash
+  ln <zieldatei> <hardlinkname>
+#+END_SRC
 
 Beispiel:
-: ln datei.txt hardlink.txt
+#+BEGIN_SRC bash
+  ln datei.txt hardlink.txt
+#+END_SRC
 
 Ergebnis:
 - Beide Dateien (Original und Link) teilen denselben Inode.
@@ -46,17 +50,24 @@ Ergebnis:
 - Kann über Dateisystemgrenzen hinweg verwendet werden.
 - Funktioniert nicht, wenn die Zieldatei gelöscht wird (Broken Link).
 
-** Der Befehl `ln -s` für Soft-Links
-Mit dem Befehl `ln -s` können Sie einen Soft-Link erstellen.
+** Der Befehl =ln -s= für Soft-Links
+Mit dem Befehl =ln -s= können Sie einen Soft-Link erstellen.
 
-: ln -s <zielpfad> <softlinkname>
+#+BEGIN_SRC bash
+ ln -s <zielpfad> <softlinkname>
+#+END_SRC
+
+
 
 Beispiel:
-: ln -s /home/user/datei.txt softlink.txt
+#+BEGIN_SRC bash
+ ln -s /home/user/datei.txt softlink.txt
+#+END_SRC
+
 
 Ergebnis:
-- `softlink.txt` verweist auf `/home/user/datei.txt`.
-- Wenn `datei.txt` gelöscht wird, zeigt der Soft-Link ins Leere.
+- =softlink.txt= verweist auf =/home/user/datei.txt=.
+- Wenn =datei.txt= gelöscht wird, zeigt der Soft-Link ins Leere.
 
 * Vergleich: Hard-Links vs. Soft-Links
 | Eigenschaft                         | Hard-Link | Soft-Link          |

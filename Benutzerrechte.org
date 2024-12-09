@@ -59,7 +59,10 @@ Wenn man beim symbolischen Ansatz statt =+= ein =–= benutzt, können damit Rec
 * 3. Verwaltung von Benutzern
 ** =useradd=
 Mit =useradd= wird ein neuer Benutzer erstellt:
-: useradd  <optionen> <benutzername>
+#+BEGIN_SRC bash
+ useradd  <optionen> <benutzername>
+#+END_SRC
+
 
 Optionen:
 - =-m=: Erstellt ein Home-Verzeichnis.
@@ -68,7 +71,10 @@ Optionen:
 
 ** =usermod=
 =usermod= dient zur Änderung von Benutzereigenschaften:
-: usermod <optionen> <benutzername>
+#+BEGIN_SRC bash
+ usermod <optionen> <benutzername>
+#+END_SRC
+
 
 Optionen:
 - =-G=: Gruppen ändern.
@@ -78,14 +84,20 @@ Optionen:
 * 4. Verwaltung von Gruppen
 ** =groupadd=
 Erstellt eine neue Gruppe:
-: groupadd <optionen> <gruppenname>
+#+BEGIN_SRC bash
+ groupadd <optionen> <gruppenname>
+#+END_SRC
+
 
 Optionen:
 - =-g <GID>=: Setzt die Gruppen-ID.
 
 ** =groupmod=
 Modifiziert bestehende Gruppen:
-: groupmod <optionen> <gruppenname>
+#+BEGIN_SRC bash
+ groupmod <optionen> <gruppenname>
+#+END_SRC
+
 
 Optionen:
 - =-n=: Ändert den Gruppennamen.
