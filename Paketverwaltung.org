@@ -48,6 +48,10 @@ In Debian (und auch in Ubuntu) wird die Paketverwaltung mit dem Tool =apt= durch
 *** Wichtige Befehle
 Hier sind einige der grundlegenden Befehle zur Verwendung von APT:
 
+#+BEGIN_QUOTE
+Wichtig: Die folgenden Befehle benötigen Root-Rechte. Dafür wird der =sudo=-Befehl genutzt. Um diesen nutzen zu dürfen, müssen Sie Mitglied der =sudoer=-Nutzer-Gruppe sein. Folgen sie dazu der Anleitung unter [[file:SuperUser.pdf][SuperUser.pdf]].
+#+END_QUOTE
+
 **** System aktualisieren
   Um alle installierten Pakete (Programme und Systemkomponenten) auf den neuesten Stand zu bringen, verwendet man:
   #+BEGIN_SRC bash

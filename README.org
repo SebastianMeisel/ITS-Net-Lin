@@ -115,6 +115,7 @@
   - Themen: Rechte in Linux (User, Gruppen, Verzeichnisse), Rechteverwaltung mit Symbolen und Zahlen
   - Aufgaben: Benutzerverwaltung, Rechtezuweisung, Kontrolle der Rechtevergabe
   - [[file:Benutzerrechte.pdf][Benutzerrechte (PDF)]]
+  - [[file:SuperUser.pdf][Super-User-Rechte (root) (PDF)]]
 
 ** Samba
 :PROPERTIES:

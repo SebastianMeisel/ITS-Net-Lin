@@ -1,0 +1,97 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Root-Rechte
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Einführung in Root-Rechte
+Unter Linux werden administrative Aufgaben durch den sogenannten *Root-Benutzer* ausgeführt. Dieser Benutzer verfügt über uneingeschränkte Rechte und kann das gesamte System verändern. Es ist daher wichtig, Root-Rechte mit Vorsicht einzusetzen, um unbeabsichtigte Änderungen oder Schäden am System zu vermeiden.
+
+Root-Rechte werden in der Regel nur für Systemverwaltung und Konfigurationsaufgaben benötigt, z. B.:
+- Installation von Software,
+- Bearbeitung systemweiter Konfigurationsdateien,
+- Verwaltung von Benutzerkonten und Berechtigungen.
+
+** Verwendung von =su= und =su -=
+Der Befehl =su= ermöglicht es Ihnen, zum Root-Benutzer zu wechseln oder sich als ein anderer Benutzer anzumelden.
+
+*** =su=: Wechsel zum Root-Benutzer
+   - Mit dem Befehl =su= wechseln Sie in die Root-Sitzung:
+     #+BEGIN_SRC bash
+     su
+     #+END_SRC
+   - Sie müssen das Passwort des Root-Benutzers eingeben.
+   - Nach dem Wechsel arbeiten Sie mit den Berechtigungen des Root-Benutzers, behalten aber die Umgebungsvariablen Ihrer ursprünglichen Sitzung.
+
+*** =su -=: Wechsel zur vollständigen Root-Umgebung
+   - Mit =su -= wechseln Sie nicht nur zum Root-Benutzer, sondern übernehmen auch dessen Umgebungsvariablen (z. B. =PATH=, =HOME=):
+     #+BEGIN_SRC bash
+     su -
+     #+END_SRC
+   - Dies ist besonders nützlich, wenn Sie Programme verwenden möchten, die speziell für den Root-Benutzer konfiguriert sind.
+
+** Verwendung von =sudo=
+Der Befehl =sudo= erlaubt es Ihnen, einzelne Befehle mit Root-Rechten auszuführen, ohne die Sitzung zu wechseln.
+
+1. *Ein Befehl mit Root-Rechten:*
+   - Mit =sudo= führen Sie einen einzelnen Befehl aus:
+     #+BEGIN_SRC bash
+     sudo apt update
+     #+END_SRC
+   - Nach der Eingabe Ihres eigenen Passworts werden Root-Rechte für diesen Befehl gewährt.
+
+2. *Vorteile von =sudo=:*
+   - Sie behalten Ihre normale Benutzerumgebung.
+   - Es ist sicherer, da Root-Rechte nur temporär und für spezifische Befehle gewährt werden.
+
+** Der Benutzer der =sudo=-Gruppe beitreten
+Nur Benutzer, die der Gruppe =sudo= (oder =wheel=, je nach Distribution) angehören, können den Befehl =sudo= verwenden. Falls Ihr Benutzerkonto noch keine Root-Rechte hat, können Sie sich selbst der =sudo=-Gruppe hinzufügen, wenn Sie Root-Zugang besitzen.
+
+1. *Hinzufügen zur Gruppe mit =usermod=:*
+   - Wechseln Sie in die Root-Sitzung:
+     #+BEGIN_SRC bash
+     su -
+     #+END_SRC
+   - Fügen Sie den Benutzer der =sudo=-Gruppe hinzu:
+     #+BEGIN_SRC bash
+     usermod -aG sudo BENUTZERNAME
+     #+END_SRC
+   - Ersetzen Sie =BENUTZERNAME= durch Ihren Benutzernamen.
+
+2. *Aktualisierung der Gruppenmitgliedschaft mit =newgrp=:*
+   - Um die Änderungen sofort anzuwenden, ohne sich abzumelden, verwenden Sie:
+     #+BEGIN_SRC bash
+     newgrp sudo
+     #+END_SRC
+
+** Gruppenmitgliedschaft überprüfen
+Um zu prüfen, ob Sie nun zur =sudo=-Gruppe gehören, führen Sie den folgenden Befehl aus:
+#+BEGIN_SRC bash
+groups
+#+END_SRC
+
+Der Name =sudo= sollte in der Liste der Gruppen erscheinen.
+
+** Zusammenfassung
+- =su= :: Wechseln Sie in eine Root-Sitzung.
+- =su -= :: Wechseln Sie in die vollständige Root-Umgebung.
+- =sudo= :: Führen Sie einzelne Befehle mit Root-Rechten aus.
+- =usermod= :: Fügen Sie Ihren Benutzer der =sudo=-Gruppe hinzu.
+- =newgrp= :: Aktivieren Sie Gruppenänderungen ohne Abmeldung.
+
+Mit diesen Befehlen können Sie Root-Rechte effizient und sicher verwalten.
