@@ -105,6 +105,27 @@ Der Befehl =sed= ist ein Stream-Editor, der es ermöglicht, Text in der Eingabe 
       sed '/pattern1/,/pattern2/s/pattern/replace/g' datei.txt
       #+END_SRC
 
+Eine weitergehende Einführung bietet mein Tool [[https://github.com/SebastianMeisel/sedtutor/blob/main/sedtutor][sedtutor]]. Dieses können Sie unter Windows herunterladen und dann wie folgt auf die Linux-VM transportieren:
+
+#+BEGIN_SRC powershell
+     cd ~\Downloads
+     scp sedtutor.txt debian:~/sedtutor
+#+END_SRC
+
+In der Linux-VM müssen Sie nun im Terminal die Ausführungsrechte für Ihren Nutzer setzen:
+
+#+BEGIN_SRC bash
+     chmod u+x sedtutor
+#+END_SRC
+
+Nun können Sie das Skript wie folgt ausführen:
+
+#+BEGIN_SRC bash
+    ./sedtutor
+#+END_SRC
+
+Folgen Sie den Anweisungen. Mit ~[Q]~ können Sie das Skript jederzeit beenden um später fortzusetzen.
+
 ** Beispiel für die Verwendung von Pipes mit mehreren Befehlen
 Angenommen, wir möchten eine Datei nach einem bestimmten Muster durchsuchen, das Ergebnis sortieren und dann die Duplikate entfernen:
 
