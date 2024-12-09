@@ -54,6 +54,21 @@ cat datei.txt | grep "Suchbegriff"
 cat datei.txt | sort
 #+END_SRC
 
+** Verwendung von =more= und =less=
+
+Die Befehle =more= und =less= ermöglichen das schrittweise Anzeigen von Inhalten, insbesondere bei langen Texten, die nicht vollständig in das Terminal passen.
+
+- **=more=:** Der Befehl =more= zeigt den Inhalt einer Datei seitenweise an. Mit der Leertaste kann man zur nächsten Seite wechseln, und mit der Taste =q= beendet man die Anzeige. Beispiel:
+  #+BEGIN_SRC bash
+  more datei.txt
+  #+END_SRC
+
+- **=less=:** =less= ist eine erweiterte Version von =more= und bietet zusätzliche Navigationsmöglichkeiten. Mit den Pfeiltasten oder der Bildlauf-Funktion kann man vor- und zurückscrollen. Mit =q= beendet man auch hier die Ansicht. Beispiel:
+  #+BEGIN_SRC bash
+  less datei.txt
+  #+END_SRC
+
+=less= ist besonders nützlich, da es den gesamten Inhalt vorab lädt, was die Navigation in sehr großen Dateien erleichtert.
 
 ** Ersetzen von Text mit =sed= 
 Der Befehl =sed= ist ein Stream-Editor, der es ermöglicht, Text in der Eingabe zu bearbeiten. Ein häufiger Anwendungsfall ist die Ersetzung von Mustern.
@@ -62,14 +77,14 @@ Der Befehl =sed= ist ein Stream-Editor, der es ermöglicht, Text in der Eingabe 
     #+BEGIN_SRC bash
     sed 's/pattern/replace/' datei.txt
     #+END_SRC
-    Dieser Befehl ersetzt das erste Vorkommen von "pattern" mit "replace" in jeder Zeile.
+    Dieser Befehl ersetzt das erste Vorkommen von ,pattern' mit ,replace' in jeder Zeile.
 
   - Globale Ersetzung: :
     Mit der Option =g= kann man alle Vorkommen in einer Zeile ersetzen:
     #+BEGIN_SRC bash
     sed 's/pattern/replace/g' datei.txt
     #+END_SRC
-    Dieser Befehl ersetzt jedes Vorkommen von "pattern" mit "replace" in jeder Zeile.
+    Dieser Befehl ersetzt jedes Vorkommen von ,pattern' mit ,replace' in jeder Zeile.
 
   - Zeilen adressieren ::
     Man kann mit =sed= auch bestimmte Zeilen ansprechen, um dort Text zu ersetzen:
@@ -85,7 +100,7 @@ Der Befehl =sed= ist ein Stream-Editor, der es ermöglicht, Text in der Eingabe 
       #+BEGIN_SRC bash
       sed '5,+4s/pattern/replace/g' datei.txt
       #+END_SRC
-    - /pattern/,/pattern/ :: Ersetzt zwischen den Zeilen, die mit dem ersten und dem zweiten "pattern" übereinstimmen:
+    - /pattern/,/pattern/ :: Ersetzt zwischen den Zeilen, die mit dem ersten und dem zweiten ,pattern' übereinstimmen:
       #+BEGIN_SRC bash
       sed '/pattern1/,/pattern2/s/pattern/replace/g' datei.txt
       #+END_SRC
@@ -94,10 +109,10 @@ Der Befehl =sed= ist ein Stream-Editor, der es ermöglicht, Text in der Eingabe 
 Angenommen, wir möchten eine Datei nach einem bestimmten Muster durchsuchen, das Ergebnis sortieren und dann die Duplikate entfernen:
 
 #+BEGIN_SRC bash
-cat datei.txt | grep "Muster" | sort | uniq
+cat datei.txt | grep ,Muster' | sort | uniq
 #+END_SRC
 
-Hierbei wird der Inhalt von =datei.txt= nach dem Muster "Muster" durchsucht, dann nach alphabetischer Reihenfolge sortiert und schließlich werden doppelte Zeilen entfernt.
+Hierbei wird der Inhalt von =datei.txt= nach dem Muster ,Muster' durchsucht, dann nach alphabetischer Reihenfolge sortiert und schließlich werden doppelte Zeilen entfernt.
 
 ** Fazit
 Pipes und die Kombination von Befehlen wie =cat=, =grep=, =sort= und =sed= bieten leistungsstarke Möglichkeiten zur Verarbeitung von Textdaten in Linux. Durch das Erlernen und Anwenden dieser Werkzeuge kann man Daten effizient durchsuchen, filtern und bearbeiten.
