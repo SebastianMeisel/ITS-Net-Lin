@@ -21,13 +21,13 @@
 
 * Einführung
 
-Der SSH-Server wird in der Datei =/etc/ssh/sshd_config= konfiguriert. Dies ist eine einfache Textdatei. Zeilen die mit einer Raute (=#=) beginnen sind auskommentiert, d. h. sie werden nicht eingelesen.
+Der SSH-Server wird in der Datei =/etc/ssh/sshd_config= konfiguriert. Dies ist eine einfache Textdatei. Zeilen, die mit einer Raute (=#=) beginnen, sind auskommentiert, d. h., sie werden nicht eingelesen.
 
-Hier stelle ich eine einfache Konfiguration vor, die einen sicheren SSH-Server konfiguriert:
+Hier stelle ich eine einfache Konfiguration vor, die einen sicheren SSH-Server einrichtet:
 
 ** Weitere Einstellungen in =/etc/ssh/sshd_config.d/= erlauben
 
-Mit dieser Zeilen wird erreicht, dass Dateien im Unterverzeichnis =/etc/ssh/sshd_config.d/= liegen und auf =.conf= enden, weitere Einstellung enthalten dürfen. So kann man die Konfiguration aufteilen und übersichtlicher gestalten:
+Mit dieser Zeile wird ermöglicht, dass zusätzliche Dateien im Unterverzeichnis =/etc/ssh/sshd_config.d/= mit der Endung =.conf= weitere Konfigurationsoptionen enthalten können. So bleibt die Konfiguration übersichtlich:
 
 #+BEGIN_SRC sshd_config :tangle sshd_config
 Include /etc/ssh/sshd_config.d/*.conf
@@ -35,41 +35,41 @@ Include /etc/ssh/sshd_config.d/*.conf
 
 ** Port ändern
 
-SSH lauscht normalerweise auf Port 22, dies kann man ändern. Allerdings ist der Gewinn an Sicherheit dadurch sehr gering.
+SSH lauscht standardmäßig auf Port 22. Dies kann geändert werden, jedoch bringt dies nur geringen Sicherheitsgewinn:
 
 #+BEGIN_SRC sshd_config :tangle sshd_config
 Port 2222
 #+END_SRC
 
-Wenn man diese Einstellung vornimmt muss zudem die Datei =~/.ssh/config= auf dem Client angepasst werden:
+Wenn diese Einstellung vorgenommen wird, muss zudem die Datei =~/.ssh/config= auf dem Client angepasst werden:
 
 #+BEGIN_SRC 
 Host Debian debian deb
     HostName       debian
-    Port           2222              # Neue Zeile!
+    Port           2222              # Angepasster Port!
     UserName       <benutzername>
-    IdentityFile   ~/.ssh/config
+    IdentityFile   ~/.ssh/<key-file>  # Pfad zur Schlüsseldatei
 #+END_SRC
 
+=<benutername>= und <key-file> müssen hier natürlich angepasst werden.
 
 * Authentifizierung
 
-Es gibt eine Reihe von Optionen, die bestimmen, wie Benutzer sich auf einem SSH-Server anmelden können.
-Die Authentifizierung durch einen öffentlichen Schlüssel (public key) ist sicher. Darum sollte man diese Erlauben und die durch Passwort-Eingabe verbieten.
+Es gibt eine Reihe von Optionen, die bestimmen, wie Benutzer sich auf einem SSH-Server anmelden können. Die Authentifizierung mittels öffentlichem Schlüssel (public key) ist sicher. Daher sollte diese erlaubt und die Anmeldung per Passwort verboten werden:
 
 #+BEGIN_SRC sshd_config :tangle sshd_config
 PubkeyAuthentication yes
-PasswordAuthentication yes
+PasswordAuthentication no
 PermitEmptyPasswords no
 #+END_SRC
 
-Zudem sollte die interaktive Anmeldung per Tastatur verboten werden:
+Zudem sollte die interaktive Anmeldung per Tastatur deaktiviert werden:
 
 #+BEGIN_SRC sshd_config :tangle sshd_config
 KbdInteractiveAuthentication no
 #+END_SRC
 
-Auf Linux-Systemen sollte immer Standard-Anmeldemechanismus ~PAM~ genutzt werden.
+Auf Linux-Systemen sollte immer der Standard-Anmeldemechanismus ~PAM~ genutzt werden:
 
 #+BEGIN_SRC sshd_config :tangle sshd_config
 UsePAM yes
@@ -77,22 +77,21 @@ UsePAM yes
 
 ** Weitere sinnvolle Einstellungen
 
-Sie sollten erlauben, dass die Spracheinstellungen des Clients durch Umgebungsvariablen an den Server übermittelt werden:
+Die Spracheinstellungen des Clients sollten durch Umgebungsvariablen an den Server übermittelt werden können:
 
 #+BEGIN_SRC sshd_config :tangle sshd_config
 AcceptEnv LANG LC_*
 #+END_SRC
 
-Außerdem sollte das sftp-Subsystem aktiviert werden, sodass man z. B. =scp= nutzen kann:
+Das SFTP-Subsystem sollte aktiviert sein, um Dateiübertragungen wie mit =scp= zu ermöglichen:
 
 #+BEGIN_SRC sshd_config :tangle sshd_config
 Subsystem	sftp	/usr/lib/openssh/sftp-server
 #+END_SRC
 
-
 * Hashing und Verschlüsselungsalgorithmen
 
-SSH unterstützt verschiedene Verlüsselungsalgorithmen, nicht alle sind gleich sicher. Die folgende Konfiguration erlaubt nur die stärksten Algorithmen:
+SSH unterstützt verschiedene Verschlüsselungsalgorithmen. Die folgende Konfiguration erlaubt nur die sichersten Algorithmen:
 
 #+BEGIN_SRC sshd_config :tangle sshd_config
 # KEX-(Key Exchange)-Algorithmen zum Schlüsselaustausch
