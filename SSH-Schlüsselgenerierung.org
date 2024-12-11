@@ -122,6 +122,14 @@
      #+BEGIN_SRC bash
      ssh deb
      #+END_SRC
+
+Dies ist dasselbe, wie (ohne =.ssh/config=):
+
+#+BEGIN_SRC bash
+     ssh -i ~/.ssh/debian benutzername@debian
+#+END_SRC
+
+
      - Flexibilität :: Man kann mehrere Server mit unterschiedlichen Schlüsseln und Einstellungen verwalten.
 
 *** Konfiguration testen

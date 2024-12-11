@@ -1,0 +1,107 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: SSH-Server-Konfiguration
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Einführung
+
+Der SSH-Server wird in der Datei =/etc/ssh/sshd_config= konfiguriert. Dies ist eine einfache Textdatei. Zeilen die mit einer Raute (=#=) beginnen sind auskommentiert, d. h. sie werden nicht eingelesen.
+
+Hier stelle ich eine einfache Konfiguration vor, die einen sicheren SSH-Server konfiguriert:
+
+** Weitere Einstellungen in =/etc/ssh/sshd_config.d/= erlauben
+
+Mit dieser Zeilen wird erreicht, dass Dateien im Unterverzeichnis =/etc/ssh/sshd_config.d/= liegen und auf =.conf= enden, weitere Einstellung enthalten dürfen. So kann man die Konfiguration aufteilen und übersichtlicher gestalten:
+
+#+BEGIN_SRC sshd_config :tangle sshd_config
+Include /etc/ssh/sshd_config.d/*.conf
+#+END_SRC
+
+** Port ändern
+
+SSH lauscht normalerweise auf Port 22, dies kann man ändern. Allerdings ist der Gewinn an Sicherheit dadurch sehr gering.
+
+#+BEGIN_SRC sshd_config :tangle sshd_config
+Port 2222
+#+END_SRC
+
+Wenn man diese Einstellung vornimmt muss zudem die Datei =~/.ssh/config= auf dem Client angepasst werden:
+
+#+BEGIN_SRC 
+Host Debian debian deb
+    HostName       debian
+    Port           2222              # Neue Zeile!
+    UserName       <benutzername>
+    IdentityFile   ~/.ssh/config
+#+END_SRC
+
+
+* Authentifizierung
+
+Es gibt eine Reihe von Optionen, die bestimmen, wie Benutzer sich auf einem SSH-Server anmelden können.
+Die Authentifizierung durch einen öffentlichen Schlüssel (public key) ist sicher. Darum sollte man diese Erlauben und die durch Passwort-Eingabe verbieten.
+
+#+BEGIN_SRC sshd_config :tangle sshd_config
+PubkeyAuthentication yes
+PasswordAuthentication yes
+PermitEmptyPasswords no
+#+END_SRC
+
+Zudem sollte die interaktive Anmeldung per Tastatur verboten werden:
+
+#+BEGIN_SRC sshd_config :tangle sshd_config
+KbdInteractiveAuthentication no
+#+END_SRC
+
+Auf Linux-Systemen sollte immer Standard-Anmeldemechanismus ~PAM~ genutzt werden.
+
+#+BEGIN_SRC sshd_config :tangle sshd_config
+UsePAM yes
+#+END_SRC
+
+** Weitere sinnvolle Einstellungen
+
+Sie sollten erlauben, dass die Spracheinstellungen des Clients durch Umgebungsvariablen an den Server übermittelt werden:
+
+#+BEGIN_SRC sshd_config :tangle sshd_config
+AcceptEnv LANG LC_*
+#+END_SRC
+
+Außerdem sollte das sftp-Subsystem aktiviert werden, sodass man z. B. =scp= nutzen kann:
+
+#+BEGIN_SRC sshd_config :tangle sshd_config
+Subsystem	sftp	/usr/lib/openssh/sftp-server
+#+END_SRC
+
+
+* Hashing und Verschlüsselungsalgorithmen
+
+SSH unterstützt verschiedene Verlüsselungsalgorithmen, nicht alle sind gleich sicher. Die folgende Konfiguration erlaubt nur die stärksten Algorithmen:
+
+#+BEGIN_SRC sshd_config :tangle sshd_config
+# KEX-(Key Exchange)-Algorithmen zum Schlüsselaustausch
+KexAlgorithms curve25519-sha256@libssh.org,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256
+ 
+# Verschlüsselungsalgorithmen
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+ 
+# MAC-(message authentication code)-Algorithmen 
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
+#+END_SRC
+

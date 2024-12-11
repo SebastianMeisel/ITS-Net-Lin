@@ -77,14 +77,14 @@
   - Aufgaben: Erkennen von Geräten, Speicherinformationen
   - [[file:LaufwerkeUndDateisysteme.pdf][Laufwerke und Dateisystem (PDF)]]
 
-# * Virtualisierung
-# :PROPERTIES:
-# :Theorie: 4
-# :Praxis: 4
-# :Optional: t
-# :END: 
-#   - Themen: Virtualisierungstechniken, Hypervisor Grundlagen
-#   - Aufgaben: Virtualisierungsgrundlagen, Unterschiede zwischen Desktop- und Netzwerkvirtualisierung
+* Virtualisierung
+:PROPERTIES:
+:Theorie: 4
+:Praxis: 4
+:Optional: t
+:END: 
+  - Themen: Virtualisierungstechniken, Hypervisor Grundlagen
+  - Aufgaben: Virtualisierungsgrundlagen, Unterschiede zwischen Desktop- und Netzwerkvirtualisierung
 
 ** SSH
 :PROPERTIES:
@@ -105,6 +105,8 @@
   - Themen: SSH mit Schlüsseln, Alias für SSH-Management
   - Aufgaben: Einrichten und Verwenden von SSH-Schlüsseln und Aliases
   - [[file:SSH-Schlüsselgenerierung.pdf][SSH-Schlüsselgenerierung (PDF)]]
+  - [[file:sshd_conf.pdf][SSH-Server-Konfiguration (PDF)]]
+  - [[file:sshd_config][SSH-Server-Konfigurations-Datei (text)]]
 
 ** Rechteverwaltung
 :PROPERTIES:
@@ -135,14 +137,14 @@
   - Themen: Backup-Strategien, cronjobs, Sicherungsprogramme
   - Aufgaben: Backups planen und durchführen, Verwendung von find für Sicherungen
 
-# * Skripte erstellen
-# :PROPERTIES:
-# :Theorie: 8
-# :Praxis: 8
-# :Optional: t
-# :END: 
-#   - Themen: Bash-Skripte, Variablen, Schleifen, if-else-Anweisungen
-#   - Aufgaben: Skripte zur Automatisierung von Aufgaben, Beispiel: Benutzer anlegen, Cronjobs einrichten
+** Skripte erstellen
+:PROPERTIES:
+:Theorie: 8
+:Praxis: 8
+:Optional: t
+:END: 
+  - Themen: Bash-Skripte, Variablen, Schleifen, if-else-Anweisungen
+  - Aufgaben: Skripte zur Automatisierung von Aufgaben, Beispiel: Benutzer anlegen, Cronjobs einrichten
 
 ** Firewall
 :PROPERTIES:
@@ -153,15 +155,15 @@
   - Themen: Linux-Firewalls, iptables, ufw
   - Aufgaben: Firewall für SSH und Samba einrichten
 
-# * Apache-Web-Server im Intranet
-# :PROPERTIES:
-# :Theorie: 2
-# :Praxis: 2
-# :Optional: t
-# :END:
-  
-#   - Themen: Apache-Installation, Erstellung einer Homepage im Intranet
-#   - Aufgaben: Webserver einrichten, Seiten erstellen und anpassen
+** Apache-Web-Server im Intranet
+:PROPERTIES:
+:Theorie: 2
+:Praxis: 2
+:Optional: t
+:END:
+
+  - Themen: Apache-Installation, Erstellung einer Homepage im Intranet
+  - Aufgaben: Webserver einrichten, Seiten erstellen und anpassen
 
 ** Abschluss und Projekttage
   - Durchführung und Nachbesprechung einer Leistungskontrolle
