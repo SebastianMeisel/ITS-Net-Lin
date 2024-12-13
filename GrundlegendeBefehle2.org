@@ -15,7 +15,7 @@
 #+OPTIONS: timestamp:nil toc:nil num:nil
 :END:
 
-#+TITLE: Pipes und Text-Befehle
+#+TITLE: Pipes, Umleitungen und Text-Befehle
 #+SUBTITLE: ITS-Net-Lin
 #+AUTHOR: Sebastian Meisel
 
@@ -32,7 +32,70 @@ Eine Pipe wird durch das Symbol =|= dargestellt und verbindet die Ausgabe eines 
 ls -l | grep "txt"
 #+END_SRC
 
-In diesem Beispiel listet der Befehl =ls -l= die Dateien im aktuellen Verzeichnis auf, und die Ausgabe wird an =grep= weitergeleitet, das nur die Zeilen mit dem Text ="txt"= anzeigt.
+In diesem Beispiel listet der Befehl =ls -l= die Dateien im aktuellen Verzeichnis auf, und die Ausgabe wird an =grep= weitergeleitet, das nur die Zeilen mit dem Text ="txt"= anzeigt. 
+
+* Umleitungen (Redirections)
+** =|&=
+Diese Umleitung kombiniert Standardausgabe (stdout) und Standardfehlerausgabe (stderr) und leitet beide in denselben Zielstrom um. 
+Beispiel:
+#+BEGIN_SRC bash
+find / -name test |& less
+#+END_SRC
+
+** =<=
+Mit dieser Umleitung wird eine Datei oder ein Datenstrom als Eingabe für einen Befehl verwendet.
+Beispiel:
+#+BEGIN_SRC bash
+cat < input.txt
+#+END_SRC
+
+Das hat denselben Effekt wie =cat input.txt= (ohne Umleitung), funktioniert aber auch dann, wenn der Befehl keine Dateien lesen kann.
+
+** =<<<=
+Hierbei handelt es sich um eine sogenannte „Here-String“-Umleitung, bei der ein String direkt als Eingabe an einen Befehl übergeben wird.
+Beispiel:
+#+BEGIN_SRC bash
+grep 'pattern' <<< "This is a test string"
+#+END_SRC
+
+Das ist im Prinzip das Gegenteil von =<=: Ich kann damit einen String an einen Befehl übergeben, der eine Datei als Eingabe erwartet.
+
+** =>=
+Diese Umleitung schreibt die Standardausgabe (stdout) in eine Datei oder einen anderen Zielstrom (meist in eine Datei).
+Beispiel:
+#+BEGIN_SRC bash
+ls > output.txt
+#+END_SRC
+
+** =>>=
+Dies hängt die Ausgabe eines Befehls an das Ende einer Datei an, anstatt sie zu überschreiben.
+Beispiel:
+#+BEGIN_SRC bash
+ls >> output.log
+#+END_SRC
+
+** =2>=
+Diese Umleitung schreibt ausschließlich die Standardfehlerausgabe (stderr) in eine Datei oder einen Zielstrom.
+Beispiel:
+#+BEGIN_SRC bash
+find / -name test 2> error.log
+#+END_SRC
+
+** =2>&1=
+Mit dieser Umleitung wird stderr auf stdout umgeleitet, sodass beide Ausgaben kombiniert werden können.
+Beispiel:
+#+BEGIN_SRC bash
+find / -name test 2>&1 | tee combined.log
+#+END_SRC
+
+** =&>=
+
+Diese Umleitung macht genau dasselbe wie =2>&1=, nur in einer kürzeren Form - funktioniert aber nur in Bash und Zsh, aber in vielen anderen Shells nicht.
+
+#+BEGIN_SRC bash
+command >& output.log
+#+END_SRC
+
 
 * Wichtige Befehle
 
@@ -130,7 +193,7 @@ Folgen Sie den Anweisungen. Mit ~[Q]~ können Sie das Skript jederzeit beenden u
 Angenommen, wir möchten eine Datei nach einem bestimmten Muster durchsuchen, das Ergebnis sortieren und dann die Duplikate entfernen:
 
 #+BEGIN_SRC bash
-cat datei.txt | grep ,Muster' | sort | uniq
+cat datei.txt | grep 'Muster' | sort | uniq
 #+END_SRC
 
 Hierbei wird der Inhalt von =datei.txt= nach dem Muster ,Muster' durchsucht, dann nach alphabetischer Reihenfolge sortiert und schließlich werden doppelte Zeilen entfernt.

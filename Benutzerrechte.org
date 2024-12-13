@@ -41,6 +41,12 @@ Hier hat:
 - Andere :: Nur Lese- (~r~) aber *keine* Schreib (~–~) oder Ausführungs- (~–~) ~rechte.
 
 * 2. Der Befehl =chmod=
+
+#+begin_quote
+- !!Wichtig!! :: Die folgenden Befehel können nur von einem Benutzer mit administrativen Rechten (z. B. root) ausgeführt werden.
+- Verzeichnisse und Dateien, die zu kritischen Systemkomponenten gehören, sollten sorgfältig verwaltet werden, um Fehlfunktionen zu vermeiden. Nutzen Sie =sudo=
+#+end_quote
+
 Mit =chmod= können Rechte für Dateien und Verzeichnisse geändert werden. Es gibt zwei Methoden:
 - Symbolisch :: Rechte werden durch Symbole geändert.
   - Beispiel :: =chmod u+rwx,g+r,o-rw datei.txt=
@@ -65,9 +71,9 @@ Mit =useradd= wird ein neuer Benutzer erstellt:
 
 
 Optionen:
-- =-m=: Erstellt ein Home-Verzeichnis.
-- =-s=: Setzt die Standard-Shell (z. B. =/bin/bash=).
-- =-G=: Fügt den Benutzer zu Gruppen hinzu (z. B. =sudo=).
+- =-m= :: Erstellt ein Home-Verzeichnis.
+- =-s= :: Setzt die Standard-Shell (z. B. =/bin/bash=).
+- =-G= :: Fügt den Benutzer zu Gruppen hinzu (z. B. =sudo=).
 
 ** =usermod=
 =usermod= dient zur Änderung von Benutzereigenschaften:
@@ -77,9 +83,9 @@ Optionen:
 
 
 Optionen:
-- =-G=: Gruppen ändern.
-- =-L=: Benutzer sperren.
-- =-U=: Benutzer entsperren.
+- =-G= :: Gruppen ändern.
+- =-L= :: Benutzer sperren.
+- =-U= :: Benutzer entsperren.
 
 * 4. Verwaltung von Gruppen
 ** =groupadd=
@@ -90,7 +96,8 @@ Erstellt eine neue Gruppe:
 
 
 Optionen:
-- =-g <GID>=: Setzt die Gruppen-ID.
+- =-g <GID>= :: Setzt die Gruppen-ID.
+- -=U <user>,<user>= :: Fügt der Gruppe Nutzer hinzu.
 
 ** =groupmod=
 Modifiziert bestehende Gruppen:
@@ -100,5 +107,47 @@ Modifiziert bestehende Gruppen:
 
 
 Optionen:
-- =-n=: Ändert den Gruppennamen.
-- =-g=: Ändert die Gruppen-ID.
+- =-n= :: Ändert den Gruppennamen.
+- =-g= :: Ändert die Gruppen-ID.
+
+  * 5. Ändern von Besitzer und Gruppe mit =chown=
+Mit =chown= können der Besitzer und/oder die Gruppe einer Datei oder eines Verzeichnisses geändert werden.
+
+** Syntax:
+#+BEGIN_SRC bash
+ chown [OPTIONEN] <neuer-besitzer>:<neue-gruppe> <datei/ordner>
+#+END_SRC
+
+** Beispiele:
+- Besitzer ändern:
+  #+BEGIN_SRC bash
+  chown sebastian datei.txt
+  #+END_SRC
+  Ändert den Besitzer der Datei =datei.txt= auf den Benutzer =sebastian=.
+
+- Gruppe ändern:
+  #+BEGIN_SRC bash
+  chown :users datei.txt
+  #+END_SRC
+  Ändert die Gruppe der Datei =datei.txt= auf =users=.
+
+- Besitzer und Gruppe gleichzeitig ändern:
+  #+BEGIN_SRC bash
+  chown sebastian:users datei.txt
+  #+END_SRC
+  Ändert den Besitzer auf =sebastian= und die Gruppe auf =users=.
+
+- Rekursiv ändern:
+  #+BEGIN_SRC bash
+  chown -R sebastian:users /home/sebastian/
+  #+END_SRC
+  Ändert Besitzer und Gruppe für alle Dateien und Verzeichnisse im Pfad =/home/sebastian= rekursiv.
+
+** Nützliche Optionen:
+- =-R= :: Ändert Besitzer und Gruppe rekursiv für alle Unterverzeichnisse und Dateien.
+- =--from= :: Beschränkt Änderungen auf Objekte, die von einem bestimmten Besitzer oder einer bestimmten Gruppe stammen.
+  - Beispiel: 
+    #+BEGIN_SRC bash
+    chown --from=olduser newuser datei.txt
+    #+END_SRC
+
