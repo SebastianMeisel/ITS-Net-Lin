@@ -127,6 +127,7 @@
 :END:
   - Themen: Samba Installation, Konfiguration, Freigaben
   - Aufgaben: Samba-Server einrichten, Netzlaufwerke verbinden
+  - [[file:Samba.pdf][Windows-Freigaben unter Linux mit Samba (PDF)]]
 
 ** Backups
 :PROPERTIES:

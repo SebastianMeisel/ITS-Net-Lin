@@ -1,0 +1,100 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Windows-Freigaben unter Linux mit Samba
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Samba unter Linux
+
+Samba ist eine Software-Suite, die es ermöglicht, Linux-Systeme mit Windows- und anderen SMB-/CIFS-kompatiblen Systemen zu verbinden. Mit Samba können Dateien und Drucker über Netzwerke freigegeben werden, sodass unterschiedliche Betriebssysteme nahtlos zusammenarbeiten können.
+
+** Installation und Einrichtung
+Um Samba zu nutzen, muss das Paket =samba= auf dem System installiert sein. Dies kann in einer Debian-basierten Distribution wie folgt erfolgen:
+
+#+begin_src bash
+sudo apt update
+sudo apt install samba
+#+end_src
+
+Nach der Installation kann Samba über die Datei =/etc/samba/smb.conf= konfiguriert werden. Diese Datei enthält alle Einstellungen für Freigaben, Zugriffsrechte und Netzwerkintegration.
+
+** SMB-Share unter =/home/bros= anlegen
+Angenommen, wir möchten einen SMB-Share im Verzeichnis =/home/bros= bereitstellen, der für lokale Benutzer zugänglich ist.
+
+1. Erstelle das Verzeichnis, falls es nicht existiert:
+   #+begin_src bash
+   sudo mkdir -p /home/bros
+   sudo chmod 777 /home/bros
+   #+end_src
+
+2. Bearbeite die Samba-Konfigurationsdatei:
+   Öffne die Datei =/etc/samba/smb.conf= mit einem Texteditor (z. B. Vim oder Nano) und füge die folgende Konfiguration hinzu:
+   #+begin_example
+   [bros]
+   path = /home/bros
+   browseable = yes
+   writable = yes
+   guest ok = no
+   valid users = @bros
+   #+end_example
+
+Ersetzen =@bros= durch eine existierende Gruppe auf dem Linuxsystem.
+
+3. Setze ein Samba-Passwort für den Benutzer:
+   #+begin_src bash
+   sudo smbpasswd -a BENUTZERNAME
+   #+end_src
+
+4. Starte den Samba-Dienst neu, damit die Änderungen wirksam werden:
+   #+begin_src bash
+   sudo systemctl restart smbd
+   #+end_src
+
+Benutzer können nun auf den Share zugreifen, indem sie die IP-Adresse oder den Hostnamen des Servers verwenden, z. B. =\\192.168.1.100\bros= auf einem Windows-System.
+
+** Entfernten SMB-Share einbinden
+Ein entfernter SMB-Share kann mit dem Befehl =mount= in das lokale Dateisystem eingebunden werden. Angenommen, der entfernte Share befindet sich unter =\\server\share=.
+
+1. Erstelle ein lokales Mount-Verzeichnis:
+   #+begin_src bash
+   sudo mkdir -p /mnt/share
+   #+end_src
+
+2. Binde den entfernten Share ein:
+   #+begin_src bash
+   sudo mount -t cifs -o username=BENUTZERNAME,password=PASSWORT //server/share /mnt/share
+   #+end_src
+
+   Ersetze =BENUTZERNAME= und =PASSWORT= durch die entsprechenden Anmeldedaten.
+
+3. Überprüfe die Verbindung:
+   #+begin_src bash
+   ls /mnt/share
+   #+end_src
+
+** Automatisches Einbinden bei Systemstart
+Um den Share bei jedem Systemstart automatisch einzubinden, füge eine Zeile in die Datei =/etc/fstab= ein:
+#+begin_example
+//server/share /mnt/share cifs username=BENUTZERNAME,password=PASSWORT 0 0
+#+end_example
+
+Damit wird der entfernte Share bei jedem Neustart des Systems automatisch eingebunden.
+
+** Fazit
+Samba ist ein leistungsstarkes Werkzeug, um Linux-Systeme mit anderen Betriebssystemen zu verbinden. Es ermöglicht die nahtlose Integration von SMB/CIFS-Freigaben und ist damit eine unverzichtbare Lösung für heterogene Netzwerke.
