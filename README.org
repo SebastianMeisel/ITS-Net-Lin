@@ -76,6 +76,7 @@
   - Themen: Multitasking, Eingabe und Ausgabe, Kommando lsblk, lspci
   - Aufgaben: Erkennen von Geräten, Speicherinformationen
   - [[file:LaufwerkeUndDateisysteme.pdf][Laufwerke und Dateisystem (PDF)]]
+  - [[file:Hardware][Hardware erkennen und analysieren (PDF)]]
 
 * Virtualisierung
 :PROPERTIES:

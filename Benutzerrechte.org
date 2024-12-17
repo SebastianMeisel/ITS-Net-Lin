@@ -20,7 +20,7 @@
 #+AUTHOR: Sebastian Meisel
 
 
-* 1. Grundlegendes Konzept der Rechte in Linux
+* Grundlegendes Konzept der Rechte in Linux
 In Linux wird der Zugriff auf Dateien und Verzeichnisse über ein Rechte-System gesteuert:
 - Besitzer (=u=) :: Der Benutzer, der die Datei erstellt hat.
 - Gruppe (=g=) :: Benutzergruppe, die Zugriff auf die Datei hat.
@@ -40,7 +40,7 @@ Hier hat:
 - Die Gruppe :: Lese- (~r~), *keine* Schreib (~-~) aber Ausführungs- (~x~) ~rechte.
 - Andere :: Nur Lese- (~r~) aber *keine* Schreib (~–~) oder Ausführungs- (~–~) ~rechte.
 
-* 2. Der Befehl =chmod=
+* Der Befehl =chmod=
 
 #+begin_quote
 - !!Wichtig!! :: Die folgenden Befehel können nur von einem Benutzer mit administrativen Rechten (z. B. root) ausgeführt werden.
@@ -62,7 +62,7 @@ Mit =chmod= können Rechte für Dateien und Verzeichnisse geändert werden. Es g
 Wenn man beim symbolischen Ansatz statt =+= ein =–= benutzt, können damit Rechte entzogen werden.
 - Beispiel :: =chmod g-x datei.txt= entfernt die Ausführungsrechte für Gruppenmitglieder
 
-* 3. Verwaltung von Benutzern
+* Verwaltung von Benutzern
 ** =useradd=
 Mit =useradd= wird ein neuer Benutzer erstellt:
 #+BEGIN_SRC bash
@@ -87,7 +87,7 @@ Optionen:
 - =-L= :: Benutzer sperren.
 - =-U= :: Benutzer entsperren.
 
-* 4. Verwaltung von Gruppen
+* Verwaltung von Gruppen
 ** =groupadd=
 Erstellt eine neue Gruppe:
 #+BEGIN_SRC bash
@@ -110,7 +110,7 @@ Optionen:
 - =-n= :: Ändert den Gruppennamen.
 - =-g= :: Ändert die Gruppen-ID.
 
-  * 5. Ändern von Besitzer und Gruppe mit =chown=
+  * Ändern von Besitzer und Gruppe mit =chown=
 Mit =chown= können der Besitzer und/oder die Gruppe einer Datei oder eines Verzeichnisses geändert werden.
 
 ** Syntax:
@@ -151,3 +151,59 @@ Mit =chown= können der Besitzer und/oder die Gruppe einer Datei oder eines Verz
     chown --from=olduser newuser datei.txt
     #+END_SRC
 
+* Das Sticky-Bit
+
+Das Sticky-Bit ist ein spezielles Zugriffsrecht, das hauptsächlich für Verzeichnisse verwendet wird, um die Sicherheit und Integrität von gemeinsam genutzten Ressourcen zu erhöhen. Wenn das Sticky-Bit gesetzt ist, können Dateien innerhalb eines Verzeichnisses nur von ihrem Besitzer, dem Besitzer des Verzeichnisses oder von Benutzern mit administrativen Rechten gelöscht oder umbenannt werden. Andere Benutzer können Dateien in diesem Verzeichnis zwar lesen und bearbeiten, jedoch nicht löschen oder umbenennen.
+
+** Funktion und Zweck des Sticky-Bits
+- Schützt Dateien in gemeinsam genutzten Verzeichnissen vor unerwünschtem Löschen oder Umbenennen durch andere Benutzer.
+- Wird häufig in Verzeichnissen wie =/tmp= eingesetzt, da dort viele Benutzer Dateien erstellen und bearbeiten.
+
+** Rechteanzeige mit Sticky-Bit
+Wenn das Sticky-Bit gesetzt ist, erscheint ein =t= am Ende der Zugriffsrechte des Verzeichnisses:
+
+#+BEGIN_EXAMPLE
+drwxrwxrwt
+#+END_EXAMPLE
+
+- Das =t= zeigt, dass das Sticky-Bit aktiviert ist.
+- Beispiel: Im Verzeichnis =/tmp= haben alle Benutzer Schreibrechte, jedoch schützt das Sticky-Bit die Dateien darin.
+
+** Setzen und Entfernen des Sticky-Bits
+Das Sticky-Bit kann mit dem Befehl =chmod= gesetzt oder entfernt werden.
+
+- **Setzen des Sticky-Bits**
+  #+BEGIN_SRC bash
+  chmod +t <verzeichnis>
+  #+END_SRC
+
+  Beispiel:
+  #+BEGIN_SRC bash
+  chmod +t /shared
+  #+END_SRC
+  Aktiviert das Sticky-Bit für das Verzeichnis =/shared=.
+
+- **Entfernen des Sticky-Bits**
+  #+BEGIN_SRC bash
+  chmod -t <verzeichnis>
+  #+END_SRC
+
+  Beispiel:
+  #+BEGIN_SRC bash
+  chmod -t /shared
+  #+END_SRC
+  Entfernt das Sticky-Bit vom Verzeichnis =/shared=.
+
+** Überprüfen des Sticky-Bits
+Mit dem Befehl =ls -ld= kann
+
+#+BEGIN_SRC bash :dir /ssh:debian:~
+ls -ld /home/bros
+#+END_SRC
+
+#+RESULTS:
+: drwxrwx--T 2 sebastian bros 4096 Dec 15 16:38 /home/bros
+
+#+begin_quote
+- !! Wichtig !! :: Der Besitzer des Verzeichnisses (hier ~sebastian~) kann nach wie vor jede Datei löschen und umbenennen.
+#+end_quote>

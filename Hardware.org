@@ -1,0 +1,166 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil toc:nil num:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Geräteerkennung unter Linux
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Einführung
+
+Unter Linux stehen verschiedene Werkzeuge zur Verfügung, um Hardwarekomponenten zu erkennen und anzuzeigen. Diese Werkzeuge helfen bei der Diagnose von Problemen, der Konfiguration von Treibern und dem allgemeinen Verständnis der Systemhardware.
+
+** =lspci=: PCI-Geräte anzeigen
+Der Befehl =lspci= listet alle PCI-Geräte (z. B. Netzwerkkarten, Grafikkarten, USB-Controller) auf.
+
+*** Syntax:
+#+BEGIN_SRC bash
+lspci [OPTIONEN]
+#+END_SRC
+
+*** Wichtige Optionen:
+- =-v= :: Detaillierte Informationen anzeigen.
+- =-vv= :: Noch ausführlichere Informationen anzeigen.
+- =-k= :: Zeigt den Kernel-Treiber an, der für das jeweilige Gerät verwendet wird.
+- =-s= :: Filtert nach einer bestimmten Geräteadresse.
+
+- =-v= :: Detaillierte Informationen anzeigen.
+- =-vv= :: Noch ausführlichere Informationen anzeigen.
+- =-k= :: Zeigt den Kernel-Treiber an, der für das jeweilige Gerät verwendet wird.
+- =-s= :: Filtert nach einer bestimmten Geräteadresse.
+
+*** Beispiele:
+- Alle PCI-Geräte anzeigen:
+  #+BEGIN_SRC bash
+  lspci
+  #+END_SRC
+
+- Detaillierte Informationen zu den PCI-Geräten:
+  #+BEGIN_SRC bash
+  lspci -v
+  #+END_SRC
+
+- Informationen zu Kernel-Treibern:
+  #+BEGIN_SRC bash
+  lspci -k
+  #+END_SRC
+
+- Alle PCI-Geräte anzeigen:
+  #+BEGIN_SRC bash
+  lspci
+  #+END_SRC
+
+- Detaillierte Informationen zu den PCI-Geräten:
+  #+BEGIN_SRC bash
+  lspci -v
+  #+END_SRC
+
+- Informationen zu Kernel-Treibern:
+  #+BEGIN_SRC bash
+  lspci -k
+  #+END_SRC
+
+** =lsusb=: USB-Geräte anzeigen
+ Mit =lsusb= werden alle am System angeschlossenen USB-Geräte angezeigt.
+
+*** Syntax:
+#+BEGIN_SRC bash
+lsusb [OPTIONEN]
+#+END_SRC
+
+*** Wichtige Optionen:
+- =-v= :: Zeigt detaillierte Informationen zu jedem USB-Gerät an.
+- =-t= :: Zeigt die USB-Geräte in einer baumartigen Hierarchie.
+  
+*** Beispiele:
+- Alle USB-Geräte anzeigen:
+  #+BEGIN_SRC bash
+  lsusb
+  #+END_SRC
+
+- Detaillierte Informationen anzeigen:
+  #+BEGIN_SRC bash
+  lsusb -v
+  #+END_SRC
+
+- Baumansicht der USB-Geräte:
+  #+BEGIN_SRC bash
+  lsusb -t
+  #+END_SRC
+
+** =lshw=: Hardwaredetails anzeigen
+Das Werkzeug =lshw= liefert umfassende Informationen zur gesamten Hardware des Systems, einschließlich CPU, Speicher, Laufwerke und Netzwerkgeräte.
+
+*** Syntax:
+#+BEGIN_SRC bash
+lshw [OPTIONEN]
+#+END_SRC
+
+*** Wichtige Optionen:
+- =-short= :: Zeigt eine kompakte Übersicht der Hardware.
+- =-class <klasse>= :: Filtert Informationen nach einer bestimmten Klasse (z. B. Speicher, Netzwerk).
+- =-html= :: Gibt die Hardwareinformationen als HTML-Datei aus.
+  
+*** Beispiele:
+- Alle Hardwareinformationen anzeigen:
+  #+BEGIN_SRC bash
+  sudo lshw
+  #+END_SRC
+
+- Kompakte Übersicht anzeigen:
+  #+BEGIN_SRC bash
+  sudo lshw -short
+  #+END_SRC
+
+- Informationen zu Netzwerkgeräten anzeigen:
+  #+BEGIN_SRC bash
+  sudo lshw -class network
+  #+END_SRC
+
+** =/sys=: Systeminformationen auslesen
+Das Verzeichnis =/sys= ist ein virtueller Dateisystembaum, der Informationen über die Hardware und deren Zustand bereitstellt. Es ermöglicht, Hardware direkt über Dateien zu untersuchen und teilweise zu konfigurieren.
+
+*** Wichtige Pfade:
+- =/sys/class/= :: Enthält symbolische Links zu verschiedenen Hardwareklassen (z. B. =net= für Netzwerkgeräte).
+- =/sys/block/= :: Informationen zu Festplatten und Speichergeräten.
+- =/sys/devices/= :: Enthält den Gerätebaum der gesamten Hardware.
+
+*** Beispiele:
+- Informationen zu Netzwerkgeräten anzeigen:
+  #+BEGIN_SRC bash
+  ls /sys/class/net
+  #+END_SRC
+
+- Festplatteninformationen anzeigen:
+  #+BEGIN_SRC bash
+  ls /sys/block
+  #+END_SRC
+
+- Temperaturdaten der CPU auslesen:
+  #+BEGIN_SRC bash
+  cat /sys/class/thermal/thermal_zone0/temp
+  #+END_SRC
+
+** Zusammenfassung
+| Befehl  | Zweck                           | Beispiel                          |
+|---------+---------------------------------+-----------------------------------|
+| =lspci= | PCI-Geräte anzeigen             | =lspci -k=                        |
+| =lsusb= | USB-Geräte anzeigen             | =lsusb -t=                        |
+| =lshw=  | Detaillierte Hardware-Infos     | =sudo lshw -short=                |
+| =/sys=  | Systeminformationen direkt lesen| =ls /sys/class/net=               |
+
+Diese Werkzeuge ermöglichen es Administratoren und Benutzern, gezielt Hardware zu analysieren und zu überwachen.
