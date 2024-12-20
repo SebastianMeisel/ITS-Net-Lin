@@ -28,6 +28,14 @@ Backups sind ein essenzieller Bestandteil der IT-Sicherheit und Datenverwaltung.
 ** Funktionsweise von rsync
 Das Tool =rsync= ist ein Programm zur Synchronisation und Sicherung von Dateien, das standardmäßig auf Linux-Systemen installiert ist. Es arbeitet effizient, indem es nur die geänderten Daten zwischen Quelle und Ziel überträgt. =rsync= nutzt dazu sogenannte delta-Transfers, bei denen nur die tatsächlich veränderten Teile einer Datei kopiert werden.
 
+=rsync= muss unter Umständen zunächst installiert werden:
+
+#+BEGIN_SRC bash
+sudo apt update                      # wenn letzer Aufruf länger als 24h zurückliegt
+sudo apt install rsync
+#+END_SRC
+
+
 ** Unterschiedliche Backup-Strategien
 Es gibt drei grundlegende Arten von Backups, die sich hinsichtlich Speicherbedarf, Zeitaufwand und Wiederherstellungszeit unterscheiden:
 
@@ -39,11 +47,13 @@ Ein Vollbackup umfasst alle Daten in einem definierten Verzeichnis oder auf eine
 
 Beispiel mit =rsync=:
 #+BEGIN_SRC bash
-rsync -av --progress /quelle/ /backup/vollbackup/
+sudo mkdir -p /backup/vollbackup
+sudo chmod 777 -R /backup/       # 7 = 111 =  rwx 
+rsync -av --progress /quelle/ /backup/vollbackup/ziel
 #+END_SRC
-- `-a` (*archive*) :: Aktiviert den Archivmodus, wodurch Dateien rekursiv kopiert und die wichtigsten Attribute (z. B. Rechte, Besitzer, Zeitstempel) beibehalten werden.
-- `-v` (*verbose*) :: Gibt detaillierte Informationen über den Fortschritt aus.
-- `--progress` :: Zeigt den Fortschritt für jede Datei an.
+- =-a= (*archive*) :: Aktiviert den Archivmodus, wodurch Dateien rekursiv kopiert und die wichtigsten Attribute (z. B. Rechte, Besitzer, Zeitstempel) beibehalten werden.
+- =-v= (*verbose*) :: Gibt detaillierte Informationen über den Fortschritt aus.
+- =--progress= :: Zeigt den Fortschritt für jede Datei an.
 
 
 *** Inkrementelles Backup
@@ -54,8 +64,11 @@ Ein inkrementelles Backup speichert nur die Änderungen, die seit dem letzten Ba
 
 Beispiel mit =rsync= und Nutzung eines Zeitstempels:
 #+BEGIN_SRC bash
-rsync -av --progress --link-dest=/backup/vollbackup/ /quelle/ /backup/inkrementell/$(date +%Y%m%d)/
+sudo mkdir -p /backup/inkrementell/
+sudo chmod 777 -R /backup/       # 7 = 111 =  rwx 
+rsync -av --progress --link-dest=/backup/vollbackup/ziel /quelle/ /backup/inkrementell/ziel-$(date +%Y%m%d)/
 #+END_SRC
+- =--link-dest=<Pfad>= :: Verwendet eine Referenz auf ein vorheriges Backup, um Hardlinks zu erstellen. Diese Methode spart Speicherplatz, da unveränderte Dateien nicht erneut kopiert werden.
 
 *** Differenzielles Backup
 Ein differenzielles Backup speichert alle Änderungen seit dem letzten Vollbackup. Es bietet eine Kompromisslösung zwischen Voll- und inkrementellem Backup.
@@ -65,9 +78,10 @@ Ein differenzielles Backup speichert alle Änderungen seit dem letzten Vollbacku
 
 Beispiel mit =rsync=:
 #+BEGIN_SRC bash
-rsync -av --progress --link-dest=/backup/vollbackup/ /quelle/ /backup/differenziell/$(date +%Y%m%d)/
+sudo mkdir -p /backup/differenziell/
+sudo chmod 777 -R /backup/       # 7 = 111 =  rwx 
+rsync -av --progress --link-dest=/backup/vollbackup/ziel /quelle/ /backup/differenziell/ziel-$(date +%Y%m%d)/
 #+END_SRC
-- `--link-dest=<Pfad>`: Verwendet eine Referenz auf ein vorheriges Backup, um Hardlinks zu erstellen. Diese Methode spart Speicherplatz, da unveränderte Dateien nicht erneut kopiert werden.
 
 ** Praktische Hinweise
 - Vor einem Backup sollte geprüft werden, ob ausreichend Speicherplatz zur Verfügung steht.
@@ -97,7 +111,7 @@ case "$1" in
   full)
     rsync -av --progress "$SOURCE_DIR/" "$BACKUP_DIR/full/"
     ;;
-  differential)
+  differential)CElo
     rsync -av --progress --link-dest="$BACKUP_DIR/full/" "$SOURCE_DIR/" "$BACKUP_DIR/differential/$DATE/"
     ;;
   incremental)
