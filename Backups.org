@@ -1,0 +1,204 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Backups mit Linux
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+
+
+* Einführung
+Backups sind ein essenzieller Bestandteil der IT-Sicherheit und Datenverwaltung. Sie gewährleisten, dass Daten nach einem Hardwareausfall, versehentlichem Löschen oder einer Malware-Infektion wiederhergestellt werden können. In dieser Einführung betrachten wir die verschiedenen Arten von Backups und wie diese mit dem Tool =rsync= in Linux umgesetzt werden können.
+
+** Funktionsweise von rsync
+Das Tool =rsync= ist ein Programm zur Synchronisation und Sicherung von Dateien, das standardmäßig auf Linux-Systemen installiert ist. Es arbeitet effizient, indem es nur die geänderten Daten zwischen Quelle und Ziel überträgt. =rsync= nutzt dazu sogenannte delta-Transfers, bei denen nur die tatsächlich veränderten Teile einer Datei kopiert werden.
+
+** Unterschiedliche Backup-Strategien
+Es gibt drei grundlegende Arten von Backups, die sich hinsichtlich Speicherbedarf, Zeitaufwand und Wiederherstellungszeit unterscheiden:
+
+*** Vollbackup
+Ein Vollbackup umfasst alle Daten in einem definierten Verzeichnis oder auf einem gesamten Datenträger. Es ist die vollständigste Form des Backups, benötigt aber am meisten Speicherplatz und Zeit.
+
+- *Vorteil*: Einfaches Wiederherstellen, da alle Daten in einem einzigen Backup enthalten sind.
+- *Nachteil*: Hoher Speicher- und Zeitaufwand.
+
+Beispiel mit =rsync=:
+#+BEGIN_SRC bash
+rsync -av --progress /quelle/ /backup/vollbackup/
+#+END_SRC
+- `-a` (*archive*) :: Aktiviert den Archivmodus, wodurch Dateien rekursiv kopiert und die wichtigsten Attribute (z. B. Rechte, Besitzer, Zeitstempel) beibehalten werden.
+- `-v` (*verbose*) :: Gibt detaillierte Informationen über den Fortschritt aus.
+- `--progress` :: Zeigt den Fortschritt für jede Datei an.
+
+
+*** Inkrementelles Backup
+Ein inkrementelles Backup speichert nur die Änderungen, die seit dem letzten Backup (egal welcher Art) vorgenommen wurden. Es benötigt weniger Speicherplatz und Zeit als ein Vollbackup.
+
+- *Vorteil*: Spart Speicherplatz und Zeit.
+- *Nachteil*: Wiederherstellung ist komplexer, da alle inkrementellen Backups seit dem letzten Vollbackup benötigt werden.
+
+Beispiel mit =rsync= und Nutzung eines Zeitstempels:
+#+BEGIN_SRC bash
+rsync -av --progress --link-dest=/backup/vollbackup/ /quelle/ /backup/inkrementell/$(date +%Y%m%d)/
+#+END_SRC
+
+*** Differenzielles Backup
+Ein differenzielles Backup speichert alle Änderungen seit dem letzten Vollbackup. Es bietet eine Kompromisslösung zwischen Voll- und inkrementellem Backup.
+
+- *Vorteil*: Schneller als ein Vollbackup, aber weniger aufwändig als inkrementelle Backups.
+- *Nachteil*: Kann mit der Zeit speicherintensiv werden, da alle Änderungen seit dem letzten Vollbackup enthalten sind.
+
+Beispiel mit =rsync=:
+#+BEGIN_SRC bash
+rsync -av --progress --link-dest=/backup/vollbackup/ /quelle/ /backup/differenziell/$(date +%Y%m%d)/
+#+END_SRC
+- `--link-dest=<Pfad>`: Verwendet eine Referenz auf ein vorheriges Backup, um Hardlinks zu erstellen. Diese Methode spart Speicherplatz, da unveränderte Dateien nicht erneut kopiert werden.
+
+** Praktische Hinweise
+- Vor einem Backup sollte geprüft werden, ob ausreichend Speicherplatz zur Verfügung steht.
+- Automatisierungen mit =cron= oder =systemd= Timer können regelmäßige Backups sicherstellen.
+- Es empfiehlt sich, die Backups regelmäßig zu testen, um sicherzustellen, dass die Wiederherstellung im Ernstfall funktioniert.
+
+** Beispiel für ein Backup-Schema mit systemd-Timer
+Ein sinnvolles Backup-Schema könnte wie folgt aussehen:
+- *Täglich*: Inkrementelle Backups.
+- *Wöchentlich*: Differenzielle Backups.
+- *Monatlich*: Vollbackups.
+
+Dazu richten wir mit =systemd= einen Service und einen Timer ein.
+
+*** Schritt 1: Backup-Skript erstellen
+Erstellen Sie ein Skript, das den Backup-Vorgang ausführt:
+#+BEGIN_SRC bash :tangle /usr/local/bin/backup.sh
+#!/bin/bash
+BACKUP_DIR="/backup"
+SOURCE_DIR="/quelle"
+
+# Datum im Format YYYYMMDD
+DATE=$(date +%Y%m%d)
+
+# Backup-Art je nach Argument
+case "$1" in
+  full)
+    rsync -av --progress "$SOURCE_DIR/" "$BACKUP_DIR/full/"
+    ;;
+  differential)
+    rsync -av --progress --link-dest="$BACKUP_DIR/full/" "$SOURCE_DIR/" "$BACKUP_DIR/differential/$DATE/"
+    ;;
+  incremental)
+    rsync -av --progress --link-dest="$BACKUP_DIR/differential/" "$SOURCE_DIR/" "$BACKUP_DIR/incremental/$DATE/"
+    ;;
+  *)
+    echo "Usage: $0 {full|differential|incremental}"
+    exit 1
+    ;;
+esac
+#+END_SRC
+
+Stellen Sie sicher, dass das Skript ausführbar ist:
+#+BEGIN_SRC bash
+chmod +x /usr/local/bin/backup.sh
+#+END_SRC
+
+*** Schritt 2: systemd-Service erstellen
+Erstellen Sie eine Datei =/etc/systemd/system/backup.service=:
+#+BEGIN_SRC ini :tangle /etc/systemd/system/backup.service
+[Unit]
+Description=Backup Service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/backup.sh %i
+#+END_SRC
+
+*** Schritt 3: Timer für Backups erstellen
+Erstellen Sie drei Timer-Dateien für die verschiedenen Backup-Typen.
+
+1. Täglicher inkrementeller Timer: =/etc/systemd/system/backup@incremental.timer=
+#+BEGIN_SRC ini :tangle /etc/systemd/system/backup@incremental.timer
+[Unit]
+Description=Daily Incremental Backup Timer
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+#+END_SRC
+
+2. Wöchentlicher differenzieller Timer: =/etc/systemd/system/backup@differential.timer=
+#+BEGIN_SRC ini :tangle /etc/systemd/system/backup@differential.timer
+[Unit]
+Description=Weekly Differential Backup Timer
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+#+END_SRC
+
+3. Monatlicher Vollbackup-Timer: =/etc/systemd/system/backup@full.timer=
+#+BEGIN_SRC ini :tangle /etc/systemd/system/backup@full.timer
+[Unit]
+Description=Monthly Full Backup Timer
+
+[Timer]
+OnCalendar=monthly
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+#+END_SRC
+
+*** Schritt 4: Timer aktivieren
+Aktivieren Sie die Timer:
+#+BEGIN_SRC bash
+systemctl enable --now backup@incremental.timer
+systemctl enable --now backup@differential.timer
+systemctl enable --now backup@full.timer
+#+END_SRC
+
+** Moderne Backup-Tools unter Linux
+Neben =rsync= gibt es eine Vielzahl moderner Tools, die speziell für Backups entwickelt wurden und viele zusätzliche Funktionen bieten. Einige Beispiele:
+
+*** BorgBackup (=borg=)
+- *Beschreibung*: Ein modernes deduplizierendes Backup-Tool, das effiziente und sichere Backups ermöglicht.
+- *Funktionen*: Datenkomprimierung, Verschlüsselung und effiziente Speicherung durch Deduplizierung.
+- *Installation*: 
+  #+BEGIN_SRC bash
+  sudo apt install borgbackup
+  #+END_SRC
+
+*** Restic
+- *Beschreibung*: Ein sicheres, schnelles und benutzerfreundliches Backup-Tool, das auf vielen Plattformen läuft.
+- *Funktionen*: Verschlüsselung, Unterstützung für mehrere Speichersysteme (lokal, Cloud), inkrementelle Backups.
+- *Installation*: 
+  #+BEGIN_SRC bash
+  sudo apt install restic
+  #+END_SRC
+
+*** Duplicity
+- *Beschreibung*: Ein Backup-Tool, das Verschlüsselung und inkrementelle Backups mit Unterstützung für viele Remote-Speicherarten (z. B. Amazon S3) bietet.
+- *Funktionen*: Verwendet GPG zur Verschlüsselung, ideal für Cloud-Backups.
+- *Installation*: 
+  #+BEGIN_SRC bash
+  sudo apt install duplicity
+  #+END_SRC

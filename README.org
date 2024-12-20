@@ -138,6 +138,7 @@
 :END:
   - Themen: Backup-Strategien, cronjobs, Sicherungsprogramme
   - Aufgaben: Backups planen und durchführen, Verwendung von find für Sicherungen
+  - [[file:Backups.pdf][Backups unter Linux (PDF)]]
 
 ** Skripte erstellen
 :PROPERTIES:
