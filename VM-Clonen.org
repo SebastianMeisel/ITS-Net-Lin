@@ -1,0 +1,248 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: VM Klonen mit HyperV
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Schritte zum Klonen einer VM in Hyper-V
+** 1. Exportieren der VM
+ 1) Wählen Sie die zu klonende VM (z. B. „Debian_FISIB”) aus.
+    - Stellen Sie sicher, dass die VM, die Sie klonen möchten, ausgeschaltet ist (Status: „Aus“).
+ 2) Klicken Sie im rechten Bereich unter „Aktionen” auf „Exportieren...”.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-01.png]]
+
+ 1) Klicken Sie auf „Durchsuchen”.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-02.png]]
+
+  1) Klicken Sie mit der rechten Maustaste in die Adressleiste.
+  2) Wählen Sie im Menü „Adresse bearbeiten”.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-03.png]]
+
+   1) Tragen Sie in der Adressleiste =C:\Users\Benutzername= ein. Ersetzen Sie dabei „Benutzername” durch ihren Benutzernamen unter Windows.
+      - Bestätigen Sie mit =[Enter]=.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-04.png]]
+
+  1) klicken Sie auf „Neuer Ordner”.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-05.png]]
+
+   1) Benennen Sie den neuen Ordner „HyperV”
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-06.png]]
+
+
+   1) Stellen Sie sicher, dass Sie im Ordner „HyperV” sind.
+   2) Klicken Sie „Ordner auswählen”.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-07.png]]
+
+   1) Überprüfen Sie, dass als Speicherort „C:\Users\IhrBenutzername\HyperV” gewählt wurde.
+      Kopieren Sie diesen Pfad.
+   2) „Exportieren” Sie die VM.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-08.png]]
+
+   1) Der Fortschritt des Exports wird im Bereich ‚Status‘ angezeigt.
+      Warten Sie, bis der Export abgeschlossen ist und keine Fortschrittsanzeige mehr erscheint.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-09.png]]
+
+   1) Wählen Sie rechts unter „Aktionen” den Menüpunkt „Virtuellen Computer importieren…”.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-10.png]]
+
+   1) Überspringen Sie die Vorbemerkungen mit „Weiter”.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-11.png]]
+
+   1) Klicken Sie bei „Ordner suchen” auf „Durchsuchen…”. 
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-12.png]]
+
+   1) Gehen Sie wieder zum Ordner „HyperV” in Ihrem Benutzerverzeichnis.
+   2) Wählen Sie den Ordner, in den die VM exportiert wurde.
+   3) Bestätigen Sie mit „Ordner auswählen”.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-13.png]]
+
+   1) Überprüfen Sie, dass das korrekte Unterverzeichnis ausgewählt ist.
+   2) Bestätigen Sie mit „Weiter”.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-14.png]]
+
+   Hier sollte nun der Name der Virtuellen Maschine genannt werden.
+   1) Bestätigen Sie mit „Weiter”.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-15.png]]
+
+   1) Unter „Importtyp auswählen” den 3. Punkt „Virtuellen Computer kopieren (neue eindeutige ID erstellen)”.
+
+#+begin_quote
+Die anderen Alternativen sind für Backup-Zwecke gedacht. Ohne eindeutige ID kann der Klon nicht neben der Original-VM ausgeführt werden.
+#+end_quote
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-16.png]]
+
+Setzen Sie unter „Ziel auswählen” den Haken bei „Virtuellen Computer an einem anderen Ort speichern”.
+   1) 2) 3) Fügen Sie  den vorher kopierten Pfad =C:\\Users\IhrBenutzername\HyperV= bei allen ein.
+   4) Bestätigen Sie mit „Weiter”.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-17.png]]
+
+   1) Fügen denselben Pfad unter „Speicherort auswählen” ein.
+   2) Bestätigen Sie mit „Weiter”.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-18.png]]
+
+   1) Bestätigen Sie die Zusammenfassung mit „Fertig stellen”.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-19.png]]
+
+   1) Warten Sie bis das Festplatten-Abbild (=vhdx=) kopiert wurde.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-20.png]]
+
+   1) Klicken Sie den Namen des Klons unter „Virtuelle Computer”.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-21.png]]
+
+   1) Benennen Sie die VM z. B. in „Code” um.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-22.png]]
+
+   1) Gehen Sie rechts unten auf „Einstellungen”.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-23.png]]
+
+   1) Gehen Sie zum Abschnitt „Arbeitsspeicher”.
+   2) Begrenzen Sie den maximalen RAM auf ~4096 MB~.
+   3) Schließen Sie das Fenster mit „OK”.
+   Wiederholen Sie dasselbe für die Original-VM.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-24.png]]
+
+** 2. Hostnamen anpassen
+
+Starten Sie die VM, melden Sie sich an und starten Sie den Terminal-Emulator.
+
+*** =hostnamectl=
+
+Auf modernen Systemen bietet =hostnamectl= die beste Möglichkeit den Hostnamen anzupassen, unter dem der Rechner (in diesem Fall die VM) erreichbar ist. Es ist wichtig, dass jeder Rechnen einen individuellen Hostnamen hat.
+
+#+BEGIN_SRC bash
+hostnamectl
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+ Static hostname: debian
+       Icon name: computer-vm
+         Chassis: vm 🖴
+      Machine ID: 469b943a1653455f843e711d1a3d6a58
+         Boot ID: 0896ffa758d44bce98781b59a659c3f8
+  Virtualization: microsoft
+Operating System: Debian GNU/Linux 12 (bookworm)  
+          Kernel: Linux 6.1.0-28-amd64
+    Architecture: x86-64
+ Hardware Vendor: Microsoft Corporation
+  Hardware Model: Virtual Machine
+Firmware Version: Hyper-V UEFI Release v4.1
+#+END_EXAMPLE
+
+Um den hostnamen zu ändern nutzen Sie den Befehl:
+
+#+BEGIN_SRC bash
+sudo hostnamectl hostname --static clone
+#+END_SRC
+

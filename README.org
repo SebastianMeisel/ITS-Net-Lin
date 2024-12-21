@@ -15,7 +15,7 @@
 #+OPTIONS: timestamp:nil toc:nil num:nil
 :END:
 
-#+COLUMNS: %50ITEM %THEORIE(Th){+} %PRAXIS(Pr){+}
+#+COLUMNS: %50ITEM %THEORIE(Th){+} %PRAXIS(Pr){+} %Optional(Opt)
 
 #+TITLE: Inhalt
 #+SUBTITLE: ITS-Net-Lin
@@ -78,7 +78,7 @@
   - [[file:LaufwerkeUndDateisysteme.pdf][Laufwerke und Dateisystem (PDF)]]
   - [[file:Hardware][Hardware erkennen und analysieren (PDF)]]
 
-* Virtualisierung
+** Virtualisierung
 :PROPERTIES:
 :Theorie: 4
 :Praxis: 4
