@@ -246,3 +246,31 @@ Um den hostnamen zu ändern nutzen Sie den Befehl:
 sudo hostnamectl hostname --static clone
 #+END_SRC
 
+Auf Legacy-Systemen (die hostnamectl nicht unterstützen) kann man den Hostnamen in der Datei =/etc/hostname= eintragen, z. B.:
+
+#+begin_src bash
+echo "clone" | sudo tee /etc/hostname
+#+end_src
+
+#+begin_quote
+- =| sudo tee= :: schreibt die Ausgabe des vorangehenden Befehl mit Super-User-Rechten und die folgende Datei und gibt sie gleichzeitig in der Shell aus.
+#+end_quote
+
+** SSH-Anmeldung per Passwort zulassen
+
+Für den Klon soll ein eigener Schlüssel installiert werden. Damit dieser übertragen werden kann, muss zunächst die Anmeldung per Passwort vorübergehend erlaubt werden.
+
+Dafür müssen einige Einträge in der Datei =/etc/ssh/sshd_config= geändert werden. Dafür können Sie z. B. =sed= nutzen:
+
+#+BEGIN_SRC bash
+sudo sed -E 's/^(StrictModes|Max|PubkeyAuth)/# \1/;/^#?(PasswordAuthentication)/{s/^#//;s/no/yes/}' /etc/ssh/sshd_config -i
+#+END_SRC
+
+- =-E= :: Aktiviert erweiterte reguläre Ausdrücke (ERE), wodurch z. B. () und {} verwendet werden können.
+- =s/^(StrictModes|Max|PubkeyAuth)/# \1/= :: Findet Zeilen, die mit StrictModes oder Max beginnen und kommentiert diese mit =#= aus. =\1= wird durch =StrictModes=, =Max= oder (=|=) =PubkeyAuth= ersetzt — je nachdem was in dieser Zeile gefunden wurde.
+- =/^#?(PasswordAuthentication)/{s/^#//;s/no/yes/}= :: Findet Zeilen, die =PasswordAuthentication= enthalten, unabhängig davon, ob sie auskommentiert sind oder nicht.
+  - Entfernt ein eventuell vorhandenes =#= am Anfang der Zeile (macht sie aktiv).
+  - Ersetzt den Wert =no= durch =yes=, wodurch die Anmeldung per Passwort erlaubt wird.
+- =-i= :: Schreibt die Änderungen direkt (in place) in die Datei =/etc/ssh/sshd_config=.
+
+Nun können Sie auf den Hosts von denen aus Sie anmelden wollen Schlüssel erstellen und auf den Klon übertragen. Wie das funktioniert wird in der Datei [[file:SSH-Schluesselgenerierung.pdf][SSH-Schluesselgenerierung.pdf]] beschrieben. Passen Sie dabei den Namen des Schlüssels an (z. B. clone statt debian).
