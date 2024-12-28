@@ -1,0 +1,128 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Virtualisierung
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Einführung 
+
+Du hast einen Emacs-Venv erstellt, der speziell für die Erstellung von Präsentationen für Rhetorik- und Sprachstoffe konzipiert wurde.
+
+Hier ist eine kurze Zusammenfassung:
+
+-   Die LaTeX-Einstellungen haben die Verwendung von =xelatex= vorgeschrieben.
+-   Beiträge werden direkt mit dem Command =C-c C-e l= erstellt, was ein Listenobjekt in Liste aufrufbar macht
+-   Das Konzept der sogenannten "Hierausgaben" ermöglicht es, den Inhalt vorab zu speichern und zu laden.
+-   Die Reveal.js-Beziehungen können gespeichert werden und später eingesetzt werden.
+
+Hier sind einige grundlegende Informationen zum Einsetzen von Beiträgen in Elaborationen:
+
+*** 1. Erstellung eines Listenobjekts
+#+begin_src 
+(Make outline)
+#+end_src
+
+*2. Anfügeben von Textblöcken*: 
+
+-   *   M-M
+-   Sie lassen sich auch in Codeabschnitte einfügen.
+
+Hier ist nur ein Beispiel für einen kurzen, einfacher Abschnitt: 
+
+* Einführung
+
+Die Virtualisierung oder Virtualisierung im weiteren Sinne des Wortes bezeichnet eine virtuell auftrittende Erweiterung einer Realität. Ein Verteiler erlaubt den Zugriff auf physische Ressourcen wie Server, Speichermedien und Rechenzentren über Netzwerkerfassungen.
+
+Die Technik zur Virtualisierung kann als Kombination von Hardware-Verteilerhardware (also hardware, das mehrere virtuelle Maschinen verwaltet) oder Softwareververter.
+
+Virtualisierung ist eine Schlüsseltechnologie in der modernen IT, die es ermöglicht, physische Ressourcen effizienter zu nutzen. Sie schafft abstrahierte Umgebungen, in denen mehrere Betriebssysteme oder Anwendungen auf derselben Hardware betrieben werden können.
+
+** Arten von Hypervisors
+Hypervisors sind die Grundlage der Virtualisierung und werden in zwei Typen unterteilt:
+
+*** Typ-1-Hypervisors (Bare Metal)
+   Diese laufen direkt auf der Hardware ohne darunterliegendes Betriebssystem. Sie sind effizient und werden in Rechenzentren eingesetzt.
+   Beispiele:
+   - Xen :: Einer der ältesten Typ-1-Hypervisors, weit verbreitet in Cloud-Infrastrukturen.
+   - Proxmox VE :: Open-Source-Lösung für Server-Virtualisierung mit Unterstützung für KVM, LXC und Clusterbetrieb.
+   - VMware ESXi :: Führend im Bereich kommerzieller Virtualisierung.
+   - Hyper-V :: Microsofts Lösung, besonders geeignet für Windows-Umgebungen.
+
+*** Typ-2-Hypervisors
+   Diese laufen auf einem Host-Betriebssystem und sind einfacher einzurichten, aber weniger effizient.
+   Beispiele:
+   - VirtualBox :: Open-Source-Software, ideal für Desktop-User.
+   - VMware Workstation :: Führend im Bereich kommerzieller Virtualisierung.
+   - KVM/QEMU :: Linux-basierter Hypervisor, in Kombination mit **QEMU** flexibel und leistungsfähig.
+     - Virt-Manager :: Grafische Benutzeroberfläche für die Verwaltung von KVM- und QEMU-VMs.
+
+** Containerisierung
+Container ermöglichen eine leichtgewichtige Virtualisierung auf Betriebssystemebene. Sie teilen denselben Kernel mit dem Host, sind aber voneinander isoliert. Beispiele:
+- Docker :: Die am weitesten verbreitete Container-Technologie.
+- Podman :: Eine Alternative zu Docker ohne Daemon.
+- LXC/LXD :: Containerlösung mit stärkeren Virtualisierungsfeatures, oft in Proxmox integriert.
+
+Container eignen sich hervorragend für Microservices und Anwendungen, die eine geringe Overhead-Belastung erfordern.
+
+** Netzwerkvirtualisierung
+Virtuelle Netzwerke sind essenziell, um verschiedene virtuelle Umgebungen zu verbinden oder isolieren.
+
+*** Virtuelle Bridges
+  Ermöglichen die Verbindung von virtuellen Maschinen untereinander und mit physischen Netzwerken.
+  Einrichtung mit dem modernen =bridge=-Tool:
+  #+begin_src bash
+  sudo ip link add name br0 type bridge
+  sudo ip link set br0 up
+  sudo ip link set eth0 master br0
+  #+end_src
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/VBridge.png]]
+
+*** VLAN (Virtual Local Area Network) 
+  VLANs segmentieren Netzwerke logisch, auch wenn sie physisch miteinander verbunden sind.
+  Ein VLAN mit ID 100 kann so konfiguriert werden:
+  #+begin_src bash
+  sudo ip link add link eth0 name eth0.100 type vlan id 100
+  sudo ip link set eth0.100 up
+  #+end_src
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/VLAN.png]]
+
+*** VXLAN (Virtual Extensible LAN)
+
+Ermöglicht die Segmentierung von Netzwerken über Layer-3-Netzwerke hinweg. Dies wird häufig in Cloud-Infrastrukturen verwendet. 
+
+Die Segmentierung eines Netzwerks bezieht sich auf den Prozess, bei dem ein komplexes Netzwerk in kleinere Teilmengen oder Segmente unterteilt wird. Diese Segmentation ermöglicht die Isolation von Netzwerken innerhalb einer Cloud-Infrastruktur.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/VXLAN.png]]
+
+** Anwendungsfälle
+- Typ-1-Hypervisors :: Rechenzentren, Cloud-Dienste, Hochverfügbarkeit.
+- Typ-2-Hypervisors :: Desktop-Umgebungen, Testing.
+- Container :: Microservices, DevOps-Workflows.
+- Netzwerkvirtualisierung :: Multi-Tenant-Clouds, isolierte Umgebungen.

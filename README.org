@@ -78,7 +78,7 @@
   - [[file:LaufwerkeUndDateisysteme.pdf][Laufwerke und Dateisystem (PDF)]]
   - [[file:Hardware][Hardware erkennen und analysieren (PDF)]]
 
-** Virtualisierung
+** Virtualisierung (nur FISI)
 :PROPERTIES:
 :Theorie: 4
 :Praxis: 4
@@ -86,6 +86,7 @@
 :END: 
   - Themen: Virtualisierungstechniken, Hypervisor Grundlagen
   - Aufgaben: Virtualisierungsgrundlagen, Unterschiede zwischen Desktop- und Netzwerkvirtualisierung
+  - [[file:Virtualisierung.org][Virtualisierung (PDF)]]
 
 ** SSH
 :PROPERTIES:
