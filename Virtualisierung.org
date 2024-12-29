@@ -98,8 +98,8 @@ Virtuelle Netzwerke sind essenziell, um verschiedene virtuelle Umgebungen zu ver
 [[file:Bilder/VBridge.png]]
 
 *** VLAN (Virtual Local Area Network) 
-  VLANs segmentieren Netzwerke logisch, auch wenn sie physisch miteinander verbunden sind.
-  Ein VLAN mit ID 100 kann so konfiguriert werden:
+  ~VLANs~ segmentieren Netzwerke logisch, auch wenn sie physisch (Layer 2) miteinander verbunden sind. Die verwendete 12-Bit-VLAN-ID ermöglicht die Adressierung von 4096 VLANs.
+  Ein ~VLAN~ mit ID 100 kann so konfiguriert werden:
   #+begin_src bash
   sudo ip link add link eth0 name eth0.100 type vlan id 100
   sudo ip link set eth0.100 up
@@ -112,12 +112,16 @@ Virtuelle Netzwerke sind essenziell, um verschiedene virtuelle Umgebungen zu ver
 
 *** VXLAN (Virtual Extensible LAN)
 
-Ermöglicht die Segmentierung von Netzwerken über Layer-3-Netzwerke hinweg. Dies wird häufig in Cloud-Infrastrukturen verwendet. 
+#Überprüfe und korrigieren, wenn nötig - eventuell auch für mehr Klarheit.
+~VXLANS~ ermöglichen die Segmentierung von Netzwerken über Layer-3-Netzwerke hinweg. Dies wird häufig in Cloud-Infrastrukturen verwendet. 
 
-Die Segmentierung eines Netzwerks bezieht sich auf den Prozess, bei dem ein komplexes Netzwerk in kleinere Teilmengen oder Segmente unterteilt wird. Diese Segmentation ermöglicht die Isolation von Netzwerken innerhalb einer Cloud-Infrastruktur.
+Dafür wird ein ~VXLAN~-Tunnel zwischen Virtual Tunnel End Points (~VTEPs~) erstellt. In diesem werden die ursprünglichen Ehternet-Header mit der ~MAC~-Adresse in einem ~UDP~-Paket verpackt. Dadurch werden zum einen die ~MAC~-Tabellen der Switche auf dem Weg überschaubar gehalten. Andererseit ermöglicht dies den Transport der Layer-2-Header über einer Layer-3-Infrastruktur.
+
+Die Virtual Network ID (~VNI~) ist 24 Bit groß und erlaubt somit über 16.000.000 verschiedene ~VXLANs~. Dies ist besonders in Rechenzentren mit vielen Virtuellen Maschinen interessant, die verschiedenen Virtuellen Netzwerken z. B. von verschiedenen Kunden genutzt werden.
+
 
 #+ATTR_HTML: :width 50%
-#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_LATEX: :width .75\linewidth :placement [!htpb]
 #+ATTR_ORG: :width 700
 [[file:Bilder/VXLAN.png]]
 
