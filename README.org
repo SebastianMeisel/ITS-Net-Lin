@@ -86,7 +86,7 @@
 :END: 
   - Themen: Virtualisierungstechniken, Hypervisor Grundlagen
   - Aufgaben: Virtualisierungsgrundlagen, Unterschiede zwischen Desktop- und Netzwerkvirtualisierung
-  - [[file:Virtualisierung.org][Virtualisierung (PDF)]]
+  - [[file:Virtualisierung.pdf][Virtualisierung (PDF)]]
 
 ** SSH
 :PROPERTIES:
