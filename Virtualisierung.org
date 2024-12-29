@@ -20,31 +20,6 @@
 #+SUBTITLE: ITS-Net-Lin
 #+AUTHOR: Sebastian Meisel
 
-* Einführung 
-
-Du hast einen Emacs-Venv erstellt, der speziell für die Erstellung von Präsentationen für Rhetorik- und Sprachstoffe konzipiert wurde.
-
-Hier ist eine kurze Zusammenfassung:
-
--   Die LaTeX-Einstellungen haben die Verwendung von =xelatex= vorgeschrieben.
--   Beiträge werden direkt mit dem Command =C-c C-e l= erstellt, was ein Listenobjekt in Liste aufrufbar macht
--   Das Konzept der sogenannten "Hierausgaben" ermöglicht es, den Inhalt vorab zu speichern und zu laden.
--   Die Reveal.js-Beziehungen können gespeichert werden und später eingesetzt werden.
-
-Hier sind einige grundlegende Informationen zum Einsetzen von Beiträgen in Elaborationen:
-
-*** 1. Erstellung eines Listenobjekts
-#+begin_src 
-(Make outline)
-#+end_src
-
-*2. Anfügeben von Textblöcken*: 
-
--   *   M-M
--   Sie lassen sich auch in Codeabschnitte einfügen.
-
-Hier ist nur ein Beispiel für einen kurzen, einfacher Abschnitt: 
-
 * Einführung
 
 Die Virtualisierung oder Virtualisierung im weiteren Sinne des Wortes bezeichnet eine virtuell auftrittende Erweiterung einer Realität. Ein Verteiler erlaubt den Zugriff auf physische Ressourcen wie Server, Speichermedien und Rechenzentren über Netzwerkerfassungen.
