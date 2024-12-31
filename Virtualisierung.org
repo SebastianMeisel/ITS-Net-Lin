@@ -22,10 +22,6 @@
 
 * Einführung
 
-Die Virtualisierung oder Virtualisierung im weiteren Sinne des Wortes bezeichnet eine virtuell auftrittende Erweiterung einer Realität. Ein Verteiler erlaubt den Zugriff auf physische Ressourcen wie Server, Speichermedien und Rechenzentren über Netzwerkerfassungen.
-
-Die Technik zur Virtualisierung kann als Kombination von Hardware-Verteilerhardware (also hardware, das mehrere virtuelle Maschinen verwaltet) oder Softwareververter.
-
 Virtualisierung ist eine Schlüsseltechnologie in der modernen IT, die es ermöglicht, physische Ressourcen effizienter zu nutzen. Sie schafft abstrahierte Umgebungen, in denen mehrere Betriebssysteme oder Anwendungen auf derselben Hardware betrieben werden können.
 
 ** Arten von Hypervisors
@@ -87,12 +83,11 @@ Virtuelle Netzwerke sind essenziell, um verschiedene virtuelle Umgebungen zu ver
 
 *** VXLAN (Virtual Extensible LAN)
 
-#Überprüfe und korrigieren, wenn nötig - eventuell auch für mehr Klarheit.
 ~VXLANS~ ermöglichen die Segmentierung von Netzwerken über Layer-3-Netzwerke hinweg. Dies wird häufig in Cloud-Infrastrukturen verwendet. 
 
-Dafür wird ein ~VXLAN~-Tunnel zwischen Virtual Tunnel End Points (~VTEPs~) erstellt. In diesem werden die ursprünglichen Ehternet-Header mit der ~MAC~-Adresse in einem ~UDP~-Paket verpackt. Dadurch werden zum einen die ~MAC~-Tabellen der Switche auf dem Weg überschaubar gehalten. Andererseit ermöglicht dies den Transport der Layer-2-Header über einer Layer-3-Infrastruktur.
+Dafür wird ein ~VXLAN~-Tunnel zwischen Virtual Tunnel End Points (~VTEPs~) erstellt. In diesem werden die ursprünglichen Ethernet-Header mit der ~MAC~-Adresse in einem ~UDP~-Paket verpackt. Dadurch werden zum einen die ~MAC~-Tabellen der Switche auf dem Weg überschaubar gehalten. Andererseits ermöglicht dies den Transport der Layer-2-Header über einer Layer-3-Infrastruktur.
 
-Die Virtual Network ID (~VNI~) ist 24 Bit groß und erlaubt somit über 16.000.000 verschiedene ~VXLANs~. Dies ist besonders in Rechenzentren mit vielen Virtuellen Maschinen interessant, die verschiedenen Virtuellen Netzwerken z. B. von verschiedenen Kunden genutzt werden.
+Die Virtual Network ID (~VNI~) ist 24 Bit groß und erlaubt somit über 16.000.000 verschiedene ~VXLANs~. Dies ist besonders in Rechenzentren mit vielen virtuellen Maschinen interessant, die verschiedenen virtuellen Netzwerken z. B. von verschiedenen Kunden genutzt werden.
 
 
 #+ATTR_HTML: :width 50%

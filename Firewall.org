@@ -7,7 +7,6 @@
 #+LATEX_HEADER: \usepackage{listings}
 :END:
 
-
 :REVEAL_PROPERTIES:
 #+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
 #+REVEAL_REVEAL_JS_VERSION: 4
@@ -130,7 +129,6 @@ Sie können mit =ufw= diese Regel auch leicht wieder deaktivieren:
 #+BEGIN_SRC bash
   sudo ufw disable
 #+END_SRC
-
 
 
 
