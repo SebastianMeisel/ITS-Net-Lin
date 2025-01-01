@@ -130,6 +130,7 @@
   - Themen: Samba Installation, Konfiguration, Freigaben
   - Aufgaben: Samba-Server einrichten, Netzlaufwerke verbinden
   - [[file:Samba.pdf][Windows-Freigaben unter Linux mit Samba (PDF)]]
+  - [[file:Samba-Rechte.pdf][Nutzerzuordnung und Dateizuordnungsrechte (nur FISI) (PDF)]]
 
 ** Backups
 :PROPERTIES:
@@ -158,6 +159,7 @@
 :END:
   - Themen: Linux-Firewalls, iptables, ufw
   - Aufgaben: Firewall für SSH und Samba einrichten
+  - 
 
 ** Apache-Web-Server im Intranet
 :PROPERTIES:

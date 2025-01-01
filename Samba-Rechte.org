@@ -1,0 +1,93 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Benutzerzuordnung zwischen Windows und Linux
+#+SUBTITLE: Rechteverwaltung und Konfiguration
+#+AUTHOR: Sebastian Meisel
+
+* Benutzerzuordnung zwischen Windows und Linux
+
+Die Benutzerzuordnung zwischen Windows- und Linux-Systemen ist ein essenzieller Schritt, um ein reibungsloses Zusammenspiel in einer heterogenen Netzwerkumgebung sicherzustellen. Samba bietet hierzu Mechanismen, um Windows-Benutzerkonten Linux-Benutzern und -Gruppen zuzuordnen.
+
+** Samba und Benutzerzuordnung
+
+Samba nutzt die Datei =/etc/samba/smbusers=, um Windows-Benutzer Linux-Benutzern zuzuordnen. Ein Beispiel:
+
+#+begin_example
+root = Administrator
+user1 = windowsuser1
+user2 = windowsuser2
+#+end_example
+
+In diesem Beispiel wird der Windows-Benutzer =Administrator= dem Linux-Benutzer =root= zugeordnet. Ähnlich werden =windowsuser1= und =windowsuser2= den Linux-Benutzern =user1= und =user2= zugewiesen.
+
+Bearbeiten Sie diese Datei mit einem Texteditor, um weitere Benutzerzuordnungen hinzuzufügen:
+#+begin_src bash
+sudo vim /etc/samba/smbusers
+#+end_src
+
+** Konfiguration der Dateirechte
+
+Windows unterstützt kein POSIX-kompatiblen Dateirechte. Die Parameter =create mode= und =directory mode= definieren die Standardrechte für neu erstellte Dateien und Verzeichnisse.
+
+*** Parameter: create mode
+
+Der Parameter =create mode= legt die Rechte für neu erstellte Dateien fest. Ein Beispiel:
+
+#+begin_src text
+[Freigabe]
+    path = /srv/samba/freigabe
+    create mode = 0644
+#+end_src
+
+In diesem Beispiel erhalten alle neu erstellten Dateien in der Freigabe den Modus =0644=, was bedeutet:
+- Der Eigentümer hat Lese- und Schreibrechte (~0111 = 6~).
+- Die Gruppe und andere Benutzer haben nur Leserechte (~0100 = 4~).
+
+*** Parameter: directory mode
+
+Der Parameter =directory mode= definiert die Rechte für neu erstellte Verzeichnisse. Beispiel:
+
+#+begin_src text
+[Freigabe]
+    path = /srv/samba/freigabe
+    directory mode = 0755
+#+end_src
+
+Hierbei erhalten alle neu erstellten Verzeichnisse die Rechte =0755=:
+- Der Eigentümer hat Lese-, Schreib- und Ausführungsrechte (~0111 = 7~).
+- Die Gruppe und andere Benutzer haben nur Lese- und Ausführungsrechte (~0110 = 5~).
+
+*** Anwendung der Parameter
+
+Die Kombination von =create mode= und =directory mode= ermöglicht eine konsistente Rechteverwaltung. Beide Parameter können innerhalb einer Samba-Freigabe definiert werden:
+
+#+begin_src text
+[Freigabe]
+    path = /srv/samba/freigabe
+    create mode = 0644
+    directory mode = 0755
+#+end_src
+
+Diese Einstellungen garantieren, dass Dateien und Verzeichnisse mit sinnvollen Standardrechten erstellt werden, wodurch die Sicherheit und Zugänglichkeit verbessert wird.
+
+Um die Änderungen zu übernehmen, starten Sie den Samba-Dienst neu:
+
+#+begin_src bash
+sudo systemctl restart smbd
+#+end_src

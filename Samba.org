@@ -96,5 +96,3 @@ Um den Share bei jedem Systemstart automatisch einzubinden, füge eine Zeile in 
 
 Damit wird der entfernte Share bei jedem Neustart des Systems automatisch eingebunden.
 
-** Fazit
-Samba ist ein leistungsstarkes Werkzeug, um Linux-Systeme mit anderen Betriebssystemen zu verbinden. Es ermöglicht die nahtlose Integration von SMB/CIFS-Freigaben und ist damit eine unverzichtbare Lösung für heterogene Netzwerke.
