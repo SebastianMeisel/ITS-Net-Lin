@@ -159,7 +159,7 @@
 :END:
   - Themen: Linux-Firewalls, iptables, ufw
   - Aufgaben: Firewall für SSH und Samba einrichten
-  - 
+  - [[file:Firewall.pdf][Firewalls unter Linux (PDF)]]
 
 ** Apache-Web-Server im Intranet
 :PROPERTIES:

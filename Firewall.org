@@ -1,0 +1,75 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Firewalls unter Linux
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Einführung
+
+Eine Firewall ist ein sicherheitsrelevantes Netzwerkgerät oder Software, das den Datenverkehr zwischen Netzwerken überwacht und kontrolliert. Unter Linux stehen zahlreiche Tools und Technologien zur Verfügung, um Firewalls zu implementieren. Dieser Text führt in das Konzept einer Stateful Packet Inspection (SPI)-Firewall ein und gibt einen Überblick über gängige Lösungen wie Iptables, Nftables, UFW und Firewalld.
+
+** Das Konzept der SPI-Firewall
+
+Eine SPI-Firewall (Stateful Packet Inspection) überwacht und analysiert den Zustand jeder Verbindung, die durch sie hindurchläuft. Dies bedeutet, dass die Firewall nicht nur die Header-Informationen einzelner Pakete betrachtet, sondern auch den Kontext einer Verbindung beibehält. Dadurch kann sie gezielt entscheiden, welche Pakete erlaubt oder abgelehnt werden sollen. SPI-Firewalls bieten daher eine bessere Kontrolle und Sicherheit im Vergleich zu statischen Paketfiltern.
+
+** Gängige Lösungen unter Linux
+
+1. ***Iptables***  
+   Iptables ist ein traditionelles Firewall-Tool, das auf dem Netfilter-Framework basiert. Es ermöglicht die Definition von Regeln, um Netzwerkpakete zu filtern und Weiterleitungsrichtlinien festzulegen.
+
+   #+BEGIN_SRC bash
+   # Beispiel: Alle eingehenden SSH-Verbindungen erlauben
+   sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+   # Beispiel: Alle ausgehenden Verbindungen blockieren
+   sudo iptables -A OUTPUT -j DROP
+   #+END_SRC
+
+2. ***Nftables***  
+   Nftables ist der moderne Nachfolger von Iptables und bietet eine effizientere Syntax und bessere Leistung. Es wird ebenfalls vom Netfilter-Framework unterstützt und ersetzt schrittweise Iptables.
+
+   #+BEGIN_SRC bash
+   # Beispiel: Eingehende HTTP-Verbindungen erlauben
+   sudo nft add rule ip filter input tcp dport 80 accept
+   # Beispiel: Alle ausgehenden Pakete verwerfen
+   sudo nft add rule ip filter output drop
+   #+END_SRC
+
+3. ***UFW (Uncomplicated Firewall)***  
+   UFW ist ein einfaches Frontend für Iptables und zielt darauf ab, Firewall-Management benutzerfreundlich zu gestalten. Es ist insbesondere bei Ubuntu-Systemen beliebt.
+
+   #+BEGIN_SRC bash
+   # Beispiel: HTTP und HTTPS-Verbindungen erlauben
+   sudo ufw allow 80/tcp
+   sudo ufw allow 443/tcp
+   # Beispiel: SSH-Verbindungen deaktivieren
+   sudo ufw deny 22
+   #+END_SRC
+
+4. ***Firewalld***  
+   Firewalld ist ein dynamisches Firewall-Management-Tool, das die Definition und Verwaltung von Regeln ohne Neustart der Firewall ermöglicht. Es nutzt Zonen, um unterschiedliche Sicherheitsstufen zu implementieren.
+
+   #+BEGIN_SRC bash
+   # Beispiel: SSH in der Zone 'public' erlauben
+   sudo firewall-cmd --zone=public --add-service=ssh
+   # Beispiel: HTTP in der Zone 'public' entfernen
+   sudo firewall-cmd --zone=public --remove-service=http
+   sudo firewall-cmd --runtime-to-permanent
+   #+END_SRC
+
