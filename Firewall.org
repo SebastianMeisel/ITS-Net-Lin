@@ -31,7 +31,7 @@ Eine SPI-Firewall (Stateful Packet Inspection) überwacht und analysiert den Zus
 
 ** Gängige Lösungen unter Linux
 
-1. ***Iptables***  
+*** Iptables
    Iptables ist ein traditionelles Firewall-Tool, das auf dem Netfilter-Framework basiert. Es ermöglicht die Definition von Regeln, um Netzwerkpakete zu filtern und Weiterleitungsrichtlinien festzulegen.
 
    #+BEGIN_SRC bash
@@ -41,7 +41,7 @@ Eine SPI-Firewall (Stateful Packet Inspection) überwacht und analysiert den Zus
    sudo iptables -A OUTPUT -j DROP
    #+END_SRC
 
-2. ***Nftables***  
+*** Nftables
    Nftables ist der moderne Nachfolger von Iptables und bietet eine effizientere Syntax und bessere Leistung. Es wird ebenfalls vom Netfilter-Framework unterstützt und ersetzt schrittweise Iptables.
 
    #+BEGIN_SRC bash
@@ -51,7 +51,51 @@ Eine SPI-Firewall (Stateful Packet Inspection) überwacht und analysiert den Zus
    sudo nft add rule ip filter output drop
    #+END_SRC
 
-3. ***UFW (Uncomplicated Firewall)***  
+
+*** Erstellen einer Tabelle
+   Eine Tabelle wird benötigt, um Regeln und Ketten zu organisieren. Tabellen können verschiedene Protokolle unterstützen (z. B. IPv4, IPv6, ARP).
+
+   #+BEGIN_SRC bash
+   # Beispiel: Eine Tabelle für IPv4 anlegen
+   sudo nft add table ip filter
+   #+END_SRC
+
+*** Erstellen einer Kette
+   Innerhalb einer Tabelle werden Ketten definiert, die für eingehenden, ausgehenden oder weitergeleiteten Verkehr verwendet werden können. 
+
+   #+BEGIN_SRC bash
+   # Beispiel: Eine Eingabekette erstellen
+   sudo nft add chain ip filter input { type filter hook input priority 0; }
+   # Beispiel: Eine Ausgabekette erstellen
+   sudo nft add chain ip filter output { type filter hook output priority 0; }
+   # Beispiel: Eine Weiterleitungskette erstellen
+   sudo nft add chain ip filter forward { type filter hook forward priority 0; }
+   #+END_SRC
+
+*** Hinzufügen von Regeln zu einer Kette
+   Nachdem eine Tabelle und Ketten erstellt wurden, können Regeln hinzugefügt werden.
+
+   #+BEGIN_SRC bash
+   # Beispiel: Eingehende HTTP-Verbindungen in der Eingabekette erlauben
+   sudo nft add rule ip filter input tcp dport 80 accept
+   # Beispiel: Alle ausgehenden Verbindungen in der Ausgabekette blockieren
+   sudo nft add rule ip filter output drop
+   #+END_SRC
+
+*Anzeigen und Speichern der Konfiguration*
+   Die aktuelle Nftables-Konfiguration kann überprüft und dauerhaft gespeichert werden.
+
+   #+BEGIN_SRC bash
+   # Beispiel: Konfiguration anzeigen
+   sudo nft list ruleset
+   # Beispiel: Konfiguration dauerhaft speichern (je nach Distribution)
+   sudo nft list ruleset > /etc/nftables.conf
+   #+END_SRC
+
+Mit diesen zusätzlichen Befehlen lässt sich eine vollständige Nftables-Firewall strukturieren und anlegen. Tabellen bieten eine übersichtliche Möglichkeit, Regeln nach Protokoll oder Anwendungszweck zu organisieren.
+
+
+*** UFW (Uncomplicated Firewall)
    UFW ist ein einfaches Frontend für Iptables und zielt darauf ab, Firewall-Management benutzerfreundlich zu gestalten. Es ist insbesondere bei Ubuntu-Systemen beliebt.
 
    #+BEGIN_SRC bash
@@ -62,7 +106,7 @@ Eine SPI-Firewall (Stateful Packet Inspection) überwacht und analysiert den Zus
    sudo ufw deny 22
    #+END_SRC
 
-4. ***Firewalld***  
+*** *Firewalld*
    Firewalld ist ein dynamisches Firewall-Management-Tool, das die Definition und Verwaltung von Regeln ohne Neustart der Firewall ermöglicht. Es nutzt Zonen, um unterschiedliche Sicherheitsstufen zu implementieren.
 
    #+BEGIN_SRC bash
