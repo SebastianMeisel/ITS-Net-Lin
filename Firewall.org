@@ -37,19 +37,10 @@ Eine SPI-Firewall (Stateful Packet Inspection) überwacht und analysiert den Zus
    #+BEGIN_SRC bash
    # Beispiel: Alle eingehenden SSH-Verbindungen erlauben
    sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
-   # Beispiel: Alle ausgehenden Verbindungen blockieren
-   sudo iptables -A OUTPUT -j DROP
    #+END_SRC
 
 *** Nftables
    Nftables ist der moderne Nachfolger von Iptables und bietet eine effizientere Syntax und bessere Leistung. Es wird ebenfalls vom Netfilter-Framework unterstützt und ersetzt schrittweise Iptables.
-
-   #+BEGIN_SRC bash
-   # Beispiel: Eingehende HTTP-Verbindungen erlauben
-   sudo nft add rule ip filter input tcp dport 80 accept
-   # Beispiel: Alle ausgehenden Pakete verwerfen
-   sudo nft add rule ip filter output drop
-   #+END_SRC
 
 
 *** Erstellen einer Tabelle
@@ -78,8 +69,6 @@ Eine SPI-Firewall (Stateful Packet Inspection) überwacht und analysiert den Zus
    #+BEGIN_SRC bash
    # Beispiel: Eingehende HTTP-Verbindungen in der Eingabekette erlauben
    sudo nft add rule ip filter input tcp dport 80 accept
-   # Beispiel: Alle ausgehenden Verbindungen in der Ausgabekette blockieren
-   sudo nft add rule ip filter output drop
    #+END_SRC
 
 *Anzeigen und Speichern der Konfiguration*
