@@ -48,19 +48,23 @@ Eine SPI-Firewall (Stateful Packet Inspection) überwacht und analysiert den Zus
 
    #+BEGIN_SRC bash
    # Beispiel: Eine Tabelle für IPv4 anlegen
-   sudo nft add table ip filter
+   sudo nft 'add table ip filter'
    #+END_SRC
+
+#+begin_quote
+ - !! Wichtig !! :: Die einfachen Anführungszeichen, sind in diesem Befehl genaugenommen nicht notwendig, aber in anderen. Sie verhindern, dass die Shell bestimmte Zeichen als Befehle interpretiert. Man sollte sich angewöhnen sie immer zu setzen.
+#+end_quote
 
 *** Erstellen einer Kette
    Innerhalb einer Tabelle werden Ketten definiert, die für eingehenden, ausgehenden oder weitergeleiteten Verkehr verwendet werden können. 
 
    #+BEGIN_SRC bash
    # Beispiel: Eine Eingabekette erstellen
-   sudo nft add chain ip filter input { type filter hook input priority 0; }
+   sudo nft 'add chain ip filter input { type filter hook input priority 0; }'
    # Beispiel: Eine Ausgabekette erstellen
-   sudo nft add chain ip filter output { type filter hook output priority 0; }
+   sudo nft 'add chain ip filter output { type filter hook output priority 0; }'
    # Beispiel: Eine Weiterleitungskette erstellen
-   sudo nft add chain ip filter forward { type filter hook forward priority 0; }
+   sudo nft 'add chain ip filter forward { type filter hook forward priority 0; }'
    #+END_SRC
 
 *** Hinzufügen von Regeln zu einer Kette
@@ -68,7 +72,7 @@ Eine SPI-Firewall (Stateful Packet Inspection) überwacht und analysiert den Zus
 
    #+BEGIN_SRC bash
    # Beispiel: Eingehende HTTP-Verbindungen in der Eingabekette erlauben
-   sudo nft add rule ip filter input tcp dport 80 accept
+   sudo nft 'add rule ip filter input tcp dport 80 accept'
    #+END_SRC
 
 *Anzeigen und Speichern der Konfiguration*
@@ -94,6 +98,21 @@ Mit diesen zusätzlichen Befehlen lässt sich eine vollständige Nftables-Firewa
    # Beispiel: SSH-Verbindungen deaktivieren
    sudo ufw deny 22
    #+END_SRC
+
+Damit diese Regeln aktiviert werden, muss =ufw= aktiviert werden:
+
+#+BEGIN_SRC bash
+  sudo ufw enable
+#+END_SRC
+
+Sie können mit =ufw= diese Regel auch leicht wieder deaktivieren:
+
+#+BEGIN_SRC bash
+  sudo ufw disable
+#+END_SRC
+
+
+
 
 *** *Firewalld*
    Firewalld ist ein dynamisches Firewall-Management-Tool, das die Definition und Verwaltung von Regeln ohne Neustart der Firewall ermöglicht. Es nutzt Zonen, um unterschiedliche Sicherheitsstufen zu implementieren.

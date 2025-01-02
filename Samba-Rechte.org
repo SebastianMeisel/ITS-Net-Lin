@@ -41,6 +41,18 @@ Bearbeiten Sie diese Datei mit einem Texteditor, um weitere Benutzerzuordnungen 
 sudo vim /etc/samba/smbusers
 #+end_src
 
+Anschließend tragen sie in der Datei =/etc/samba/smb.conf= im Abschnitt =[global]= die Zeile =username map = /etc/samba/smbusers= hinzu:
+
+#+BEGIN_SRC text
+[global]
+
+## Browsing/Identification ###
+
+# Change this to the workgroup/NT-domain name your Samba server will part of
+   workgroup = WORKGROUP
+   username map = /etc/samba/smbusers
+#+END_SRC
+
 ** Konfiguration der Dateirechte
 
 Windows unterstützt kein POSIX-kompatiblen Dateirechte. Die Parameter =create mode= und =directory mode= definieren die Standardrechte für neu erstellte Dateien und Verzeichnisse.
