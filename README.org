@@ -142,7 +142,7 @@
   - Aufgaben: Backups planen und durchführen, Verwendung von find für Sicherungen
   - [[file:Backups.pdf][Backups unter Linux (PDF)]]
 
-** Skripte erstellen
+** Skripte erstellen (Nur FISI)
 :PROPERTIES:
 :Theorie: 8
 :Praxis: 8
@@ -161,7 +161,7 @@
   - Aufgaben: Firewall für SSH und Samba einrichten
   - [[file:Firewall.pdf][Firewalls unter Linux (PDF)]]
 
-** Apache-Web-Server im Intranet
+** Apache-Web-Server im Intranet (nur FISI)
 :PROPERTIES:
 :Theorie: 2
 :Praxis: 2

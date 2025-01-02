@@ -47,13 +47,17 @@ Ein Vollbackup umfasst alle Daten in einem definierten Verzeichnis oder auf eine
 
 Beispiel mit =rsync=:
 #+BEGIN_SRC bash
-sudo mkdir -p /backup/vollbackup
-sudo chmod 777 -R /backup/       # 7 = 111 =  rwx 
+sudo mkdir -p -m 777 /backup/vollbackup
 rsync -av --progress /quelle/ /backup/vollbackup/ziel
 #+END_SRC
-- =-a= (*archive*) :: Aktiviert den Archivmodus, wodurch Dateien rekursiv kopiert und die wichtigsten Attribute (z. B. Rechte, Besitzer, Zeitstempel) beibehalten werden.
-- =-v= (*verbose*) :: Gibt detaillierte Informationen über den Fortschritt aus.
-- =--progress= :: Zeigt den Fortschritt für jede Datei an.
+
+- =mkdir= :: Verzeichnis erstellen:
+  - =-p= :: inklusive Elternverzeichnis (/parent/).
+  - =-m 777= :: setze die Nutzerrechte: ~rwx = 111 = 7~
+- =rsync= :: Verzeichnisse synchronisieren:
+  - =-a= (*archive*) :: Aktiviert den Archivmodus, wodurch Dateien rekursiv kopiert und die wichtigsten Attribute (z. B. Rechte, Besitzer, Zeitstempel) beibehalten werden.
+  - =-v= (*verbose*) :: Gibt detaillierte Informationen über den Fortschritt aus.
+  - =--progress= :: Zeigt den Fortschritt für jede Datei an.
 
 
 *** Inkrementelles Backup
@@ -63,12 +67,41 @@ Ein inkrementelles Backup speichert nur die Änderungen, die seit dem letzten Ba
 - *Nachteil*: Wiederherstellung ist komplexer, da alle inkrementellen Backups seit dem letzten Vollbackup benötigt werden.
 
 Beispiel mit =rsync= und Nutzung eines Zeitstempels:
+
+Um ein inkrementelles Backup zu erstellen, müssen wir stets wissen, welche das letzte Backup war - unabhängig davon, ob es ein Voll-, ein inkrementelles oder differentielles Backup war.
+
+Um das zu erreichen setzen wir zunächst einen [[file:Datei-Links.pdf][Softlink]] auf das Vollbackup:
+
 #+BEGIN_SRC bash
-sudo mkdir -p /backup/inkrementell/
-sudo chmod 777 -R /backup/       # 7 = 111 =  rwx 
-rsync -av --progress --link-dest=/backup/vollbackup/ziel /quelle/ /backup/inkrementell/ziel-$(date +%Y%m%d)/
+mkdir -p -m 777 /backup/latest/
+sudo ln -snf /backup/vollbackup/ziel /backup/latest
+#+END_SRC
+
+- =-ln= :: Link erstellen:
+  - =-s= :: Softlink erstellen (keinen Hardlink).
+  - =-n= :: Stelle sicher, dass ein Link auf das Verzeichnis (nicht in dem Verzeichnis) erstellt wird.
+  - =-f= :: Falls bereits ein Link besteht, ersetze ihn.
+
+Nun kann das inkrementelle Backup auf dieser Grundlage erstellt werden:
+
+#+BEGIN_SRC bash
+sudo mkdir -p -m 777/backup/inkrementell/
+rsync -av --progress --link-dest=/backup/latest/ziel /quelle/ /backup/inkrementell/ziel-$(date +%Y%m%d)/
 #+END_SRC
 - =--link-dest=<Pfad>= :: Verwendet eine Referenz auf ein vorheriges Backup, um Hardlinks zu erstellen. Diese Methode spart Speicherplatz, da unveränderte Dateien nicht erneut kopiert werden.
+
+Abschließend muss ein neuer Link erstellt werden:
+#+BEGIN_SRC bash
+sudo ln -snf /backup/inkrementell/$(ls -1tr ziel* | tail -1) /backup/latest
+#+END_SRC
+
+- =$(…)= :: Füge die Ausgabe der Befehle in Klammern als String ein (Subshell).
+- =ls= :: Verzeichnisinhalt anzeigen:
+  - =-1= :: Eine Datei pro Zeile.
+  - =-t= :: Sortiere nach Zeit der letzten Änderung.
+  - =-r= :: Umgekehrte Reihenfolge (neueste Datei zuletzt).
+- =tail= :: Letzte Zeilen ausgeben:
+  - =-1= :: Nur eine (/die/ letzte) Zeile ausgeben.
 
 *** Differenzielles Backup
 Ein differenzielles Backup speichert alle Änderungen seit dem letzten Vollbackup. Es bietet eine Kompromisslösung zwischen Voll- und inkrementellem Backup.
@@ -78,10 +111,10 @@ Ein differenzielles Backup speichert alle Änderungen seit dem letzten Vollbacku
 
 Beispiel mit =rsync=:
 #+BEGIN_SRC bash
-sudo mkdir -p /backup/differenziell/
-sudo chmod 777 -R /backup/       # 7 = 111 =  rwx 
+sudo mkdir -p -m 777/backup/differenziell/
 rsync -av --progress --link-dest=/backup/vollbackup/ziel /quelle/ /backup/differenziell/ziel-$(date +%Y%m%d)/
 #+END_SRC
+
 
 ** Praktische Hinweise
 - Vor einem Backup sollte geprüft werden, ob ausreichend Speicherplatz zur Verfügung steht.
@@ -98,26 +131,47 @@ Dazu richten wir mit =systemd= einen Service und einen Timer ein.
 
 *** Schritt 1: Backup-Skript erstellen
 Erstellen Sie ein Skript, das den Backup-Vorgang ausführt:
-#+BEGIN_SRC bash :tangle /usr/local/bin/backup.sh
+#+BEGIN_SRC bash :tangle backup.sh
 #!/bin/bash
-BACKUP_DIR="/backup"
-SOURCE_DIR="/quelle"
+SUB_DIR="bros"
+BACKUP_DIR="/backup/"
+SOURCE_DIR="/home/${SUB_DIR}"
 
 # Datum im Format YYYYMMDD
 DATE=$(date +%Y%m%d)
 
+FULLB="${BACKUP_DIR}/Vollbackup
+INCRB="${BACKUP_DIR}/Inkrementell/${DATE}"
+DIFFB="${BACKUP_DIR}/Differentiell"
+LASTB="${BACKUP_DIR}/Latest"
+
 # Backup-Art je nach Argument
 case "$1" in
   full)
-    rsync -av --progress "$SOURCE_DIR/" "$BACKUP_DIR/full/"
-    ;;
-  differential)CElo
-    rsync -av --progress --link-dest="$BACKUP_DIR/full/" "$SOURCE_DIR/" "$BACKUP_DIR/differential/$DATE/"
+    # Stelle sicher, dass Zielverzeichnis existiert 
+    [[ -d "${FULLB}"]] || mkdir -p -m 777 "${FULLB}"
+    # Synchronisiere
+    rsync -av "${SOURCE_DIR/}" "${FULLB}"
+    # Link to Latest
+    ln -snf "${FULLB}/${SUB_DIR" "${LASTB}"
     ;;
   incremental)
-    rsync -av --progress --link-dest="$BACKUP_DIR/differential/" "$SOURCE_DIR/" "$BACKUP_DIR/incremental/$DATE/"
+    # Stelle sicher, dass Zielverzeichnis existiert 
+    [[ -d "${INCRB}"]] || mkdir -p -m 777 "${INCRB}"
+    # Synchronisiere
+    rsync -av --link-dest="${LASTB}" "${SOURCE_DIR}" "${INCRB}"
+    # Link to Latest
+    ln -snf "${INCRB}/${SUB_DIR" "${LASTB}"
     ;;
-  *)
+  differential)
+    # Stelle sicher, dass Zielverzeichnis existiert 
+    [[ -d "${DIFFB}"]] || mkdir -p -m 777 "${DIFFB}"
+    # Synchronisiere
+    rsync -av --link-dest="${FULLB}" "${SOURCE_DIR}" "${DIFFB}"
+    # Link to Latest
+    ln -snf "${DIFFB}/${SUB_DIR" "${LASTB}"
+    ;;
+  ,*)
     echo "Usage: $0 {full|differential|incremental}"
     exit 1
     ;;
@@ -131,7 +185,7 @@ chmod +x /usr/local/bin/backup.sh
 
 *** Schritt 2: systemd-Service erstellen
 Erstellen Sie eine Datei =/etc/systemd/system/backup.service=:
-#+BEGIN_SRC ini :tangle /etc/systemd/system/backup.service
+#+BEGIN_SRC ini :tangle backup.service
 [Unit]
 Description=Backup Service
 
@@ -144,7 +198,7 @@ ExecStart=/usr/local/bin/backup.sh %i
 Erstellen Sie drei Timer-Dateien für die verschiedenen Backup-Typen.
 
 1. Täglicher inkrementeller Timer: =/etc/systemd/system/backup@incremental.timer=
-#+BEGIN_SRC ini :tangle /etc/systemd/system/backup@incremental.timer
+#+BEGIN_SRC ini :tangle backup@incremental.timer
 [Unit]
 Description=Daily Incremental Backup Timer
 
@@ -157,7 +211,7 @@ WantedBy=timers.target
 #+END_SRC
 
 2. Wöchentlicher differenzieller Timer: =/etc/systemd/system/backup@differential.timer=
-#+BEGIN_SRC ini :tangle /etc/systemd/system/backup@differential.timer
+#+BEGIN_SRC ini :tangle backup@differential.timer
 [Unit]
 Description=Weekly Differential Backup Timer
 
@@ -170,7 +224,7 @@ WantedBy=timers.target
 #+END_SRC
 
 3. Monatlicher Vollbackup-Timer: =/etc/systemd/system/backup@full.timer=
-#+BEGIN_SRC ini :tangle /etc/systemd/system/backup@full.timer
+#+BEGIN_SRC ini :tangle backup@full.timer
 [Unit]
 Description=Monthly Full Backup Timer
 
