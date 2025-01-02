@@ -32,16 +32,36 @@ Eine SPI-Firewall (Stateful Packet Inspection) überwacht und analysiert den Zus
 ** Gängige Lösungen unter Linux
 
 *** Iptables
-   Iptables ist ein traditionelles Firewall-Tool, das auf dem Netfilter-Framework basiert. Es ermöglicht die Definition von Regeln, um Netzwerkpakete zu filtern und Weiterleitungsrichtlinien festzulegen.
+   ~Iptables~ ist ein veraltetes Firewall-Tool, das auf dem Netfilter-Framework basiert. Es ermöglicht die Definition von Regeln, um Netzwerkpakete zu filtern und Weiterleitungsrichtlinien festzulegen.
 
-   #+BEGIN_SRC bash
+   ~Iptables~ ist seit Debian seit #welcher Version? nicht mehr vorinstalliert.
+
+
+Iptables ist seit Debian 10 (Buster) nicht mehr vorinstalliert. Es kann aber nachinstalliert werden:
+
+#+BEGIN_SRC bash
+sudo apt update # Wenn nötig
+sudo apt install iptables
+#+END_SRC
+
+Nun kann man Firewall-Regeln anlegen …
+
+      #+BEGIN_SRC bash
    # Beispiel: Alle eingehenden SSH-Verbindungen erlauben
    sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
    #+END_SRC
 
-*** Nftables
-   Nftables ist der moderne Nachfolger von Iptables und bietet eine effizientere Syntax und bessere Leistung. Es wird ebenfalls vom Netfilter-Framework unterstützt und ersetzt schrittweise Iptables.
+… und anzeigen
 
+      #+BEGIN_SRC bash
+   # Beispiel: Alle eingehenden SSH-Verbindungen erlauben
+   sudo iptables -L
+   #+END_SRC
+
+Allerdings ist dies nur ein Kompatiblitätsschicht, die den Übergang zu ~Nftables~ erleichtern soll.
+
+*** Nftables
+   ~Nftables~ ist der moderne Nachfolger von ~Iptables~ und bietet eine effizientere Syntax und bessere Leistung. 
 
 *** Erstellen einer Tabelle
    Eine Tabelle wird benötigt, um Regeln und Ketten zu organisieren. Tabellen können verschiedene Protokolle unterstützen (z. B. IPv4, IPv6, ARP).
