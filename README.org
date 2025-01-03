@@ -150,6 +150,7 @@
 :END: 
   - Themen: Bash-Skripte, Variablen, Schleifen, if-else-Anweisungen
   - Aufgaben: Skripte zur Automatisierung von Aufgaben, Beispiel: Benutzer anlegen, Cronjobs einrichten
+  - [[file:Bash-Skripting.pdf][Bash-Skripting (PDF)]]
 
 ** Firewall
 :PROPERTIES:
