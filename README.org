@@ -172,6 +172,7 @@
 
   - Themen: Apache-Installation, Erstellung einer Homepage im Intranet
   - Aufgaben: Webserver einrichten, Seiten erstellen und anpassen
+  - [[file:Apache.pdf][Apache-Web-Server (PDF)]]
 
 ** Abschluss und Projekttage
   - Durchführung und Nachbesprechung einer Leistungskontrolle

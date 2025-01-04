@@ -1,0 +1,179 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Apache-Web-Server im Intranet
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+
+* Einleitung
+   Der Apache-Web-Server ist eine der bekanntesten und am häufigsten eingesetzten Softwarelösungen, um Webanwendungen und Webseiten zu hosten. 
+
+* Apache-Installation
+   Der Apache-Web-Server, auch als =httpd= bekannt, ist Open Source und auf nahezu allen Unix- und Linux-basierten Betriebssystemen verfügbar. Um den Apache-Web-Server zu installieren, müssen Sie die entsprechenden Pakete über den Paketmanager Ihrer Distribution installieren.
+
+** Installation
+
+Installation auf einem Debian-basierten System:
+
+#+BEGIN_SRC bash
+sudo apt update
+sudo apt install apache2
+#+END_SRC
+
+Installation auf einem Red Hat-basierten System (z.B. CentOS, Fedora):
+
+#+BEGIN_SRC bash
+sudo yum install httpd
+#+END_SRC
+
+** Starten und Aktivieren des Apache-Webservers:
+
+Nach der Installation muss der Apache-Web-Server gestartet und so konfiguriert werden, dass er bei jedem Systemstart automatisch startet.
+
+#+BEGIN_SRC bash
+sudo systemctl start apache2   # Debian/Ubuntu
+sudo systemctl enable apache2  # Debian/Ubuntu
+#+END_SRC
+
+Für /Red Hat/-basierte Systeme verwenden Sie =httpd= statt =apache2=:
+
+#+BEGIN_SRC bash
+sudo systemctl start httpd     # Red Hat/CentOS/Fedora
+sudo systemctl enable httpd    # Red Hat/CentOS/Fedora
+#+END_SRC
+
+Überprüfen, ob der Webserver läuft: Nach dem Start können Sie den Webserver durch Aufrufen der IP-Adresse oder des Hostnamens des Servers im Browser überprüfen. Standardmäßig wird auf =http://localhost= oder =http://[Server-IP]= die Apache-Testseite angezeigt.
+
+*  Konfiguration des Apache-Webservers
+Der Apache-Web-Server wird über Konfigurationsdateien gesteuert. Die Hauptkonfigurationsdatei befindet sich in der Regel unter  =/etc/apache2/apache2.conf= für Debian-basierte Systeme oder =/etc/httpd/conf/httpd.conf= für Red Hat-basierte Systeme.
+
+Wichtige Konfigurationsdateien:
+
+ - =/etc/apache2/apache2.conf= (Debian/Ubuntu)
+   - =/etc/httpd/conf/httpd.conf= (Red Hat/CentOS/Fedora)
+ - =/etc/apache2/sites-available/000-default.conf= (Debian/Ubuntu, für virtuelle Hosts)
+   - =/etc/httpd/conf.d/= (Red Hat/CentOS/Fedora, für benutzerdefinierte Konfigurationen)
+
+- Beispiel :: In der Datei =/etc/apache2/sites-available/000-default.conf= können Sie die Konfiguration des Webservers anpassen, z.B. das Verzeichnis, in dem Ihre Webseiten gespeichert werden.
+
+#+BEGIN_SRC text
+DocumentRoot /var/www/html
+#+END_SRC
+
+#+begin_quote
+- Best Practice :: Sichern Sie Ihre Konfiguration durch regelmäßige Backups und testen Sie Änderungen vor der Live-Schaltung, um den Webserver vor möglichen Fehlkonfigurationen zu schützen.
+#+end_quote
+
+
+* Erstellung einer Homepage im Intranet
+Nachdem der Apache-Web-Server installiert und konfiguriert wurde, können Sie mit der Erstellung einer Homepage beginnen. Die Standard-Webroot für Apache ist in der Regel =/var/www/html=, in dem Sie Ihre HTML-Dateien ablegen können.0
+
+ - Erstellen Sie eine neue HTML-Datei in /var/www/html:
+#+BEGIN_SRC bash
+sudo nano /var/www/html/index.html
+#+END_SRC
+ - Fügen Sie grundlegenden HTML-Code hinzu:
+#+BEGIN_SRC text
+    <!DOCTYPE html>
+    <html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Intranet Homepage</title>
+    </head>
+    <body>
+        <h1>Willkommen im Intranet!</h1>
+        <p>Dies ist die Startseite für das interne Netzwerk.</p>
+    </body>
+    </html>
+#+END_SRC
+
+#+begin_quote
+ - Best Practice :: Verwenden Sie immer die richtige Ordnersicherheit und stellen Sie sicher, dass nur der Webserver (und autorisierte Benutzer) Zugriff auf den Webordner hat. Geben Sie keine Schreibrechte für nicht vertrauenswürdige Benutzer.
+
+#+BEGIN_SRC bash
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod -R 755 /var/www/html
+#+END_SRC
+#+end_quote
+
+
+* 4. Anpassen der Homepage
+Um die Homepage weiter anzupassen, können Sie zusätzliche HTML-Seiten erstellen oder Stylesheets und Skripte einbinden, um die Benutzeroberfläche zu verbessern.
+
+Beispiel für eine einfache Anpassung: Fügen Sie eine neue Seite hinzu, die einen Link zur Startseite enthält:
+
+#+BEGIN_SRC bash
+sudo nano /var/www/html/about.html
+#+END_SRC
+
+
+Inhalt der about.html:
+
+#+BEGIN_SRC text
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Über uns</title>
+</head>
+<body>
+    <h1>Über unser Intranet</h1>
+    <p>Hier sind Informationen über unser internes Netzwerk.</p>
+    <a href="index.html">Zurück zur Startseite</a>
+</body>
+</html>
+#+END_SRC
+
+
+#+begin_quote
+ - Best Practice :: Verwenden Sie relative URLs für die Verlinkung zwischen den Seiten, um die Navigation innerhalb des Intranets zu erleichtern.
+#+end_quote
+
+* Weitere Anpassungen und Funktionen
+
+**  Virtuelle Hosts
+
+Wenn Sie mehrere Webseiten auf demselben Server hosten möchten, können Sie virtuelle Hosts einrichten. Dies wird durch Erstellen von Konfigurationsdateien unter =/etc/apache2/sites-available/= (Debian/Ubuntu) oder =/etc/httpd/conf.d/= (Red Hat/CentOS/Fedora) durchgeführt.
+
+Beispiel (Debian/Ubuntu):
+
+#+BEGIN_SRC bash
+sudo nano /etc/apache2/sites-available/meine-website.conf
+#+END_SRC
+
+Inhalt:
+
+#+BEGIN_SRC text
+<VirtualHost *:80>
+    ServerAdmin webmaster@meine-website.local
+    DocumentRoot /var/www/meine-website
+    ServerName meine-website.local
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+#+END_SRC
+
+Aktivieren Sie den virtuellen Host:
+
+#+BEGIN_SRC bash
+sudo a2ensite meine-website.conf
+sudo systemctl reload apache2
+#+END_SRC
