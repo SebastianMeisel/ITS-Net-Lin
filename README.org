@@ -151,6 +151,7 @@
   - Themen: Bash-Skripte, Variablen, Schleifen, if-else-Anweisungen
   - Aufgaben: Skripte zur Automatisierung von Aufgaben, Beispiel: Benutzer anlegen, Cronjobs einrichten
   - [[file:Bash-Skripting.pdf][Bash-Skripting (PDF)]]
+  - [[file:CrontabsTimers.org][Cronjobs und systemd-Timer (PDF)]]
 
 ** Firewall
 :PROPERTIES:

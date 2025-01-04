@@ -1,0 +1,104 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Cronjobs und systemd-Timer
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Einleitung
+  In Linux- und Unix-Systemen sind Cronjobs und systemd-Timer grundlegende Werkzeuge zur Automatisierung wiederkehrender Aufgaben. Während Cronjobs eine traditionelle Methode zur Planung von Aufgaben bieten, stellt systemd mit seinen Timer-Einheiten eine moderne und flexiblere Lösung dar. In diesem Dokument werden sowohl Cronjobs als auch systemd-Timer behandelt, ihre Funktionsweise erklärt und Best Practices zur Nutzung vorgestellt.
+
+* Cronjobs
+  Cronjobs sind geplante Aufgaben, die regelmäßig zu festgelegten Zeiten ausgeführt werden. Cron ist ein Daemon, der es ermöglicht, Befehle oder Skripte in regelmäßigen Abständen auszuführen. Die Konfiguration erfolgt durch die Bearbeitung der Datei =crontab=.
+
+**  Cronjob erstellen
+  Mit dem Befehl =crontab -e= wird die Crontab-Datei für den aktuellen Benutzer geöffnet, in der wiederkehrende Aufgaben definiert werden. Ein einfaches Beispiel für einen Cronjob, der täglich um 3 Uhr morgens ein Backup-Skript ausführt, sieht wie folgt aus:
+
+  #+BEGIN_SRC bash
+  0 3 * * * /home/user/backup.sh
+  #+END_SRC
+
+  In diesem Beispiel wird der Befehl =/home/user/backup.sh= täglich um 3:00 Uhr ausgeführt.
+
+** Cronjob-Syntax
+  Die Cronjob-Syntax besteht aus fünf Feldern, die die Ausführungszeit definieren:
+
+  #+BEGIN_SRC text
+  * * * * *  Befehl
+  │ │ │ │ │
+  │ │ │ │ └─ Wochentag (0-7, wobei 0 und 7 Sonntag sind)
+  │ │ │ └─── Monat (1-12)
+  │ │ └───── Tag des Monats (1-31)
+  │ └─────── Stunde (0-23)
+  │ └─────── Minute (0-59)
+  #+END_SRC
+
+* systemd-Timer
+  systemd bietet eine moderne und flexible Methode zur Planung von Aufgaben mit sogenannten Timer-Einheiten. Sie bieten mehr Funktionen und Integration in das systemd-System als Cronjobs und erlauben komplexe Zeitpläne sowie Abhängigkeiten zwischen Aufgaben.
+
+* systemd-Timer erstellen
+  Um einen systemd-Timer zu erstellen, müssen zwei Dateien angelegt werden: eine Service-Datei, die die auszuführende Aufgabe beschreibt, und eine Timer-Datei, die die Ausführungszeit festlegt.
+
+** Service-Datei (z.B. =/etc/systemd/system/backup.service=)
+
+  #+BEGIN_SRC ini
+  [Unit]
+  Description=Backup-Skript ausführen
+
+  [Service]
+  ExecStart=/home/user/backup.sh
+  #+END_SRC
+
+** Timer-Datei (z.B. =/etc/systemd/system/backup.timer=):
+
+  #+BEGIN_SRC ini
+  [Unit]
+  Description=Backup-Timer
+
+  [Timer]
+  OnCalendar=daily
+  Persistent=true
+
+  [Install]
+  WantedBy=timers.target
+  #+END_SRC
+
+  In diesem Beispiel wird das Skript =/home/user/backup.sh= täglich ausgeführt.
+
+** Timer-Syntax
+  Die Timer-Syntax von systemd verwendet den Parameter =OnCalendar=, um festzulegen, wann die Aufgabe ausgeführt werden soll. Dabei sind verschiedene Zeitformate möglich, z.B. =daily=, =weekly= oder eine genaue Angabe wie =Mon *-*-03 03:00:00= für eine Ausführung am 3. Montag jedes Monats um 3 Uhr.
+
+* Vor- und Nachteile
+** Cronjobs
+  - Vorteile:
+    - Einfach zu konfigurieren
+    - Weit verbreitet und gut dokumentiert
+    - Ideal für einfache Zeitpläne
+  - Nachteile:
+    - Eingeschränkte Flexibilität
+    - Keine Integration in systemd
+
+** systemd-Timer
+  - Vorteile:
+    - Höhere Flexibilität (z.B. komplexe Zeitpläne, Abhängigkeiten)
+    - Bessere Integration in das systemd-System
+    - Fehlermanagement und Log-Funktionalitäten
+  - Nachteile:
+    - Etwas komplexer in der Konfiguration
+    - Neuere Technologie, weniger verbreitet
+
