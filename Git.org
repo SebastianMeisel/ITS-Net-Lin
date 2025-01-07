@@ -1,0 +1,119 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Git
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Git 
+
+~Git~ ist ein verteiltes Versionskontrollsystem, das Entwicklern hilft, Änderungen an Dateien zu verfolgen, mit anderen zusammenzuarbeiten und die Historie von Projekten zu verwalten. Es wurde wie der Linux-Kernel von Linus Torvalds entwickelt. ~Git~ kann vollständig über die Kommandozeile genutzt werden und bietet viele mächtige Funktionen, um die Arbeit mit Quellcode und Dateien zu erleichtern.
+
+** Grundlegende Git-Befehle
+
+Die wichtigsten Git-Befehle lassen sich in zwei Kategorien einteilen: Befehle für die Arbeit mit einem Repository und Befehle für die Verwaltung von Änderungen.
+
+*** Git-Repository initialisieren
+
+Bevor Sie Git verwenden können, müssen Sie ein Git-Repository initialisieren. Dies geschieht mit dem folgenden Befehl:
+
+#+begin_src bash
+git init
+#+end_src
+
+Dieser Befehl erstellt ein neues Git-Repository im aktuellen Verzeichnis. Sie können nun Dateien zu diesem Repository hinzufügen und es mit der Versionskontrolle beginnen.
+
+*** Dateien zum Repository hinzufügen
+
+Nachdem Sie ein Repository initialisiert haben, können Sie Dateien zum Staging-Bereich hinzufügen, um sie in die Versionskontrolle zu übernehmen:
+
+#+begin_src bash
+git add <dateiname>
+#+end_src
+
+Um alle Dateien hinzuzufügen, verwenden Sie:
+
+#+begin_src bash
+git add .
+#+end_src
+
+*** Änderungen committen
+
+Nachdem die Dateien zum Staging-Bereich hinzugefügt wurden, können Sie diese Änderungen mit einem Commit speichern:
+
+#+begin_src bash
+git commit -m "Beschreibung der Änderung"
+#+end_src
+
+Der Parameter =-m= ermöglicht es, eine kurze Beschreibung des Commits hinzuzufügen, um die vorgenommenen Änderungen zu dokumentieren.
+
+*** Git-Status anzeigen
+
+Um den Status des Repositories zu überprüfen und zu sehen, welche Dateien geändert wurden, verwenden Sie:
+
+#+begin_src bash
+git status
+#+end_src
+
+Dieser Befehl zeigt Ihnen die aktuellen Änderungen und den Staging-Bereich an.
+
+*** Änderungen an Git-Repository zurücksetzen
+
+Falls Sie Änderungen rückgängig machen möchten, können Sie sie mit folgendem Befehl zurücksetzen:
+
+#+begin_src bash
+git checkout -- <dateiname>
+#+end_src
+
+Dieser Befehl stellt die Datei wieder her, wie sie im letzten Commit war.
+
+** Arbeiten mit Remote-Repositories
+
+Neben lokalen Git-Repositories können Sie auch mit Remote-Repositories arbeiten, die sich auf einem anderen Server befinden (z. B. GitHub, GitLab).
+
+*** Remote-Repository hinzufügen
+
+Um ein Remote-Repository zu Ihrem lokalen Repository hinzuzufügen, verwenden Sie den Befehl:
+
+#+begin_src bash
+git remote add origin <url-des-repositories>
+#+end_src
+
+Beispiel:
+
+#+begin_src bash
+git remote add origin https://github.com/Benutzername/Projekt.git
+#+end_src
+
+*** Änderungen an Remote-Repository senden
+
+Nach dem Commit können Sie Ihre Änderungen an das Remote-Repository senden:
+
+#+begin_src bash
+git push origin master
+#+end_src
+
+*** Änderungen aus Remote-Repository herunterladen
+
+Um Änderungen aus dem Remote-Repository zu holen, verwenden Sie den Befehl:
+
+#+begin_src bash
+git pull origin master
+#+end_src
+
