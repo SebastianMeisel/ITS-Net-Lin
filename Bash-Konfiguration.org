@@ -1,0 +1,81 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Bash Konfiguration
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Einführung
+Die ~Bash~ (Bourne Again Shell) ist eine der am weitesten verbreiteten Shells unter Linux. Sie bietet umfangreiche Möglichkeiten zur Anpassung und Automatisierung von Aufgaben durch Konfigurationsdateien.
+
+* =.bash_profile=
+Die Datei =.bash_profile= wird ausgeführt, wenn eine interaktive Login-Shell gestartet wird. Sie wird oft genutzt, um Umgebungsvariablen zu setzen und die Datei =.bashrc= aufzurufen.
+
+** Beispiel für eine typische =.bash_profile=:
+#+begin_src bash
+# Umgebungsvariablen setzen
+export PATH="${HOME}/bin:${PATH}"
+
+# .bashrc aufrufen, falls vorhanden
+if [ -f "${HOME}/.bashrc" ]; then
+  source "${HOME}/.bashrc"
+fi
+#+end_src
+
+#+begin_quote
+ - =PATH= :: Diese Umgebungsvariable enthält Pfade (getrennt durch =:=) in denen nach ausführbaren Dateien gesucht wird.
+ - =HOME= :: Das Home-Verzeichnis (Benutzerverzeichnis).
+ - =source= :: Datei einlesen.
+#+end_quote
+
+* =.bashrc=
+Die Datei =.bashrc= wird bei der Initialisierung von interaktiven Nicht-Login-Shells ausgeführt. Sie enthält häufig Aliase, Funktionen und andere benutzerdefinierte Einstellungen.
+
+** Beispiel für eine typische =.bashrc=:
+#+begin_src bash
+# Aliase definieren
+alias ll='ls -la'
+alias grep='grep --color=auto'
+
+# Prompt anpassen
+export PS1='\u@\h:\w$ '
+#+end_src
+
+#+begin_quote
+ - =alias= :: Einfache neue Befehle definieren.
+#+end_quote
+
+* =.bash_history=
+Die Datei =.bash_history= speichert die Befehlshistorie der Bash. Sie ermöglicht es, frühere Befehle bequem aufzurufen und erneut auszuführen. Die Historie kann durch verschiedene Umgebungsvariablen angepasst werden.
+
+** Wichtige Einstellungen:
+ - =HISTSIZE= ::  Anzahl der gespeicherten Befehle in der Sitzung
+ - =HISTFILESIZE= :: Maximale Anzahl der in der Datei gespeicherten Befehle
+ - =HISTCONTROL=  :: Steuerung der Speicherung (z. B. =ignoredups= vermeidet doppelte Einträge)
+
+** Beispiel für Einstellungen in der =.bashrc=:
+#+begin_src bash
+# Befehlshistorie konfigurieren
+export HISTSIZE=1000
+export HISTFILESIZE=2000
+export HISTCONTROL=ignoredups:ignorespace
+#+end_src
+
+#+begin_quote
+ - Sicherheitstipp :: Vermeide die Speicherung sensibler Daten in der Historie, indem du ein Leerzeichen vor dem Befehl einfügst (sofern =ignorespace= aktiviert ist).
+#+end_quote
