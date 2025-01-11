@@ -140,6 +140,4 @@ Auch für macOS und Windows stehen Paketverwaltungen zur Verfügung:
   winget install <paketname>
   #+END_SRC
 
-** Fazit
-Obwohl jede Distribution ihre eigene Paketverwaltung hat, verfolgen sie alle das gleiche Ziel: Die einfache Verwaltung von Softwarepaketen. Mit Tools wie APT, DNF, YUM, Zypper und Pacman wird die Installation und Wartung von Software unter Linux erheblich vereinfacht. Auf macOS und Windows bieten Homebrew und Winget ähnliche Funktionen, um auch auf diesen Plattformen Software bequem zu verwalten.
 

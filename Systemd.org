@@ -1,0 +1,164 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Systemd und systemctl
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Einführung
+
+Systemd ist ein modernes Init-System und Dienstemanager für Linux, das die traditionellen Init-Systeme wie SysVinit ersetzt hat. Es wurde entwickelt, um den Bootprozess zu beschleunigen, Dienste effizient zu verwalten und eine bessere Kontrolle über Systemressourcen zu bieten.
+
+** Warum Systemd?
+- **Parallele Dienststarts**: Systemd startet Dienste parallel, wodurch der Bootprozess deutlich beschleunigt wird.
+- **Einheitliche Schnittstelle**: Die Verwaltung von Diensten und anderen Ressourcen erfolgt über eine zentrale Schnittstelle.
+- **Abhängigkeitsmanagement**: Dienste können in Abhängigkeit zueinander gestartet oder gestoppt werden.
+- **Erweiterte Logging-Funktionen**: Das Journal speichert umfassende Log-Daten, die das Debuggen erleichtern.
+
+** Grundlegende Begriffe
+- *Unit*: Eine grundlegende Verwaltungsentität (z. B. Service, Socket, Mount).
+- *Target*: Gruppen von Units, die zusammen einen Systemzustand repräsentieren.
+- *Journal*: Zentralisiertes Logging-System, das detaillierte Ereignisprotokolle bereitstellt.
+- *Dependency*: Abhängigkeiten zwischen Units, die den Start- und Stoppprozess steuern.
+
+* systemctl
+
+Das Werkzeug =systemctl= ist die Hauptschnittstelle, um Systemd zu steuern und Units zu verwalten. Es ermöglicht die Interaktion mit Diensten, Systemzielen und anderen Units. Einige wichtige Anwendungsfälle werden im Folgenden erläutert.
+
+** Units
+
+Units sind Konfigurationsdateien, die Dienste, Geräte, Mountpunkte oder andere Ressourcen beschreiben. Sie werden typischerweise in =/usr/lib/systemd/system/= oder =/etc/systemd/system/= gespeichert.
+
+#+BEGIN_SRC bash
+systemctl list-units
+#+END_SRC
+
+Mit diesem Befehl werden alle aktiven Units aufgelistet. Jede Unit hat einen Status, der Informationen über den aktuellen Zustand liefert.
+
+#+BEGIN_SRC bash :results verbatim :export both
+systemctl cat sshd.service
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+# /usr/lib/systemd/system/sshd.service
+[Unit]
+Description=OpenSSH Daemon
+After=network.target
+
+[Service]
+Type=notify
+EnvironmentFile=-/etc/sysconfig/ssh
+ExecStartPre=/usr/sbin/sshd-gen-keys-start
+ExecStartPre=/usr/sbin/sshd -t $SSHD_OPTS
+ExecStart=/usr/sbin/sshd -D $SSHD_OPTS
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+RestartPreventExitStatus=255
+TasksMax=infinity
+
+[Install]
+WantedBy=multi-user.target
+#+end_example
+
+Die Konfigurationsdateien sind in Abschnitte unterteilt:
+- **[Unit]**: Enthält Meta-Informationen über die Unit, z. B. Beschreibung und Abhängigkeiten.
+- **[Service]**: Definiert, wie der Dienst gestartet wird, inklusive Startbefehlen und Restart-Strategien.
+- **[Install]**: Enthält Informationen zur Aktivierung der Unit.
+
+** Service-Units
+
+Service-Units sind die häufigsten Units in Systemd. Sie repräsentieren Dienste, die gestartet, gestoppt oder neu gestartet werden können.
+
+Ein Beispiel für die Statusabfrage eines Dienstes:
+
+#+BEGIN_SRC bash  :results verbatim :export both
+systemctl status sshd.service
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+● sshd.service - OpenSSH Daemon
+     Loaded: loaded (/usr/lib/systemd/system/sshd.service; enabled; preset: disabled)
+     Active: active (running) since Thu 2025-01-09 07:45:33 CET; 12h ago
+ Invocation: 5c24fa50b31945d1b508d9928061d14e
+    Process: 1493 ExecStartPre=/usr/sbin/sshd-gen-keys-start (code=exited, status=0/SUCCESS)
+    Process: 1509 ExecStartPre=/usr/sbin/sshd -t $SSHD_OPTS (code=exited, status=0/SUCCESS)
+   Main PID: 1527 (sshd)
+      Tasks: 1
+        CPU: 40ms
+     CGroup: /system.slice/sshd.service
+             └─1527 "sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups"
+
+Warning: some journal files were not opened due to insufficient permissions.
+#+end_example
+
+Weitere Befehle für die Verwaltung von Diensten:
+
+- Stoppen eines Dienstes:
+#+BEGIN_SRC bash
+sudo systemctl stop sshd.service
+#+END_SRC
+
+- Deaktivieren eines Dienstes beim Systemstart:
+#+BEGIN_SRC bash
+sudo systemctl disable sshd.service
+#+END_SRC
+
+- Aktivieren eines Dienstes beim Systemstart:
+#+BEGIN_SRC bash
+sudo systemctl enable sshd.service
+#+END_SRC
+
+- Starten eines Dienstes:
+#+BEGIN_SRC bash
+sudo systemctl start sshd.service
+#+END_SRC
+
+- Neustarten eines Dienstes:
+#+BEGIN_SRC bash
+sudo systemctl restart sshd.service
+#+END_SRC
+
+** Target-Units
+
+Targets gruppieren mehrere Units, um bestimmte Systemzustände zu definieren, wie z. B. den Multi-User-Modus oder den Rettungsmodus.
+
+Targets können verwendet werden, um zwischen verschiedenen Betriebsmodi eines Systems zu wechseln.
+
+- Wechsel in ein bestimmtes Target:
+#+BEGIN_SRC bash
+sudo systemctl isolate multi-user.target
+#+END_SRC
+
+- Standard-Target festlegen:
+#+BEGIN_SRC bash
+sudo systemctl set-default multi-user.target
+#+END_SRC
+
+** Journal und Logging
+
+Systemd integriert ein leistungsstarkes Logging-System namens Journal. Es ermöglicht das zentrale Speichern und Abrufen von Log-Ereignissen. Um Logs zu analysieren, kann der folgende Befehl verwendet werden:
+
+#+BEGIN_SRC bash
+journalctl -u sshd.service
+#+END_SRC
+
+Dieser Befehl zeigt die Logs eines spezifischen Dienstes an.
+

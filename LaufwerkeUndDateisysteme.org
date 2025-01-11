@@ -51,39 +51,39 @@ Anders als bei Windows zeigt ein Verzeichnis nicht an, auf welchem Laufwerk es l
 
 ** /dev
 Das Verzeichnis =/dev= enthält Schnittstellen zu Geräten und stellt diese als Pseudo-Dateien (API) dar. Hier finden sich beispielsweise:
-- =/dev/sda= oder =/dev/nvme0n1=: Geräte für Festplatten.
-- =/dev/null=: Eine Art "Datenmülleimer", der alle geschriebenen Daten verwirft.
-- =/dev/tty=: Virtuelle Terminals.
+- =/dev/sda= oder =/dev/nvme0n1= :: Geräte für Festplatten.
+- =/dev/null= :: Eine Art "Datenmülleimer", der alle geschriebenen Daten verwirft.
+- =/dev/tty= :: Virtuelle Terminals.
 
 ** /proc
 Das Verzeichnis =/proc= ist ebenfalls ein virtuelles Dateisystem (API), das Laufzeitinformationen über den Kernel und die laufenden Prozesse bereitstellt. Beispiele:
-- =/proc/cpuinfo=: Informationen über den Prozessor.
-- =/proc/meminfo=: Informationen über den Speicherverbrauch.
-- =/proc/[PID]=: Unterverzeichnisse für jeden laufenden Prozess, basierend auf der Prozess-ID (PID).
+- =/proc/cpuinfo= ::  Informationen über den Prozessor.
+- =/proc/meminfo= :: Informationen über den Speicherverbrauch.
+- =/proc/[PID]= :: Unterverzeichnisse für jeden laufenden Prozess, basierend auf der Prozess-ID (PID).
 ** /sys
 Das Verzeichnis =/sys= ist ein weiteres virtuelles Dateisystem (API), das Laufzeitinformationen über Geräte und Hardware bereitstellt. Es wird vom Kernel bereitgestellt und ermöglicht eine Interaktion mit Hardwarekomponenten. Beispiele:
-- =/sys/class=: Klassifizierung von Geräten, z. B. Netzwerkadapter oder Speichergeräte.
-- =/sys/devices=: Hierarchische Darstellung der Hardware-Geräte und ihrer Abhängigkeiten.
-- =/sys/block=: Informationen über Blockgeräte wie Festplatten und Partitionen.
+- =/sys/class= :: Klassifizierung von Geräten, z. B. Netzwerkadapter oder Speichergeräte.
+- =/sys/devices= :: Hierarchische Darstellung der Hardware-Geräte und ihrer Abhängigkeiten.
+- =/sys/block= :: Informationen über Blockgeräte wie Festplatten und Partitionen.
 
 Das =/sys=-Verzeichnis ergänzt =/proc=, indem es eine strukturierte und oft besser lesbare Darstellung für Hardware-nahe Informationen bietet. Es wird häufig von Systemadministratoren und Entwicklern genutzt, um die Hardware eines Systems zu konfigurieren oder zu überwachen.
 
 ** /var
 Das Verzeichnis =/var= enthält Dateien, deren Inhalt sich dynamisch ändert, z. B.:
-- =/var/log=: System- und Anwendungslogs.
-- =/var/spool=: Warteschlangen für Drucker oder Mails.
-- =/var/cache=: Zwischenspeicher von Anwendungen.
+- =/var/log= :: System- und Anwendungslogs.
+- =/var/spool= :: Warteschlangen für Drucker oder Mails.
+- =/var/cache= :: Zwischenspeicher von Anwendungen.
 
 ** /usr
 Das Verzeichnis =/usr= ist für Benutzerprogramme und Bibliotheken vorgesehen, die nicht direkt für den Systemstart benötigt werden. Beispiele:
-- =/usr/bin=: Programme für alle Benutzer.
-- =/usr/lib=: Bibliotheken für diese Programme.
-- =/usr/share=: Architekturunabhängige Dateien wie Dokumentationen.
+- =/usr/bin= :: Programme für alle Benutzer.
+- =/usr/lib= :: Bibliotheken für diese Programme.
+- =/usr/share= :: Architekturunabhängige Dateien wie Dokumentationen.
 
 ** /usr/local
 Das Verzeichnis =/usr/local= ist für Software gedacht, die lokal installiert wurde, ohne den Paketmanager zu verwenden. Dies verhindert Konflikte mit Systemdateien:
-- =/usr/local/bin=: Eigene Programme für alle Benutzer.
-- =/usr/local/lib=: Eigene Bibliotheken.
+- =/usr/local/bin= :: Eigene Programme für alle Benutzer.
+- =/usr/local/lib= :: Eigene Bibliotheken.
 
 
 
@@ -107,6 +107,11 @@ sr0     11:0    1 1024M  0 rom
 ** =df=
 Mit dem Befehl =df= kann überprüft werden, wie viel Speicherplatz auf den Dateisystemen verfügbar oder belegt ist. Mit der Option =-h= (human-readable) werden die Ergebnisse in leicht lesbaren Größen (z. B. MiB oder GiB) angezeigt.
 
+#+BEGIN_SRC bash
+df -h
+#+END_SRC
+
+
 #+begin_example
 Filesystem      Size  Used Avail Use% Mounted on
 udev            947M     0  947M   0% /dev
@@ -122,5 +127,5 @@ tmpfs           195M   80K  195M   1% /run/user/1000
 #+end_example
 
 Dabei werden auch virtuelle Dateisysteme angezeigt:
-- =tmpfs=: Temporäre Dateisysteme im RAM.
-- =udev=: Virtuelles Dateisystem für Gerätekommunikation.
+- =tmpfs= :: Temporäre Dateisysteme im RAM.
+- =udev= :: Virtuelles Dateisystem für Gerätekommunikation.
