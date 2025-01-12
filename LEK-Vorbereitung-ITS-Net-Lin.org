@@ -1,0 +1,261 @@
+#+TITLE:  LEK-Vorbereitung - Lösungen
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil H:4 num:nil toc:nil
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+
+#+LATEX: \def\square{\text{\LARGE{☐}}}\relax\def\boxtimes{\text{\LARGE{☐}}}\relax 
+
+
+* Aufgaben
+
+Es gibt in der LEK je Aufgabe 4 Punkte: für jede Option einen Punkte, wenn sie korrekt angekreuzt, bzw. nicht angekreuzt wurde. Das bedeutet, dass Sie nicht erkennen können, wie viele Antworten richtig sind. Es gibt aber mindestens eine richtige und mindestens eine falsche Antwortmöglichkeit.
+
+** Frage 01 - Systemstart
+Welche der folgenden Komponenten ist für den Start eines Linux-Systems unerlässlich?
+ - [X] Bootloader
+ - [ ] Samba
+ - [X] Kernel
+ - [ ] SSH-Daemon
+
+** Frage 02 - Verzeichnisoperationen
+Wie kann man ein Verzeichnis und dessen gesamten Inhalt sicher löschen?
+ - [ ] =rm dir=
+ - [X] =rm -r dir=
+ - [ ] =rmdir dir=
+ - [ ] =delete dir=
+
+** Frage 03 - Prozesse überwachen
+Welcher Befehl zeigt eine Übersicht aller laufenden Prozesse an?
+ - [X] =ps aux=
+ - [ ] =jobs=
+ - [X] =htop=
+ - [ ] =find --process=
+
+** Frage 04 - Benutzerverwaltung
+Wie fügt man einen neuen Benutzer mit dem Home-Verzeichnis =/home/user1= hinzu?
+ - [ ] =adduser user1=
+ - [ ] =usermod -add user1=
+ - [ ] =createuser user1 -d /home/user1=
+ - [X] =useradd -m -d /home/user1 user1=
+
+** Frage 05 - Rechte ändern
+Wie ändert man die Rechte einer Datei so, dass nur der Besitzer Lese- und Schreibrechte hat?
+ - [ ] =chmod 766 file=
+ - [ ] =chmod 777 file=
+ - [X] =chmod 600 file=
+ - [ ] =chmod u+rw,g-rw,o-rw file=
+
+** Frage 06 - Dateitypen prüfen
+Wie überprüft man, ob eine Datei eine symbolische Verknüpfung ist?
+ - [ ] =file --link=
+ - [ ] =ls -link=
+ - [ ] =ln -check file=
+ - [X] =ls -l file=
+
+
+** Frage 07 - Shell-Skripte
+Wie macht man ein Shell-Skript ausführbar?
+ - [X] =chmod 777 script.sh=
+ - [ ] =execute script.sh=
+ - [X] =chmod +x script.sh=
+ - [ ] =run script.sh=
+
+** Frage 08 - Dateigröße
+Wie zeigt man die Größe einer Datei in lesbarem Format (z. B. KB, MB) an?
+ - [ ] =du file=
+ - [ ] =ls -l --size file=
+ - [X] =ls -lh file=
+ - [ ] =file --size file=
+
+** Frage 09 - Hintergrundprozesse
+Wie führt man einen Befehl im Hintergrund aus?
+ - [X] =command &=
+ - [ ] =command -bg=
+ - [ ] =run background command=
+ - [ ] =command && bg=
+
+** Frage 10 - Benutzerrechte
+Wie kann man einem Benutzer vorübergehend Superuser-Rechte geben?
+ - [ ] =su -temporary=
+ - [ ] =sudo -e=
+ - [X] =sudo command=
+ - [ ] =runas command=
+
+** Frage 11 - Benutzer zu Gruppe hinzufügen
+Wie fügt man einen Benutzer nachträglich einer Gruppe hinzu?
+ - [ ] =groupmod -a username=
+ - [ ] =passwd -G username=
+ - [X] =usermod -aG username=
+ - [ ] =adduser groupname username
+   =
+** Frage 12 - Hostname
+Wie zeigt man den Hostnamen eines Systems an?
+ - [X] =cat /etc/hostname=
+ - [X] =hostname=
+ - [X] =hostnamectl=
+ - [ ] =Get-ComputerName=
+
+** Frage 13 - Prozesse beenden
+Welcher Befehl beendet den Prozess mit der Prozess-ID (PID) 3245, wenn ein ordentliches beenden nicht möglich ist?
+ - [X] =kill -KILL 3245=
+ - [ ] =kill -TERM 3245=
+ - [ ] =stop 3245=
+ - [ ] =ps 2345 --kill=
+
+** Frage 14 - Symbolische Links
+Wie erstellt man einen symbolischen Link für die Datei =/home/user/file= im Verzeichnis =/tmp/link=?
+ - [ ] =ln /home/user/file /tmp/link=
+ - [X] =ln -s /home/user/file /tmp/link=
+ - [ ] =link -s /home/user/file /tmp/link=
+ - [ ] =lnsym /home/user/file /tmp/link=
+
+** Frage 15 - Festplattenplatz
+Wie kann man den gesamten freien Speicherplatz auf allen Partitionen im für Menschen lesbaren Format anzeigen?
+ - [ ] =du --free=
+ - [X] =df -h=
+ - [ ] =lsblk --free=
+ - [ ] =space --all=
+
+** Frage 16 - Dateitypen erkennen
+Welcher Befehl identifiziert den Typ einer Datei?
+ - [ ] =type file=
+ - [ ] =ls -type file=
+ - [X] =file file=
+ - [ ] Anhand der Dateiendung
+
+** Frage 17 - Paketinstallation
+Wie installiert man ein Paket namens =htop= auf einem Debian-basierten System?
+ - [ ] =install htop=
+ - [ ] =apt get install htop=
+ - [X] =apt install htop=
+ - [ ] =pkg -install htop=
+
+** Frage 18 - Dateiinhalt durchsuchen
+Wie sucht man nach der Zeichenfolge "error" in der Datei =logfile.log=?
+ - [ ] =find "error" logfile.log=
+ - [ ] =search error logfile.log=
+ - [X] =grep "error" logfile.log=
+ - [ ] =locate error logfile.log=
+
+** Frage 19 - Benutzer löschen
+Wie entfernt man einen Benutzer namens =testuser= und sein Home-Verzeichnis?
+ - [ ] =deluser testuser=
+ - [X] =userdel -r testuser=
+ - [ ] =removeuser testuser --home=
+ - [ ] =usermod -delete testuser=
+
+** Frage 20 - Firewall-Regeln anzeigen
+Wie zeigt man die aktuellen Firewall-Regeln an, die mit =nft= definiert sind?
+ - [ ] =iptables list=
+ - [ ] =firewall show=
+ - [ ] =iptables -L=
+ - [X] =nft list ruleset=
+
+** Frage 21 - Systemauslastung
+Welcher Befehl zeigt die aktuelle CPU- und Speicher-Auslastung an?
+ - [ ] =usage=
+ - [X] =top=
+ - [ ] =load=
+ - [ ] =sysstat=
+
+** Frage 22 - Hintergrundprozesse
+Wie bringt man einen pausierten Hintergrundprozess wieder in den Vordergrund?
+ - [ ] =start process=
+ - [ ] =restart job=
+ - [X] =fg=
+ - [ ] =resume bg=
+
+** Frage 23 - Paketquellen aktualisieren
+Wie aktualisiert man die Paketquellen eines Debian-basierten Systems?
+ - [ ] =pkg update=
+ - [ ] =refresh packages=
+ - [X] =apt update=
+ - [ ] =apt-get refresh=
+
+** Frage 24 - Dateien synchronisieren
+Welcher Befehl synchronisiert Dateien zwischen zwei Verzeichnissen?
+ - [ ] =syncdir source dest=
+ - [ ] =mirror source dest=
+ - [X] =rsync -av source/ dest/=
+ - [ ] =cp --sync source dest=
+
+** Frage 25 - Hardware-Informationen
+Wie zeigt man detaillierte Hardware-Informationen an?
+ - [ ] =hardware info=
+ - [ ] =sysinfo --hardware=
+ - [X] =lshw=
+ - [ ] =hwinfo=
+
+** Frage 26 - Partitionen anzeigen
+Welcher Befehl listet alle Partitionen eines Systems auf?
+ - [ ] =partinfo=
+ - [ ] =fdisk --list=
+ - [X] =lsblk=
+ - [ ] =blkid -all=
+
+** Frage 27 - Root-Rechte
+Wie wechselt man in eine Root-Shell, falls ein Root-Benutzer existiert?
+ - [ ] =sudo bash=
+ - [X] =su -=
+ - [ ] =root --login=
+ - [ ] =bash --root=
+
+** Frage 28 - Versteckte Dateien anzeigen
+Wie zeigt man versteckte Dateien in einem Verzeichnis an?
+ - [ ] =ls -hidden=
+ - [ ] =showhidden=
+ - [X] =ls -a=
+ - [ ] =ls --all=
+
+** Frage 29 - SSH-Verbindung
+Wie stellt man eine SSH-Verbindung zu einem Server =server.com= her?
+ - [X] =ssh user@server.com=
+ - [ ] =ssh server.com user=
+ - [ ] =connect ssh user server.com=
+ - [ ] =ssh connect user@server.com=
+
+** Frage 30 - Dateien kopieren
+Wie kopiert man alle Dateien eines Verzeichnisses inklusive Unterverzeichnissen?
+ - [ ] =copy dir newdir=
+ - [ ] =cp -d dir newdir=
+ - [X] =cp -r dir newdir=
+ - [ ] =cp --recursive dir newdir=
+
+** Frage 31 - System-Updates
+Wie installiert man verfügbare Updates auf einem Debian-basierten System?
+ - [ ] =apt-get patch=
+ - [ ] =apt upgrade --update=
+ - [X] =apt upgrade=
+ - [ ] =pkg update=
+
+** Frage 32 - Systemd-Dienste
+Wie startet man einen Dienst namens =apache2= mit Systemd?
+ - [ ] =service apache2 start=
+ - [X] =systemctl start apache2=
+ - [ ] =systemd apache2 start=
+ - [ ] =start service apache2=
+
+** Frage 33 - Prozesse pausieren
+Wie pausiert man einen laufenden Prozess im Terminal?
+ - [ ] =pause process=
+ - [ ] =kill -PAUS PID=
+ - [X] =Ctrl+Z=
+ - [ ] =halt PID=
+
+** Frage 34 - Benutzerpasswort ändern
+Wie ändert man das Passwort eines Benutzers namens =user1=?
+ - [ ] =passwd user1 --new=
+ - [ ] =usermod --passwd user1=
+ - [X] =passwd user1=
+ - [ ] =password user1 newpassword=
+
+** Frage 35 - Log-Dateien filtern
+Wie filtert man Zeilen, die „error“ enthalten, aus der Datei =/var/log/syslog=? 
+ - [ ] =logread "error" /var/log/syslog=
+ - [ ] =grep -syslog error=
+ - [X] =grep "error" /var/log/syslog=
+ - [ ] =syslog --grep error=

@@ -183,3 +183,9 @@
 
   - [[file:Geany.pdf][Python- und C#-IDE: Geany (PDF)]]
   - [[file:Git.pdf][Git (PDF)]]
+
+* Übung für LEK
+
+  35 Fragen - in der LEK gibt es 20 Fragen für FIAE-Klassen und 25 für FISI-Klassen.
+  - [[file:LEK-Vorbereitung-ITS-Net-Lin.pdf][LEK Vorbereitung (PDF)]]
+  - [[file:LEK-Vorbereitung-ITS-Net-Lin-LÖSUNGEN.pdf][Lösungen (PDF)]]
