@@ -1,3 +1,7 @@
+#+TITLE: Übungs-Lab
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
 :LaTeX_PROPERTIES:
 #+LANGUAGE: de
 #+OPTIONS: d:nil todo:nil pri:nil tags:nil
@@ -16,20 +20,192 @@
 #+OPTIONS: timestamp:nil toc:nil num:nil
 :END:
 
-#+TITLE: Übungs-Lab
-#+SUBTITLE: ITS-Net-Lin
-#+AUTHOR: Sebastian Meisel
-
 * Einführung
 
-Dieses Lab dient dazu, dass Sie das Gelernte in praktischen Übungen zu wiederholen.
+Dieses Lab dient dazu, das Gelernte durch praktische Übungen zu vertiefen. Die Aufgaben umfassen Benutzer- und Gruppenverwaltung, Dateirechte, Samba-Share-Konfiguration und Backups.
 
-*** Neuen Benutzer anlegen
+** Neuen Benutzer =kim= anlegen
+Erstellen Sie den Benutzer =kim=.
 
-*** Der Gruppe bros hinzufügen
+#+BEGIN_SRC bash
+sudo useradd -m -s /bin/bash kim
+#+END_SRC
 
-*** Github-Projekt nach =/home/bros= klonen
+** Neue Gruppe =python= anlegen
+Erstellen Sie die Gruppe =python=.
 
-  [[https://github.com/dhhruv/Sudoku-Solver]]
+#+BEGIN_SRC bash
+sudo groupadd python
+#+END_SRC
 
-*** 
+** =kim= der Gruppe =python= hinzufügen
+Fügen Sie den Benutzer =kim= der Gruppe =python= hinzu.
+
+#+BEGIN_SRC bash
+sudo usermod -aG python kim
+#+END_SRC
+
+** Verzeichnis =/usr/src/python= anlegen und für die Gruppe =python= schreibbar machen
+Erstellen Sie das Verzeichnis und setzen Sie die Berechtigungen.
+
+#+BEGIN_SRC bash
+sudo mkdir -p /usr/src/python
+sudo chown :python -R /usr/src/python
+sudo chmod 770 /usr/src/python
+#+END_SRC
+
+** Github-Projekt nach =/usr/src/python= klonen
+Klonen Sie das Projekt aus GitHub.
+
+#+BEGIN_SRC bash
+git clone https://github.com/dhhruv/Sudoku-Solver /usr/src/python/Sudoku-Solver
+#+END_SRC
+
+** Benutzer zu =kim= wechseln
+Wechseln Sie in die Sitzung des Benutzers =kim=.
+
+#+BEGIN_SRC bash
+su - kim
+#+END_SRC
+
+** Link auf =/usr/src/python/Sudoku-Solver= in =kim=​s Home-Verzeichnis erstellen
+Erstellen Sie einen symbolischen Link.
+
+#+BEGIN_SRC bash
+ln -sn /usr/src/python/Sudoku-Solver ~/Sudoku-Solver
+#+END_SRC
+
+#+begin_quote
+Warum brauchen Sie die Optionen =-s= und =-n=? Lesen sie dazu im Handbuch mit =man ln=.
+#+end_quote
+
+** =/usr/src/python/Sudoku-Solver= als Samba-Share für Gruppe =python= erstellen
+Konfigurieren Sie Samba, um das Verzeichnis als Share bereitzustellen.
+
+1. Bearbeiten Sie die Samba-Konfiguration:
+   - Öffnen Sie die Datei `/etc/samba/smb.conf`:
+     #+BEGIN_SRC bash
+     sudo nano /etc/samba/smb.conf
+     #+END_SRC
+   - Fügen Sie den folgenden Abschnitt hinzu:
+     #+BEGIN_SRC text
+     [Sudoku-Solver]
+     path = /usr/src/python/Sudoku-Solver
+     writable = yes
+     valid users = @python
+     create mask = 0660
+     directory mask = 0770
+     force group = python
+     #+END_SRC
+
+2. Neustarten des Samba-Dienstes:
+   #+BEGIN_SRC bash
+   sudo systemctl restart smbd
+   #+END_SRC
+
+** Backup für =/usr/src/python/Sudoku-Solver= unter =/backup/= erstellen
+1. Erstellen Sie das Backup-Skript:
+   Speichern Sie den folgenden Code in einer Datei, z. B. `/usr/local/bin/backup.sh`:
+   #+BEGIN_SRC bash
+   #!/bin/bash
+   src="/usr/src/python/Sudoku-Solver"
+   dest="/backup/Sudoku-Solver"
+   mkdir -p "$dest"
+   rsync -av --delete "$src/" "$dest/"
+   #+END_SRC
+
+#+begin_quote
+Warum brauchen Sie die Optionen =-a= und =-v=? Lesen sie dazu im Handbuch mit =man rsync=.
+
+ Es könnte sinnvoll sein, Standard- und Fehlerausgaben in ein Logfile umzuleiten, z. B. mit =>> /var/log/backup.log 2>&1= am Ende der letzten Zeile Skript.
+#+end_quote
+
+
+2. Machen Sie die Datei ausführbar:
+   #+BEGIN_SRC bash
+   sudo chmod +x /usr/local/bin/backup.sh
+   #+END_SRC
+
+3. Fügen Sie einen systemd-Timer hinzu:
+   - Erstellen Sie die Datei `/etc/systemd/system/backup.service` mit folgendem Inhalt:
+     #+BEGIN_SRC text
+     [Unit]
+     Description=Backup Service for Sudoku-Solver
+
+     [Service]
+     ExecStart=/usr/local/bin/backup.sh
+     #+END_SRC
+
+   - Erstellen Sie die Datei `/etc/systemd/system/backup.timer`:
+     #+BEGIN_SRC text
+     [Unit]
+     Description=Run Backup Service Daily
+
+     [Timer]
+     OnCalendar=daily
+     Persistent=true
+
+     [Install]
+     WantedBy=timers.target
+     #+END_SRC
+
+4. Aktivieren Sie den Timer:
+   #+BEGIN_SRC bash
+   sudo systemctl enable backup.timer
+   sudo systemctl start backup.timer
+   #+END_SRC
+
+* Abschluss
+
+Gratulation! Sie haben erfolgreich das Lab abgeschlossen und dabei verschiedene Aspekte der Linux-Systemadministration geübt.
+
+Wenn etwas nicht klappt, tauschen Sie sich zuerst mit ihren Mitschülerinnen und Mitschülern aus und nutzen Sie das Internet. Fragen Sie ansonsten gerne den Dozenten im Unterricht oder per Teams-Nachricht.
+
+Es kann auch sinnvoll sein KI-Tools wie Gemini, Claude AI oder Chat-GPT zu nutzen, um sich erklären zu lassen, was Sie nicht verstehen.
+
+
+# :LaTeX_PROPERTIES:
+# #+LANGUAGE: de
+# #+OPTIONS: d:nil todo:nil pri:nil tags:nil
+# #+OPTIONS: H:4
+# #+LaTeX_CLASS: orgstandard
+# #+LaTeX_CMD: xelatex
+# #+LATEX_HEADER: \usepackage{listings}
+# :END:
+
+# :REVEAL_PROPERTIES:
+# #+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+# #+REVEAL_REVEAL_JS_VERSION: 4
+# #+REVEAL_THEME: league
+# #+REVEAL_EXTRA_CSS: ./mystyle.css
+# #+REVEAL_HLEVEL: 2
+# #+OPTIONS: timestamp:nil toc:nil num:nil
+# :END:
+
+# #+TITLE: Übungs-Lab
+# #+SUBTITLE: ITS-Net-Lin
+# #+AUTHOR: Sebastian Meisel
+
+# * Einführung
+
+# Dieses Lab dient dazu, dass Sie das Gelernte in praktischen Übungen zu wiederholen.
+
+# *** Neuen Benutzer =kim= anlegen
+
+# *** Neue Gruppe =python= anlegen
+
+# *** =kim= der Gruppe =python= hinzufügen
+
+# *** Verzeichnis =/usr/src/python= anlegen und für die Gruppe =python= schreibbar machen
+
+# *** Github-Projekt nach =/usr/src/python= klonen
+
+#   [[https://github.com/dhhruv/Sudoku-Solver]]
+
+# *** Change User to =kim=
+
+# *** Link auf =/usr/src/python/Sudoku-Solver= in =kim=​s Home-Verzeichnis erstellen
+
+# *** =/usr/src/python/Sudoku-Solver= als Samba-Share für Gruppe =python= erstellen
+
+# *** Backup für =/usr/src/python/Sudoku-Solver= unter =/backup/= erstellen
