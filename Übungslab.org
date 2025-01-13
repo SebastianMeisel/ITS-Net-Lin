@@ -1,0 +1,35 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Übungs-Lab
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Einführung
+
+Dieses Lab dient dazu, dass Sie das Gelernte in praktischen Übungen zu wiederholen.
+
+*** Neuen Benutzer anlegen
+
+*** Der Gruppe bros hinzufügen
+
+*** Github-Projekt nach =/home/bros= klonen
+
+  [[https://github.com/dhhruv/Sudoku-Solver]]
+
+*** 
