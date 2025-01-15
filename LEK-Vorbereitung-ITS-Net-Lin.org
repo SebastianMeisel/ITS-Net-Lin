@@ -257,5 +257,5 @@ Wie ändert man das Passwort eines Benutzers namens =user1=?
 Wie filtert man Zeilen, die „error“ enthalten, aus der Datei =/var/log/syslog=? 
  - [ ] =logread "error" /var/log/syslog=
  - [ ] =grep -syslog error=
- - [X] =grep "error" /var/log/syslog=
+ - [X] ~grep "error" /var/log/syslog~
  - [ ] =syslog --grep error=
