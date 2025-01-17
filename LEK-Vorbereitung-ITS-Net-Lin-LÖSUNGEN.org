@@ -7,7 +7,7 @@
 #+LaTeX_CMD: xelatex
 #+LATEX_HEADER: \usepackage{listings}
 
-LATEX: \def\square{\text{☐}}\relax\def\boxtimes{\text{☑}}\relax 
+#+LATEX: \def\square{\text{\LARGE{☐}}}\relax\def\boxtimes{\text{\LARGE{☑}}}\relax 
 
 
 * Aufgaben
@@ -89,9 +89,9 @@ Wie kann man einem Benutzer vorübergehend Superuser-Rechte geben?
 Wie fügt man einen Benutzer nachträglich einer Gruppe hinzu?
  - [ ] =groupmod -a username=
  - [ ] =passwd -G username=
- - [X] =usermod -aG username=
- - [ ] =adduser groupname username
-   =
+ - [X] =usermod -aG groupname username=
+ - [ ] =adduser groupname username=
+
 ** Frage 12 - Hostname
 Wie zeigt man den Hostnamen eines Systems an?
  - [X] =cat /etc/hostname=
@@ -257,5 +257,5 @@ Wie ändert man das Passwort eines Benutzers namens =user1=?
 Wie filtert man Zeilen, die „error“ enthalten, aus der Datei =/var/log/syslog=? 
  - [ ] =logread "error" /var/log/syslog=
  - [ ] =grep -syslog error=
- - [X] =grep "error" /var/log/syslog=
+ - [X] ~grep "error" /var/log/syslog~
  - [ ] =syslog --grep error=

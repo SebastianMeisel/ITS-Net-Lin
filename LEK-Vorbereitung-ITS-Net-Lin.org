@@ -89,9 +89,9 @@ Wie kann man einem Benutzer vorübergehend Superuser-Rechte geben?
 Wie fügt man einen Benutzer nachträglich einer Gruppe hinzu?
  - [ ] =groupmod -a username=
  - [ ] =passwd -G username=
- - [X] =usermod -aG username=
- - [ ] =adduser groupname username
-   =
+ - [X] =usermod -aG groupname username=
+ - [ ] =adduser groupname username=
+
 ** Frage 12 - Hostname
 Wie zeigt man den Hostnamen eines Systems an?
  - [X] =cat /etc/hostname=
