@@ -1,0 +1,667 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Lab zur Vorbereitung auf die LEK
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+*  Grundlagen und Dateisystem
+** Einführung
+Das Linux-Dateisystem ist hierarchisch aufgebaut und folgt dem Filesystem Hierarchy Standard (FHS). Dieses Modul vermittelt die grundlegenden Befehle zur Navigation und Verwaltung von Dateien und Verzeichnissen sowie das Verständnis des Linux-Berechtigungssystems.
+
+*** Wichtige Verzeichnisse im Linux-System
+- / :: Das Wurzelverzeichnis (Root)
+- /home :: Benutzerverzeichnisse
+- /etc :: Systemweite Konfigurationsdateien
+- /var :: Variable Daten (Logs, Mails, etc.)
+- /tmp :: Temporäre Dateien
+- /usr :: Installierte Software und Bibliotheken
+- /bin :: Essentielle Systembefehle
+- /sbin :: Systembefehle für die Administration
+
+** Lernziele
+Nach Abschluss dieses Moduls können Sie:
+- Sicher im Linux-Dateisystem navigieren
+- Dateien und Verzeichnisse erstellen, kopieren, verschieben und löschen
+- Dateiberechtigungen verstehen und verwalten
+- Hard- und Softlinks erstellen und deren Unterschiede verstehen
+- Grundlegende Dateioperationen durchführen
+
+** Grundlegende Navigation
+*** Der pwd-Befehl
+#+BEGIN_SRC sh
+pwd
+#+END_SRC
+Erläuterung:
+- Zeigt den absoluten Pfad des aktuellen Verzeichnisses
+- Nützlich zur Orientierung in tiefen Verzeichnisstrukturen
+- Wichtig für Skripte, die den aktuellen Pfad benötigen
+
+*** Der cd-Befehl
+#+BEGIN_SRC sh
+cd /pfad/zum/verzeichnis   # Wechsel zu absolutem Pfad
+cd projekt                 # Wechsel zu relativem Pfad
+cd ..                     # Ein Verzeichnis nach oben
+cd ~                      # Zum Home-Verzeichnis
+cd -                      # Zum vorherigen Verzeichnis
+#+END_SRC
+Erläuterung:
+- cd ohne Parameter wechselt zum Home-Verzeichnis
+- .. bezeichnet das übergeordnete Verzeichnis
+- . bezeichnet das aktuelle Verzeichnis
+- Absolute Pfade beginnen mit /, relative nicht
+- Tilde (~) ist ein Shortcut für das eigene Home-Verzeichnis
+
+*** Der ls-Befehl
+#+BEGIN_SRC sh
+ls                        # Einfache Auflistung
+ls -l                     # Detaillierte Auflistung
+ls -la                    # Inkl. versteckter Dateien
+ls -lh                    # Mit menschenlesbaren Größen
+ls -R                     # Rekursive Auflistung
+#+END_SRC
+Erläuterung der ls -l Ausgabe:
+- Erstes Zeichen: Dateityp (d=Verzeichnis, l=Link, -=normale Datei)
+- Nächste 9 Zeichen: Berechtigungen (rwx für user, group, others)
+- Anzahl der Links
+- Besitzer
+- Gruppe
+- Größe
+- Datum der letzten Änderung
+- Name
+
+** Datei- und Verzeichnisoperationen
+*** Verzeichnisse erstellen mit mkdir
+#+BEGIN_SRC sh
+mkdir projekt                     # Einzelnes Verzeichnis
+mkdir -p pfad/zu/verzeichnis     # Erstellt auch Elternverzeichnisse
+mkdir -m 755 geschuetzt          # Mit spezifischen Rechten
+mkdir projekt{1..5}              # Mehrere Verzeichnisse
+#+END_SRC
+Erläuterung:
+- -p verhindert Fehler, wenn übergeordnete Verzeichnisse fehlen
+- -m setzt direkt die Zugriffsrechte
+- Geschweiften Klammern erlauben Muster-Expansion
+- Standardrechte werden durch umask beeinflusst
+
+*** Dateien kopieren mit cp
+#+BEGIN_SRC sh
+cp quelle.txt ziel.txt           # Einzelne Datei kopieren
+cp -r verz1 verz2               # Rekursiv kopieren
+cp -a quelle ziel               # Archivmodus (erhält Attribute)
+cp -u *.txt backup/             # Nur neuere Dateien kopieren
+#+END_SRC
+Erläuterung:
+- -r/R kopiert Verzeichnisse rekursiv
+- -a entspricht -dR --preserve=all
+- -i fragt vor Überschreiben
+- -u aktualisiert nur wenn Quelle neuer ist
+- -v zeigt kopierte Dateien an
+
+*** Dateien/Verzeichnisse verschieben mit mv
+#+BEGIN_SRC sh
+mv alt.txt neu.txt              # Umbenennen
+mv datei verzeichnis/          # Verschieben
+mv -i quelle ziel              # Interaktiver Modus
+mv -u *.txt ziel/              # Nur neuere Dateien
+#+END_SRC
+Erläuterung:
+- Vorsicht: mv überschreibt ohne Nachfrage
+- -i für interaktiven Modus empfohlen
+- Wenn Ziel ein Verzeichnis ist: Verschieben
+- Wenn Ziel keine Datei/Verzeichnis ist: Umbenennen
+
+*** Dateien/Verzeichnisse löschen
+#+BEGIN_SRC sh
+rm datei.txt                    # Einzelne Datei löschen
+rm -r verzeichnis              # Rekursiv löschen
+rm -f unerwuenscht.txt         # Forciertes Löschen
+rmdir leeres_verzeichnis       # Leeres Verzeichnis löschen
+#+END_SRC
+Erläuterung:
+- rm löscht unwiderruflich! Kein Papierkorb!
+- -r für rekursives Löschen von Verzeichnissen
+- -f überspringt Nachfragen und nicht-existente Dateien
+- rmdir löscht nur leere Verzeichnisse
+- Vorsicht mit rm -rf / oder rm -rf *
+
+** Dateiberechtigungen
+*** Grundlagen des Berechtigungssystems
+Linux unterscheidet drei Berechtigungsebenen:
+- u (user): Eigentümer der Datei
+- g (group): Gruppe der Datei
+- o (others): Alle anderen Benutzer
+
+Und drei Arten von Rechten:
+- r (read): Lesen/Anzeigen
+- w (write): Schreiben/Ändern
+- x (execute): Ausführen/Durchsuchen bei Verzeichnissen
+
+*** chmod - Berechtigungen ändern
+#+BEGIN_SRC sh
+chmod 755 datei.sh              # Numerische Notation
+chmod u+x datei.sh              # Symbolische Notation
+chmod -R g+rw verzeichnis      # Rekursiv für Gruppe
+chmod a+r datei.txt            # Für alle lesbar
+#+END_SRC
+Erläuterung numerische Notation:
+- Erste Ziffer: Besitzer (4=r, 2=w, 1=x)
+- Zweite Ziffer: Gruppe
+- Dritte Ziffer: Andere
+Beispiele:
+- 755: rwxr-xr-x
+- 644: rw-r--r--
+- 700: rwx------
+
+*** chown - Besitzer ändern
+#+BEGIN_SRC sh
+chown benutzer datei           # Nur Besitzer ändern
+chown benutzer:gruppe datei    # Besitzer und Gruppe
+chown -R user:group verz      # Rekursiv ändern
+#+END_SRC
+Erläuterung:
+- Nur root kann Besitzer ändern
+- :gruppe ändert nur die Gruppe
+- -R für rekursive Änderung
+- Benutzer muss existieren
+
+** Links im Linux-Dateisystem
+*** Hardlinks erstellen
+#+BEGIN_SRC sh
+ln ziel link                   # Hardlink erstellen
+#+END_SRC
+Eigenschaften:
+- Gleiche Inode wie Original
+- Nur für Dateien möglich
+- Nicht über Dateisystemgrenzen
+- Löschen eines Links reduziert Link-Count
+
+*** Symbolische Links (Softlinks)
+#+BEGIN_SRC sh
+ln -s ziel link               # Symbolischen Link erstellen
+#+END_SRC
+Eigenschaften:
+- Eigene Inode
+- Kann auf Verzeichnisse zeigen
+- Funktioniert über Dateisystemgrenzen
+- Wird ungültig wenn Ziel verschoben/gelöscht
+
+** Praktische Übungen
+1. Erstellen Sie eine Verzeichnisstruktur für ein Projekt:
+   #+BEGIN_SRC sh
+   mkdir -p ~/projekt/{src,doc,test}/{lib,bin,data}
+   #+END_SRC
+
+2. Setzen Sie entsprechende Berechtigungen:
+   #+BEGIN_SRC sh
+   chmod -R 755 ~/projekt
+   chmod -R g+w ~/projekt/src
+   #+END_SRC
+
+3. Erstellen Sie verschiedene Arten von Links:
+   #+BEGIN_SRC sh
+   touch ~/projekt/src/main.c
+   ln ~/projekt/src/main.c ~/projekt/src/main.c.backup
+   ln -s ~/projekt/src/main.c ~/projekt/test/main.c.test
+   #+END_SRC
+
+** Sicherheitshinweise
+- Vorsicht bei der Verwendung von rm -rf
+- Backup wichtiger Dateien vor Änderungen
+- Berechtigungen restriktiv setzen
+- Root-Rechte nur wenn nötig verwenden
+- Symbolische Links prüfen vor Verwendung
+
+
+* Paketverwaltung
+** APT-System
+*** Paketquellen aktualisieren
+#+BEGIN_SRC sh
+apt update                 # Paketlisten aktualisieren
+#+END_SRC
+Wichtig: 
+- Vor Installation oder Update von Software ausführen
+- Wenn letzter Aufruf > 24h zurückliegt
+- Aktualisiert nur die Paketlisten, nicht die Software
+
+*** Software installieren und aktualisieren
+#+BEGIN_SRC sh
+apt install paketname      # Software installieren
+apt upgrade               # Alle Pakete aktualisieren
+apt remove paketname      # Software entfernen
+apt autoremove           # Nicht mehr benötigte Abhängigkeiten entfernen
+#+END_SRC
+
+* Benutzerverwaltung
+** Super-User-Rechte
+*** Methoden zur Rechteerweiterung
+#+BEGIN_SRC sh
+su                        # Wechsel zum root-Benutzer
+sudo befehl              # Einzelnen Befehl mit root-Rechten ausführen
+#+END_SRC
+
+*** Voraussetzungen
+- su: root-Benutzer muss existieren
+- sudo: Benutzer muss in /etc/sudoers eingetragen sein
+- Sicherheitsempfehlung: sudo bevorzugen
+
+** Benutzer und Gruppen
+*** Benutzer verwalten
+#+BEGIN_SRC sh
+useradd username         # Benutzer erstellen
+usermod -aG gruppe user  # Benutzer zu Gruppe hinzufügen
+passwd username         # Passwort setzen/ändern
+#+END_SRC
+
+*** Gruppen verwalten
+#+BEGIN_SRC sh
+groupadd groupname      # Gruppe erstellen
+groupdel groupname      # Gruppe löschen
+groups username        # Gruppenzugehörigkeit anzeigen
+#+END_SRC
+
+* Administratorrechte
+** Rechteverwaltung
+*** Dateiberechtigungen
+#+BEGIN_SRC sh
+chmod 764 datei         # Rechte numerisch setzen
+chmod g+w datei         # Gruppe Schreibrecht geben
+chown user:gruppe datei # Besitzer und Gruppe ändern
+#+END_SRC
+
+*** Besondere Rechte
+#+BEGIN_SRC sh
+chmod u+s datei         # SUID-Bit setzen
+chmod g+s verzeichnis   # SGID-Bit setzen
+chmod +t verzeichnis    # Sticky-Bit setzen
+#+END_SRC
+
+* Firewalls
+** Firewall-Systeme
+*** Verfügbare Systeme
+- iptables: Traditionelles Firewall-System
+- nftables: Moderner Nachfolger von iptables
+- ufw: Benutzerfreundliche Abstraktion
+
+*** Grundlegende Konfiguration
+#+BEGIN_SRC sh
+ufw enable              # Firewall aktivieren
+ufw allow 22/tcp        # SSH-Port öffnen
+ufw status             # Firewall-Status anzeigen
+#+END_SRC
+
+** Praktische Übungen
+1. Paketmanagement durchführen:
+   #+BEGIN_SRC sh
+   apt update && apt upgrade    # System aktualisieren
+   #+END_SRC
+
+2. Benutzer einrichten:
+   #+BEGIN_SRC sh
+   sudo useradd -m -s /bin/bash newuser
+   sudo passwd newuser
+   #+END_SRC
+
+3. Firewall konfigurieren:
+   #+BEGIN_SRC sh
+   sudo ufw allow ssh
+   sudo ufw enable
+   #+END_SRC
+
+** Sicherheitshinweise
+- Regelmäßige System-Updates durchführen
+- Starke Passwörter verwenden
+- Minimale Rechte vergeben
+- Firewall-Regeln regelmäßig prüfen
+- sudo-Rechte nur bei Bedarf vergeben
+
+  :LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Backup und Protokollierung
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* Backup-Strategien
+** Backup-Arten
+*** Grundlegende Backup-Typen
+- Vollbackup: Sicherung aller Daten
+- Differentielles Backup: Sicherung aller Änderungen seit letztem Vollbackup
+- Inkrementelles Backup: Sicherung aller Änderungen seit letztem Backup
+
+*** Moderne Backup-Lösungen
+**** BorgBackup und Restic
+Vorteile:
+- Deduplizierte Backups (Speicherplatzersparnis)
+- Verschlüsselte Backups
+- Plattformübergreifend nutzbar
+- Open-Source
+
+* rsync und tar
+** rsync Grundlagen
+*** Grundlegende Syntax
+#+BEGIN_SRC sh
+rsync -a /quelle /backup     # Archiv-Modus
+rsync -av /quelle /backup    # Mit Fortschrittsanzeige
+rsync -avz /quelle /backup   # Mit Komprimierung
+#+END_SRC
+
+*** Wichtige Optionen
+- -a :: Archiv-Modus (erhält Metadaten)
+- -v :: Ausführliche Ausgabe
+- -z :: Komprimierung während der Übertragung
+- --delete :: Löscht Dateien im Ziel, die in der Quelle nicht mehr existieren
+
+** tar Archivierung (nur FISI)
+*** Grundlegende Befehle
+#+BEGIN_SRC sh
+tar -cvf backup.tar /quelle     # Archiv erstellen
+tar -xvf backup.tar            # Archiv entpacken
+tar -czvf backup.tar.gz /quelle # Mit Komprimierung
+#+END_SRC
+
+*** Wichtige Optionen
+- c :: Archiv erstellen
+- x :: Archiv entpacken
+- v :: Ausführliche Ausgabe
+- f :: Archivdatei angeben
+- z :: gzip-Komprimierung
+
+* Loganalyse
+** Systemlogs
+*** Wichtige Log-Dateien
+#+BEGIN_SRC sh
+/var/log/syslog              # Allgemeine Systemmeldungen
+/var/log/auth.log           # Authentifizierungsmeldungen
+/var/log/kern.log          # Kernel-Meldungen
+#+END_SRC
+
+*** Log-Analyse-Befehle
+#+BEGIN_SRC sh
+dmesg                       # Kernel-Ring-Buffer anzeigen
+dmesg | grep -i error      # Nach Fehlern suchen
+tail -f /var/log/syslog    # Logs in Echtzeit verfolgen
+#+END_SRC
+
+** Log-Filterung
+*** Grundlegende Filterbefehle
+#+BEGIN_SRC sh
+grep 'ssh' /var/log/auth.log           # SSH-Einträge finden
+dmesg | grep 'ssh' >> ssh.log         # SSH-Meldungen in Datei anhängen
+#+END_SRC
+
+** Praktische Übungen
+1. Inkrementelles Backup erstellen:
+   #+BEGIN_SRC sh
+   rsync -a --link-dest=../backup.1 /quelle /backup.0
+   #+END_SRC
+
+2. Logs überwachen:
+   #+BEGIN_SRC sh
+   tail -f /var/log/auth.log | grep --line-buffered 'ssh'
+   #+END_SRC
+
+3. Komprimiertes Backup erstellen:  (nur FISI)
+   #+BEGIN_SRC sh
+   tar -czvf backup-$(date +%Y%m%d).tar.gz /home/user/data
+   #+END_SRC
+
+** Sicherheitshinweise
+- Regelmäßige Backup-Tests durchführen
+- Backups verschlüsselt speichern
+- Backup-Medien sicher aufbewahren
+- Log-Dateien regelmäßig prüfen
+- Backup-Strategie dokumentieren
+
+* Netzwerkdiagnose
+** Grundlegende Netzwerkbefehle
+*** Verbindungstests
+#+BEGIN_SRC sh
+ping hostname              # Verfügbarkeit testen
+traceroute hostname       # Routing-Pfad anzeigen
+netstat                  # Netzwerkverbindungen anzeigen
+#+END_SRC
+
+*** Netzwerkkonfiguration
+#+BEGIN_SRC sh
+ip addr                  # IP-Adressen anzeigen
+ip route                # Routing-Tabelle anzeigen
+nslookup domain        # DNS-Auflösung
+#+END_SRC
+
+* SSH
+** SSH-Konfiguration
+*** Schlüsselerstellung
+#+BEGIN_SRC sh
+ssh-keygen -t ed25519            # Schlüsselpaar erstellen
+ssh-copy-id user@host           # Öffentlichen Schlüssel kopieren
+#+END_SRC
+
+*** Vorteile der Public-Key-Authentifizierung
+- Höhere Sicherheit (keine Brute-Force-Angriffe)
+- Bequeme Nutzung (kein Passwort nötig)
+- Erleichtert Automatisierung
+- ED25519 bietet hohe Sicherheit bei kurzer Schlüssellänge
+
+** SSH-Verbindungen
+*** Grundlegende Befehle
+#+BEGIN_SRC sh
+ssh user@host                    # Verbindung herstellen
+scp datei user@host:pfad        # Dateien kopieren
+sftp user@host                  # Interaktiver Dateitransfer
+#+END_SRC
+
+*** Sicherheitsoptionen
+#+BEGIN_SRC sh
+ssh -p 2222 user@host           # Alternativer Port
+ssh -i ~/.ssh/key user@host    # Spezifischer Schlüssel
+#+END_SRC
+
+* Samba
+** Freigabe-Konfiguration
+*** Grundkonfiguration
+#+BEGIN_SRC sh
+[shared]
+path = /home/shared
+browseable = yes
+writable = yes
+guest ok = no
+valid users = @share
+#+END_SRC
+
+*** Benutzerverwaltung
+#+BEGIN_SRC sh
+smbpasswd -a user              # Benutzer hinzufügen
+smbpasswd -x user             # Benutzer löschen
+pdbedit -L                   # Benutzer auflisten
+#+END_SRC
+
+*** Fehlerbehebung
+Häufige Probleme:
+- Falsches Passwort (Caps-Lock prüfen)
+- Kein Samba-Passwort gesetzt
+- Fehlende Gruppenmitgliedschaft
+- Falsche Berechtigungen im Dateisystem
+
+* Dienste-Verwaltung
+** Systemd
+*** Grundlegende Befehle
+#+BEGIN_SRC sh
+systemctl start dienst         # Dienst starten
+systemctl stop dienst         # Dienst stoppen
+systemctl restart dienst     # Dienst neu starten
+systemctl status dienst     # Status anzeigen
+#+END_SRC
+
+*** Automatischer Start
+#+BEGIN_SRC sh
+systemctl enable dienst       # Beim Boot aktivieren
+systemctl disable dienst     # Beim Boot deaktivieren
+systemctl is-enabled dienst # Status prüfen
+#+END_SRC
+
+** Praktische Übungen
+1. SSH-Zugang einrichten:
+   #+BEGIN_SRC sh
+   ssh-keygen -t ed25519
+   ssh-copy-id -i ~/.ssh/id_ed25519.pub user@server
+   #+END_SRC
+
+2. Samba-Freigabe konfigurieren:
+   #+BEGIN_SRC sh
+   sudo smbpasswd -a user
+   sudo systemctl restart smbd
+   #+END_SRC
+
+3. Dienste überwachen:
+   #+BEGIN_SRC sh
+   systemctl status sshd smbd
+   journalctl -u sshd
+   #+END_SRC
+
+
+* Hardware-Informationen
+** Speichergeräte
+*** Block-Devices anzeigen
+#+BEGIN_SRC sh
+lsblk                    # Blockgeräte auflisten
+lsblk -f                # Mit Dateisysteminformationen
+lsblk -m               # Mit Berechtigungen
+#+END_SRC
+Ausgabe enthält:
+- NAME: Gerätename
+- MAJ:MIN: Major/Minor-Nummer
+- SIZE: Kapazität
+- TYPE: Gerätetyp
+- MOUNTPOINT: Einhängepunkt
+
+*** Festplatten und Controller
+#+BEGIN_SRC sh
+lshw -C disk           # Detaillierte Festplatteninformationen
+lshw -C storage       # Storage-Controller-Informationen
+#+END_SRC
+
+** Systeminformationen
+*** PCI-Geräte
+#+BEGIN_SRC sh
+lspci                  # PCI-Geräte auflisten
+lspci -v              # Ausführliche Informationen
+lspci -k             # Mit Kernelmodulen
+#+END_SRC
+Zeigt an:
+- Grafikkarten
+- Netzwerkkarten
+- USB-Controller
+- SATA-Controller
+- Andere PCI-Geräte
+
+*** USB-Geräte
+#+BEGIN_SRC sh
+lsusb                 # USB-Geräte auflisten
+lsusb -v             # Detaillierte Informationen
+lsusb -t            # Als Baumstruktur
+#+END_SRC
+
+* Speichernutzung
+** Festplattenspeicher
+*** Verfügbarer Speicherplatz
+#+BEGIN_SRC sh
+df                    # Speicherplatz aller Dateisysteme
+df -h                # Mit menschenlesbaren Größen
+df -T               # Mit Dateisystemtyp
+#+END_SRC
+Ausgabe enthält:
+- Filesystem: Gerätename
+- Size: Gesamtgröße
+- Used: Genutzter Speicher
+- Available: Verfügbarer Speicher
+- Use%: Prozentuale Nutzung
+- Mounted on: Einhängepunkt
+
+*** Verzeichnisgrößen
+#+BEGIN_SRC sh
+du                   # Speichernutzung von Verzeichnissen
+du -h               # Mit menschenlesbaren Größen
+du -sh *           # Zusammenfassung pro Verzeichnis
+#+END_SRC
+
+** Arbeitsspeicher (nur FISI)
+*** RAM-Nutzung
+#+BEGIN_SRC sh
+free                 # Arbeitsspeichernutzung
+free -h             # Mit menschenlesbaren Größen
+free -s 1          # Aktualisierung jede Sekunde
+#+END_SRC
+Zeigt an:
+- total: Gesamter RAM
+- used: Genutzter RAM
+- free: Freier RAM
+- shared: Geteilter Speicher
+- buff/cache: Puffer/Cache
+- available: Verfügbar für neue Prozesse
+
+** Praktische Beispiele
+1. Systeminformationen sammeln:
+   #+BEGIN_SRC sh
+   echo "=== Speichergeräte ===" > sysinfo.txt
+   lsblk >> sysinfo.txt
+   echo -e "\n=== PCI-Geräte ===" >> sysinfo.txt
+   lspci >> sysinfo.txt
+   echo -e "\n=== Speichernutzung ===" >> sysinfo.txt
+   df -h >> sysinfo.txt
+   #+END_SRC
+
+2. Speicherauslastung überwachen:
+   #+BEGIN_SRC sh
+   watch -n 1 'free -h; echo; df -h'
+   #+END_SRC
+
+3. Große Dateien finden:
+   #+BEGIN_SRC sh
+   du -ah /home | sort -hr | head -n 10
+   #+END_SRC
+
+** Sicherheitshinweise
+- Regelmäßige Überwachung der Speichernutzung
+- Warnung bei niedriger Speicherkapazität
+- Frühe Erkennung von Hardware-Problemen
+- Dokumentation der Systemkonfiguration
+- Sicherung wichtiger Systeminformationen
+
+** Sicherheitshinweise
+- SSH-Schlüssel sicher aufbewahren
+- Regelmäßige Überprüfung der Dienste-Logs
+- Zugriffsbeschränkungen durch Firewall
+- Starke Passwörter für Samba-Benutzer
+- Regelmäßige Updates der Dienste
