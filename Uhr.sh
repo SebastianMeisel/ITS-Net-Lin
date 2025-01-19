@@ -1,6 +1,10 @@
 #!/bin/bash
 # Das Skript zeigt eine digitale Uhr im Terminal mit großen ASCII-Ziffern an.
 
+# In Zeile 88 verstecken wir den Cursor. Der folgende macht ihn wieder sicher, wenn das Programm
+# durch ein SIGNAL wie KILL, TERM oder INT (Str-C) empfängt.
+trap 'tput cnorm ; exit 0' SIGKILL SIGTERM SIGINT SIGSTOP
+
 # Definition der ASCII-Zeichendarstellung für die Ziffern 0 bis 9 und den Doppelpunkt (:).
 # Jede Ziffer und der Doppelpunkt bestehen aus 5 Zeilen.
 ONE[1]="    11  "
