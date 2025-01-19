@@ -4,8 +4,8 @@
 # Definition der ASCII-Zeichendarstellung für die Ziffern 0 bis 9 und den Doppelpunkt (:).
 # Jede Ziffer und der Doppelpunkt bestehen aus 5 Zeilen.
 ONE[1]="    11  "
-ONE[2]="   1 1  "
-ONE[3]="  1  1  "
+ONE[2]="  11 1  "
+ONE[3]="     1  "
 ONE[4]="     1  "
 ONE[5]="     1  "
 
@@ -42,7 +42,7 @@ SIX[1]="   666  "
 SIX[2]="  6     "
 SIX[3]="  666   "
 SIX[4]="  6  6  "
-SIX[5]="  6666  "
+SIX[5]="   66   "
 
 # Analog für die Ziffer 7
 SEVEN[1]="  7777  "
@@ -79,49 +79,56 @@ COLON[3]="        "
 COLON[4]="  :::   "
 COLON[5]="        "
 
-
 # Endlosschleife, um die Uhr kontinuierlich zu aktualisieren.
-while true
-   do
-       clear        # Bildschirm leeren,
-       tput civis   # Cursor ausblende,
-       echo         # und eine Leerzeile ausgeben.
+while true; do
+	clear      # Bildschirm leeren,
+	tput civis # Cursor ausblende,
+	echo       # und eine Leerzeile ausgeben.
 
-     # Die ASCII-Zeilen der Uhr werden nacheinander ausgegeben.
-     for zeile in {1..5}  # Jede Ziffer besteht aus 5 Zeilen.
-        do
-        # Das aktuelle Datum im Format HH:MM:SS wird zeichenweise durchlaufen.
-        for char in $(date +%H:%M:%S | fold -w1)
-        do
-                # Jeder einzelne Buchstabe/Ziffer wird über ein `case`-Statement verarbeitet.
-                case $char in
-                        1) echo -n "${ONE[$zeile]}"  # Ziffer 1 in der aktuellen Zeile ausgeben.
-                        ;;
-                        2) echo -n "${TWO[$zeile]}"  # Ziffer 2 ...
-                        ;;
-                        3) echo -n "${THREE[$zeile]}"  # Ziffer 3 ...
-                        ;;
-                        4) echo -n "${FOUR[$zeile]}"  # Ziffer 4 ...
-                        ;;
-                        5) echo -n "${FIVE[$zeile]}"  # Ziffer 5 ...
-                        ;;
-                        6) echo -n "${SIX[$zeile]}"  # Ziffer 6 ...
-                        ;;
-                        7) echo -n "${SEVEN[$zeile]}"  # Ziffer 7 ...
-                        ;;
-                        8) echo -n "${EIGHT[$zeile]}"  # Ziffer 8 ...
-                        ;;
-                        9) echo -n "${NINE[$zeile]}"  # Ziffer 9 ...
-                        ;;
-                        0) echo -n "${ZERO[$zeile]}"  # Ziffer 0 ...
-                        ;;
-                        :) echo -n "${COLON[$zeile]}"  # Doppelpunkt.
-                        ;;
-                esac
-        done
-        # Nach jeder Zeile der Ziffern wird ein Zeilenumbruch ausgegeben.
-        printf "\n"
-   done
+	# Die ASCII-Zeilen der Uhr werden nacheinander ausgegeben.
+	for zeile in {1..5}; do # Jede Ziffer besteht aus 5 Zeilen.
+		# Das aktuelle Datum im Format HH:MM:SS wird zeichenweise durchlaufen.
+		for char in $(date +%H:%M:%S | fold -w1); do
+			# Jeder einzelne Buchstabe/Ziffer wird über ein `case`-Statement verarbeitet.
+			case $char in
+			1)
+				echo -n "${ONE[$zeile]}" # Ziffer 1 in der aktuellen Zeile ausgeben.
+				;;
+			2)
+				echo -n "${TWO[$zeile]}" # Ziffer 2 ...
+				;;
+			3)
+				echo -n "${THREE[$zeile]}" # Ziffer 3 ...
+				;;
+			4)
+				echo -n "${FOUR[$zeile]}" # Ziffer 4 ...
+				;;
+			5)
+				echo -n "${FIVE[$zeile]}" # Ziffer 5 ...
+				;;
+			6)
+				echo -n "${SIX[$zeile]}" # Ziffer 6 ...
+				;;
+			7)
+				echo -n "${SEVEN[$zeile]}" # Ziffer 7 ...
+				;;
+			8)
+				echo -n "${EIGHT[$zeile]}" # Ziffer 8 ...
+				;;
+			9)
+				echo -n "${NINE[$zeile]}" # Ziffer 9 ...
+				;;
+			0)
+				echo -n "${ZERO[$zeile]}" # Ziffer 0 ...
+				;;
+			:)
+				echo -n "${COLON[$zeile]}" # Doppelpunkt.
+				;;
+			esac
+		done
+		# Nach jeder Zeile der Ziffern wird ein Zeilenumbruch ausgegeben.
+		printf "\n"
+	done
 
-   sleep 1;  # 1 Sekunde warten und dann die Schleife neu starten.
+	sleep 1 # 1 Sekunde warten und dann die Schleife neu starten.
 done
