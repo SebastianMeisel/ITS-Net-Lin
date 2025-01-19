@@ -153,6 +153,9 @@
   - [[file:Bash-Konfiguration.pdf][Bash Konfiguration (PDF)]]
   - [[file:Bash-Skripting.pdf][Bash-Skripting (PDF)]]
   - [[file:CrontabsTimers.org][Cronjobs und systemd-Timer (PDF)]]
+  - [[file:backup.sh][Backup-Skript (Bash)]]
+  - [[file:backup_remote.sh][Remote-Backup-Skript (Bash)]]
+  - [[file:Uhr.sh][ASCII Uhr (Bash)]]
 
 ** Firewall
 :PROPERTIES:
@@ -189,3 +192,5 @@
   35 Fragen - in der LEK gibt es 20 Fragen für FIAE-Klassen und 25 für FISI-Klassen.
   - [[file:LEK-Vorbereitung-ITS-Net-Lin.pdf][LEK Vorbereitung (PDF)]]
   - [[file:LEK-Vorbereitung-ITS-Net-Lin-LÖSUNGEN.pdf][Lösungen (PDF)]]
+  - [[file:Übungslab.pdf][Übungslab (PDF)]]
+  - [[file:LEK-Vorbereitung-LAB.pdf][Größer Lab zur Vorbereitung auf die LEK (PDF)]]
