@@ -23,6 +23,12 @@ case "$1" in
     ssh ${SERVER} "ln -snf ${FULLB} ${LASTB}"
     ;;
   incremental)
+    # Stelle sicher, dass der Link auf /backup/Latest existiert und auf ein
+    # Verzeichnis verweist
+      ssh ${SERVER} "[[ -L ${LASTB} && -d ${FULLB} ]]" || cat << _ && exit 1
+      Es exitiert kein Backup zum Vergleich. Erstellen Sie ein Vollback
+      mit $0 full.
+_
     # Stelle sicher, dass Zielverzeichnis existiert 
     ssh ${SERVER} "[[ -d ${INCRB} ]] || mkdir -p -m 777 ${INCRB}"
     # Synchronisiere

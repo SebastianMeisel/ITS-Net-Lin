@@ -182,14 +182,28 @@ case "$1" in
 esac
 #+END_SRC
 
-Stellen Sie sicher, dass das Skript ausführbar ist:
+Installieren Sie das Skript unter =/usr/local/bin/backup=:
 #+BEGIN_SRC bash
-chmod +x /usr/local/bin/backup.sh
+install --own root --group root -m 755 backup.sh /usr/local/bin/backup
 #+END_SRC
 
+#+begin_quote
+ - =--own root= :: Super-User besitzt die Datei.
+ - =--group root= :: Super-User-Gruppe besitzt die Datei.
+ - =-m 755= :: Super-User hat volle Rechte (binär =111=), alle anderen nur Lese-, und Ausführungsrechte, aber keine Schreibrechte (binär =101=).
+#+end_quote
+
+
 *** Schritt 2: systemd-Service erstellen
-Erstellen Sie eine Datei =/etc/systemd/system/backup.service=:
-#+BEGIN_SRC ini :tangle backup.service
+Erstellen Sie eine systemd-Template-Datei =/etc/systemd/system/backup@.service= mit dem Befehl:
+
+#+BEGIN_SRC bash
+systemctl --user edit --full --foce backup@.service
+#+END_SRC
+
+Der Inhalt der Datei lautet:
+
+#+BEGIN_SRC ini :tangle backup@.service
 [Unit]
 Description=Backup Service
 
@@ -198,10 +212,23 @@ Type=oneshot
 ExecStart=/usr/local/bin/backup.sh %i
 #+END_SRC
 
+#+begin_quote
+ - =Description= :: Beschreibung.
+ - =Type=oneshot= :: Einmalig ausführen, dann beeenden.
+ - =ExecStart= :: Auszuführender Befehl. =%i= wird durch das ersetzt, dass bei den Timer-Units (s.u.) nach dem =@=-Zeichen steht.
+#+end_quote
+
 *** Schritt 3: Timer für Backups erstellen
 Erstellen Sie drei Timer-Dateien für die verschiedenen Backup-Typen.
 
-1. Täglicher inkrementeller Timer: =/etc/systemd/system/backup@incremental.timer=
+1. Täglicher inkrementeller Timer: =/etc/systemd/system/backup@incremental.timer= mit dem Befehl:
+
+#+BEGIN_SRC bash
+systemctl --user edit --full --foce backup@.service
+#+END_SRC
+
+Der Inhalt der Datei lautet:
+
 #+BEGIN_SRC ini :tangle backup@incremental.timer
 [Unit]
 Description=Daily Incremental Backup Timer
@@ -214,7 +241,21 @@ Persistent=true
 WantedBy=timers.target
 #+END_SRC
 
-2. Wöchentlicher differenzieller Timer: =/etc/systemd/system/backup@differential.timer=
+#+begin_quote
+ - =OnCalendar= :: Wann soll der Dienst ausgeführt werden? Mögliche Zeitangaben finden sie unter =man systemd.time=.
+ - =Persistent= :: Es wird gespeichert, wann der Dienst zuletzt ausgeführt wurde und nachdem Systemstart sofort ausgeführt, wenn ein geplanter Termin übersprungen wurde.
+ - =WantedBy= :: In welcher Phase des Systemstarts soll der Dienst gestartet werden. Diese Angabe ist verpflichtend.
+#+end_quote
+
+
+2. Wöchentlicher differenzieller Timer: =/etc/systemd/system/backup@differential.timer= mit dem Befehl:
+
+#+BEGIN_SRC bash
+systemctl --user edit --full --foce backup@.service
+#+END_SRC
+
+Der Inhalt der Datei lautet:
+
 #+BEGIN_SRC ini :tangle backup@differential.timer
 [Unit]
 Description=Weekly Differential Backup Timer
@@ -227,7 +268,14 @@ Persistent=true
 WantedBy=timers.target
 #+END_SRC
 
-3. Monatlicher Vollbackup-Timer: =/etc/systemd/system/backup@full.timer=
+3. Monatlicher Vollbackup-Timer: =/etc/systemd/system/backup@full.timer= mit dem Befehl:
+
+#+BEGIN_SRC bash
+systemctl --user edit --full --foce backup@.service
+#+END_SRC
+
+Der Inhalt der Datei lautet:
+
 #+BEGIN_SRC ini :tangle backup@full.timer
 [Unit]
 Description=Monthly Full Backup Timer
@@ -249,7 +297,7 @@ systemctl enable --now backup@full.timer
 #+END_SRC
 
 ** Moderne Backup-Tools unter Linux
-Neben =rsync= gibt es eine Vielzahl moderner Tools, die speziell für Backups entwickelt wurden und viele zusätzliche Funktionen bieten. Einige Beispiele:
+Neben =rsync= gibt es eine Vielzahl moderner Tools, die speziell für Backups entwickelt wurden und viele zusätzliche Funktionen bieten. Neben einer komfortableren Bedienung - hier einige Beispiele:
 
 *** BorgBackup (=borg=)
 - *Beschreibung*: Ein modernes deduplizierendes Backup-Tool, das effiziente und sichere Backups ermöglicht.
