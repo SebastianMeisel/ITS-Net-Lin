@@ -31,6 +31,17 @@ Erstellen Sie den Benutzer =kim=.
 sudo useradd -m -s /bin/bash kim
 #+END_SRC
 
+*** Passwort erstellen
+:PROPERTIES:
+:CUSTOM_ID: passwd
+:END:
+Der neue Benutzer braucht nun eine Passwort
+
+#+BEGIN_SRC bash
+sudo passwd kim
+#+END_SRC
+
+
 ** Neue Gruppe =python= anlegen
 Erstellen Sie die Gruppe =python=.
 
@@ -54,6 +65,14 @@ sudo chown :python -R /usr/src/python
 sudo chmod 770 /usr/src/python
 #+END_SRC
 
+** Benutzer zu =kim= wechseln
+Wechseln Sie in die Sitzung des Benutzers =kim=. Benutzen Sie das Passwort das sie unter [[#passwd][Passwort erstellen]] gesetzt haben. Falls Sie das Passwort vergessen haben, setzen Sie es erneut, wie dort beschrieben.
+
+#+BEGIN_SRC bash
+su - kim
+#+END_SRC
+
+
 ** Github-Projekt nach =/usr/src/python= klonen
 Klonen Sie das Projekt aus GitHub.
 
@@ -61,12 +80,6 @@ Klonen Sie das Projekt aus GitHub.
 git clone https://github.com/dhhruv/Sudoku-Solver /usr/src/python/Sudoku-Solver
 #+END_SRC
 
-** Benutzer zu =kim= wechseln
-Wechseln Sie in die Sitzung des Benutzers =kim=.
-
-#+BEGIN_SRC bash
-su - kim
-#+END_SRC
 
 ** Link auf =/usr/src/python/Sudoku-Solver= in =kim=​s Home-Verzeichnis erstellen
 Erstellen Sie einen symbolischen Link.
@@ -78,6 +91,15 @@ ln -sn /usr/src/python/Sudoku-Solver ~/Sudoku-Solver
 #+begin_quote
 Warum brauchen Sie die Optionen =-s= und =-n=? Lesen sie dazu im Handbuch mit =man ln=.
 #+end_quote
+
+** Sitzung de Nutzers =kim= beenden
+Für die weiteren Schritten brauchen Sie wieder Super-User-Rechte. Da =kim=
+nicht in der Gruppe =sudo=, müssen Sie dessen Sitzung verlassen:
+
+#+BEGIN_SRC bash
+ exit
+#+END_SRC
+
 
 ** =/usr/src/python/Sudoku-Solver= als Samba-Share für Gruppe =python= erstellen
 Konfigurieren Sie Samba, um das Verzeichnis als Share bereitzustellen.
@@ -98,6 +120,10 @@ Konfigurieren Sie Samba, um das Verzeichnis als Share bereitzustellen.
      force group = python
      #+END_SRC
 
+#+begin_quote
+ - Schließen Sie mit =Strg-X=, bestätigen Sie mit =J=, dass Sie speichern wollen.
+#+end_quote
+
 2. Neustarten des Samba-Dienstes:
    #+BEGIN_SRC bash
    sudo systemctl restart smbd
@@ -105,7 +131,11 @@ Konfigurieren Sie Samba, um das Verzeichnis als Share bereitzustellen.
 
 ** Backup für =/usr/src/python/Sudoku-Solver= unter =/backup/= erstellen
 1. Erstellen Sie das Backup-Skript:
-   Speichern Sie den folgenden Code in einer Datei, z. B. `/usr/local/bin/backup.sh`:
+   Speichern Sie den folgenden Code in einer Datei, z. B. mit:
+#+BEGIN_SRC bash
+sudo nano /usr/local/bin/backup_python.sh
+#+END_SRC
+
    #+BEGIN_SRC bash
    #!/bin/bash
    src="/usr/src/python/Sudoku-Solver"
@@ -115,7 +145,7 @@ Konfigurieren Sie Samba, um das Verzeichnis als Share bereitzustellen.
    #+END_SRC
 
 #+begin_quote
-Warum brauchen Sie die Optionen =-a= und =-v=? Lesen sie dazu im Handbuch mit =man rsync=.
+Warum brauchen Sie die Optionen =-a= und =-v=? Was bewirkt das =--delete= Lesen sie dazu im Handbuch mit =man rsync=.
 
  Es könnte sinnvoll sein, Standard- und Fehlerausgaben in ein Logfile umzuleiten, z. B. mit =>> /var/log/backup.log 2>&1= am Ende der letzten Zeile Skript.
 #+end_quote
@@ -123,20 +153,35 @@ Warum brauchen Sie die Optionen =-a= und =-v=? Lesen sie dazu im Handbuch mit =m
 
 2. Machen Sie die Datei ausführbar:
    #+BEGIN_SRC bash
-   sudo chmod +x /usr/local/bin/backup.sh
+   sudo chmod +x /usr/local/bin/backup_python.sh
    #+END_SRC
 
 3. Fügen Sie einen systemd-Timer hinzu:
-   - Erstellen Sie die Datei `/etc/systemd/system/backup.service` mit folgendem Inhalt:
+   - Erstellen Sie die Datei =/etc/systemd/system/backup-python.service=:
+
+#+BEGIN_SRC bash
+sudo systemctl edit --full --force backup-python.service
+#+END_SRC
+
+
+ mit folgendem Inhalt:
      #+BEGIN_SRC text
      [Unit]
      Description=Backup Service for Sudoku-Solver
 
      [Service]
-     ExecStart=/usr/local/bin/backup.sh
+     Type=oneshot
+     ExecStart=/usr/local/bin/backup_python.sh
      #+END_SRC
 
-   - Erstellen Sie die Datei `/etc/systemd/system/backup.timer`:
+   - Erstellen Sie die Datei =/etc/systemd/system/backup-python.timer=:
+
+#+BEGIN_SRC bash
+sudo systemctl edit --full --force backup-python.timer
+#+END_SRC
+
+ mit folgendem Inhalt:
+
      #+BEGIN_SRC text
      [Unit]
      Description=Run Backup Service Daily
@@ -151,8 +196,8 @@ Warum brauchen Sie die Optionen =-a= und =-v=? Lesen sie dazu im Handbuch mit =m
 
 4. Aktivieren Sie den Timer:
    #+BEGIN_SRC bash
-   sudo systemctl enable backup.timer
-   sudo systemctl start backup.timer
+   sudo systemctl enable backup-python.timer
+   sudo systemctl start backup-python.timer
    #+END_SRC
 
 * Abschluss
