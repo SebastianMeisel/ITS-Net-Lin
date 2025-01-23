@@ -62,23 +62,23 @@ cd ~                      # Zum Home-Verzeichnis
 cd -                      # Zum vorherigen Verzeichnis
 #+END_SRC
 Erläuterung:
-- cd ohne Parameter wechselt zum Home-Verzeichnis
-- .. bezeichnet das übergeordnete Verzeichnis
-- . bezeichnet das aktuelle Verzeichnis
-- Absolute Pfade beginnen mit /, relative nicht
-- Tilde (~) ist ein Shortcut für das eigene Home-Verzeichnis
+- =cd= ohne Parameter wechselt zum Home-Verzeichnis
+- =..= bezeichnet das übergeordnete Verzeichnis
+- =.= bezeichnet das aktuelle Verzeichnis
+- Absolute Pfade beginnen mit =/=, relative nicht
+- Tilde (=~=) ist ein Shortcut für das eigene Home-Verzeichnis
 
 *** Der ls-Befehl
 #+BEGIN_SRC sh
 ls                        # Einfache Auflistung
-ls -l                     # Detaillierte Auflistung
+ls -l                     # Detaillierte Auflistung mit Rechten, usw.
 ls -la                    # Inkl. versteckter Dateien
 ls -lh                    # Mit menschenlesbaren Größen
 ls -R                     # Rekursive Auflistung
 #+END_SRC
-Erläuterung der ls -l Ausgabe:
-- Erstes Zeichen: Dateityp (d=Verzeichnis, l=Link, -=normale Datei)
-- Nächste 9 Zeichen: Berechtigungen (rwx für user, group, others)
+Erläuterung der =ls -l= Ausgabe:
+- Erstes Zeichen: Dateityp (=d= : Verzeichnis, =l= : Link, =-= : normale Datei)
+- Nächste 9 Zeichen: Berechtigungen (=rwx= für user, group, others)
 - Anzahl der Links
 - Besitzer
 - Gruppe
@@ -95,8 +95,8 @@ mkdir -m 755 geschuetzt          # Mit spezifischen Rechten
 mkdir projekt{1..5}              # Mehrere Verzeichnisse
 #+END_SRC
 Erläuterung:
-- -p verhindert Fehler, wenn übergeordnete Verzeichnisse fehlen
-- -m setzt direkt die Zugriffsrechte
+- =-p= verhindert Fehler, wenn übergeordnete Verzeichnisse fehlen
+- =-m= setzt direkt die Zugriffsrechte
 - Geschweiften Klammern erlauben Muster-Expansion
 - Standardrechte werden durch umask beeinflusst
 
@@ -108,11 +108,11 @@ cp -a quelle ziel               # Archivmodus (erhält Attribute)
 cp -u *.txt backup/             # Nur neuere Dateien kopieren
 #+END_SRC
 Erläuterung:
-- -r/R kopiert Verzeichnisse rekursiv
-- -a entspricht -dR --preserve=all
-- -i fragt vor Überschreiben
-- -u aktualisiert nur wenn Quelle neuer ist
-- -v zeigt kopierte Dateien an
+- =-r= kopiert Verzeichnisse rekursiv (funktiert auch mit großen =-R=)
+- =-a= entspricht =-dR --preserve=all=, kopiert Nutzerrechte, Zugriffszeiten, usw.
+- =-i= fragt vor Überschreiben
+- =-u= aktualisiert nur wenn Quelle neuer ist
+- =-v= zeigt kopierte Dateien an
 
 *** Dateien/Verzeichnisse verschieben mit mv
 #+BEGIN_SRC sh
@@ -122,10 +122,10 @@ mv -i quelle ziel              # Interaktiver Modus
 mv -u *.txt ziel/              # Nur neuere Dateien
 #+END_SRC
 Erläuterung:
-- Vorsicht: mv überschreibt ohne Nachfrage
-- -i für interaktiven Modus empfohlen
+- Vorsicht: =mv= überschreibt ohne Nachfrage
+- =-i= für interaktiven Modus empfohlen
 - Wenn Ziel ein Verzeichnis ist: Verschieben
-- Wenn Ziel keine Datei/Verzeichnis ist: Umbenennen
+- Wenn Ziel eine Datei ist: Umbenennen
 
 *** Dateien/Verzeichnisse löschen
 #+BEGIN_SRC sh
@@ -135,39 +135,39 @@ rm -f unerwuenscht.txt         # Forciertes Löschen
 rmdir leeres_verzeichnis       # Leeres Verzeichnis löschen
 #+END_SRC
 Erläuterung:
-- rm löscht unwiderruflich! Kein Papierkorb!
-- -r für rekursives Löschen von Verzeichnissen
-- -f überspringt Nachfragen und nicht-existente Dateien
-- rmdir löscht nur leere Verzeichnisse
-- Vorsicht mit rm -rf / oder rm -rf *
+- =rm= löscht unwiderruflich! Kein Papierkorb!
+- =-r= für rekursives Löschen von Verzeichnissen
+- =-f= überspringt Nachfragen und nicht-existente Dateien
+- =rmdir= löscht nur leere Verzeichnisse
+- Vorsicht mit =rm -rf /= oder =rm -rf *=
 
 ** Dateiberechtigungen
 *** Grundlagen des Berechtigungssystems
 Linux unterscheidet drei Berechtigungsebenen:
-- u (user): Eigentümer der Datei
-- g (group): Gruppe der Datei
-- o (others): Alle anderen Benutzer
+- =u= (user): Eigentümer der Datei
+- =g= (group): Gruppe der Datei
+- =o= (others): Alle anderen Benutzer
 
 Und drei Arten von Rechten:
-- r (read): Lesen/Anzeigen
-- w (write): Schreiben/Ändern
-- x (execute): Ausführen/Durchsuchen bei Verzeichnissen
+- =r= (read): Lesen/Anzeigen
+- =w= (write): Schreiben/Ändern
+- =x= (execute): Ausführen/Durchsuchen bei Verzeichnissen
 
 *** chmod - Berechtigungen ändern
 #+BEGIN_SRC sh
 chmod 755 datei.sh              # Numerische Notation
 chmod u+x datei.sh              # Symbolische Notation
-chmod -R g+rw verzeichnis      # Rekursiv für Gruppe
-chmod a+r datei.txt            # Für alle lesbar
+chmod -R g+rw verzeichnis       # Rekursiv für Gruppe
+chmod a+r datei.txt             # Für alle lesbar
 #+END_SRC
 Erläuterung numerische Notation:
-- Erste Ziffer: Besitzer (4=r, 2=w, 1=x)
+- Erste Ziffer: Besitzer (=4=r=, =2=w=, =1=x=)
 - Zweite Ziffer: Gruppe
 - Dritte Ziffer: Andere
 Beispiele:
-- 755: rwxr-xr-x
-- 644: rw-r--r--
-- 700: rwx------
+- 755: =rwxr-xr-x=
+- 644: =rw-r--r--=
+- 700: =rwx------=
 
 *** chown - Besitzer ändern
 #+BEGIN_SRC sh
@@ -177,8 +177,8 @@ chown -R user:group verz      # Rekursiv ändern
 #+END_SRC
 Erläuterung:
 - Nur root kann Besitzer ändern
-- :gruppe ändert nur die Gruppe
-- -R für rekursive Änderung
+- =:gruppe= ändert nur die Gruppe
+- =-R= für rekursive Änderung
 - Benutzer muss existieren
 
 ** Links im Linux-Dateisystem
@@ -187,8 +187,8 @@ Erläuterung:
 ln ziel link                   # Hardlink erstellen
 #+END_SRC
 Eigenschaften:
-- Gleiche Inode wie Original
-- Nur für Dateien möglich
+- Gleiche Inode (Eintrag in Dateizuordnungstabelle des Dateisystems) wie Original
+- Nur für Dateien möglich (nicht für Verzeichnisse)
 - Nicht über Dateisystemgrenzen
 - Löschen eines Links reduziert Link-Count
 
@@ -197,10 +197,10 @@ Eigenschaften:
 ln -s ziel link               # Symbolischen Link erstellen
 #+END_SRC
 Eigenschaften:
-- Eigene Inode
+- Eigene Inode (Eintrag in Dateizuordnungstabelle des Dateisystems)
 - Kann auf Verzeichnisse zeigen
 - Funktioniert über Dateisystemgrenzen
-- Wird ungültig wenn Ziel verschoben/gelöscht
+- Wird ungültig wenn Ziel verschoben/gelöscht wird
 
 ** Praktische Übungen
 1. Erstellen Sie eine Verzeichnisstruktur für ein Projekt:
@@ -222,7 +222,7 @@ Eigenschaften:
    #+END_SRC
 
 ** Sicherheitshinweise
-- Vorsicht bei der Verwendung von rm -rf
+- Vorsicht bei der Verwendung von =rm -rf=
 - Backup wichtiger Dateien vor Änderungen
 - Berechtigungen restriktiv setzen
 - Root-Rechte nur wenn nötig verwenden
@@ -235,18 +235,43 @@ Eigenschaften:
 #+BEGIN_SRC sh
 apt update                 # Paketlisten aktualisieren
 #+END_SRC
-Wichtig: 
-- Vor Installation oder Update von Software ausführen
-- Wenn letzter Aufruf > 24h zurückliegt
-- Aktualisiert nur die Paketlisten, nicht die Software
+#+begin_quote
+- *Erläuterungen:* 
+- Zweck :: Mit dem Befehl  werden die Paketquellen auf den neuesten Stand gebracht, d. h., die lokalen Listen der verfügbaren Softwarepakete werden mit den Repositorys synchronisiert.
+- *Wann ausführen?*
+  - Vor der Installation neuer Software.
+  - Wenn der letzte Aufruf von =apt update= mehr als 24 Stunden zurückliegt.
+- Hinweis :: Dieser Befehl aktualisiert *nur* die Paketlisten, *nicht* die installierte Software selbst.
 
+#+end_quote
 *** Software installieren und aktualisieren
 #+BEGIN_SRC sh
 apt install paketname      # Software installieren
-apt upgrade               # Alle Pakete aktualisieren
-apt remove paketname      # Software entfernen
-apt autoremove           # Nicht mehr benötigte Abhängigkeiten entfernen
+apt upgrade                # Alle installierten Pakete aktualisieren
+apt remove paketname       # Software entfernen
+apt autoremove             # Nicht mehr benötigte Abhängigkeiten entfernen
 #+END_SRC
+
+#+begin_quote
+*Erläuterungen:*
+1. *Software installieren:*
+   - Der Befehl =apt install paketname= wird verwendet, um ein bestimmtes Softwarepaket zu installieren. Dabei werden auch alle benötigten Abhängigkeiten automatisch installiert.  
+   - Beispiel: =apt install vim= installiert den Texteditor Vim.
+
+2. *Software aktualisieren:*
+   - Mit =apt upgrade= werden alle installierten Pakete auf die neuesten Versionen aktualisiert, sofern sie in den Paketquellen verfügbar sind.
+   - *Tipp:* Führe vorher immer =apt update= aus, um sicherzustellen, dass die neuesten Listen verwendet werden.
+
+3. *Software entfernen:*
+   - Mit =apt remove paketname= wird ein bestimmtes Paket deinstalliert, jedoch bleiben die Konfigurationsdateien erhalten.
+   - Für eine vollständige Entfernung, einschließlich der Konfigurationsdateien, kann =apt purge paketname= verwendet werden.
+
+4. *Nicht benötigte Pakete entfernen:*
+   - Mit =apt autoremove= werden automatisch Pakete entfernt, die nicht mehr benötigt werden, z. B. Abhängigkeiten von zuvor deinstallierten Paketen.
+
+*Zusätzliche Hinweise:*
+- Sicherheitsupdates :: Für sicherheitskritische Updates solltest du =apt upgrade= regelmäßig ausführen.
+#+end_quote
 
 * Benutzerverwaltung
 ** Super-User-Rechte
@@ -257,54 +282,136 @@ sudo befehl              # Einzelnen Befehl mit root-Rechten ausführen
 #+END_SRC
 
 *** Voraussetzungen
-- su: root-Benutzer muss existieren
-- sudo: Benutzer muss in /etc/sudoers eingetragen sein
-- Sicherheitsempfehlung: sudo bevorzugen
+- =su= :: root-Benutzer muss existieren
+- =sudo= :: Benutzer muss in =/etc/sudoers= eingetragen sein, z. B. indem er der Gruppe =sudo= angehört.
+- Sicherheitsempfehlung :: =sudo= bevorzugen
 
 ** Benutzer und Gruppen
+Die Verwaltung von Benutzern und Gruppen ermöglicht die Organisation von Rechten und Zugriffssteuerung auf einem Linux-System.
+
 *** Benutzer verwalten
 #+BEGIN_SRC sh
 useradd username         # Benutzer erstellen
 usermod -aG gruppe user  # Benutzer zu Gruppe hinzufügen
-passwd username         # Passwort setzen/ändern
+passwd username          # Passwort setzen/ändern
 #+END_SRC
 
+#+begin_quote
+*Erläuterungen:*
+1. *Benutzer erstellen:*
+   - =useradd username= erstellt einen neuen Benutzer.  
+   - Zusätzliche Optionen, z. B. für das Home-Verzeichnis, können mit =-m= angegeben werden: =useradd -m username=.
+   - Nach der Erstellung sollte mit =passwd username= ein Passwort für den Benutzer gesetzt werden.
+
+2. *Benutzer zu Gruppen hinzufügen:*
+   - Mit =usermod -aG gruppe user= wird ein Benutzer zu einer bestehenden Gruppe hinzugefügt.
+   - Wichtig :: Das =-a= (append) ist notwendig, um existierende Gruppenmitgliedschaften beizubehalten.
+
+3. *Passwort setzen oder ändern:*
+   - =passwd username= ermöglicht das Setzen oder Ändern des Passworts eines Benutzers.
+   - Für Sicherheitsrichtlinien kann die Konfiguration in =/etc/login.defs= angepasst werden.
+
+#+end_quote
 *** Gruppen verwalten
 #+BEGIN_SRC sh
-groupadd groupname      # Gruppe erstellen
-groupdel groupname      # Gruppe löschen
-groups username        # Gruppenzugehörigkeit anzeigen
+groupadd groupname       # Gruppe erstellen
+groupdel groupname       # Gruppe löschen
+groups username          # Gruppenzugehörigkeit anzeigen
 #+END_SRC
+#+begin_quote
+*Erläuterungen:*
+1. *Gruppe erstellen:*
+   - =groupadd groupname= erstellt eine neue Benutzergruppe.
+   - Diese Gruppen können genutzt werden, um Rechte gezielt mehreren Benutzern zuzuweisen.
 
+2. *Gruppe löschen:*
+   - Mit =groupdel groupname= wird eine Gruppe entfernt.
+   - Hinweis :: Prüfe vorher, ob die Gruppe noch aktiv genutzt wird, um unerwartete Probleme zu vermeiden.
+
+3. **Gruppenzugehörigkeit anzeigen:*
+   - Der Befehl =groups username= listet alle Gruppen auf, denen ein Benutzer angehört.
+
+#+end_quote
 * Administratorrechte
 ** Rechteverwaltung
+Die Rechteverwaltung erlaubt die Kontrolle über den Zugriff auf Dateien, Verzeichnisse und Systemressourcen.
+
 *** Dateiberechtigungen
 #+BEGIN_SRC sh
-chmod 764 datei         # Rechte numerisch setzen
-chmod g+w datei         # Gruppe Schreibrecht geben
-chown user:gruppe datei # Besitzer und Gruppe ändern
+chmod 764 datei          # Rechte numerisch setzen
+chmod g+w datei          # Gruppe Schreibrecht geben
+chown user:gruppe datei  # Besitzer und Gruppe ändern
 #+END_SRC
+#+begin_quote
+*Erläuterungen:*
+1. *Rechte numerisch setzen:*
+   - Mit =chmod 764 datei= wird der Zugriff numerisch festgelegt:
+     - 7 (=rwx=) :: Vollzugriff für den Besitzer.
+     - 6 (=rw-=) :: Lese- und Schreibrechte für die Gruppe.
+     - 4 (=r--=) :: Nur Leserechte für andere.
 
+2. *Spezifische Rechte ändern:*
+   - =chmod g+w datei= gibt der Gruppe Schreibrechte auf die Datei.
+   - Weitere Optionen :: =u= (Benutzer), =g= (Gruppe), =o= (andere), =a= (alle).  
+
+3. *Besitzer und Gruppe ändern:*
+   - =chown user:gruppe datei= ändert den Besitzer und die Gruppe einer Datei oder eines Verzeichnisses.
+   - Beispiel: =chown alice:users dokument.txt=.
+#+end_quote
 *** Besondere Rechte
 #+BEGIN_SRC sh
-chmod u+s datei         # SUID-Bit setzen
-chmod g+s verzeichnis   # SGID-Bit setzen
-chmod +t verzeichnis    # Sticky-Bit setzen
+chmod u+s datei          # SUID-Bit setzen
+chmod g+s verzeichnis    # SGID-Bit setzen
+chmod +t verzeichnis     # Sticky-Bit setzen
 #+END_SRC
+
+#+begin_quote
+*Erläuterungen:*
+1. *SUID-Bit:*
+   - Mit =chmod u+s datei= wird das SUID-Bit gesetzt.
+   - Führt ein Benutzer die Datei aus, erfolgt die Ausführung mit den Rechten des Dateibesitzers.
+
+2. *SGID-Bit:*
+   - =chmod g+s verzeichnis= setzt das SGID-Bit für ein Verzeichnis.
+   - Neue Dateien oder Verzeichnisse erben automatisch die Gruppenzugehörigkeit.
+
+3. *Sticky-Bit:*
+   - =chmod +t verzeichnis= aktiviert das Sticky-Bit.
+   - Nur der Besitzer kann Dateien löschen oder verschieben, auch wenn andere Benutzer Schreibrechte haben.
+#+end_quote
 
 * Firewalls
 ** Firewall-Systeme
+Firewalls schützen ein System vor unbefugten Netzwerkzugriffen. Es gibt verschiedene Firewall-Lösungen:
+
 *** Verfügbare Systeme
-- iptables: Traditionelles Firewall-System
-- nftables: Moderner Nachfolger von iptables
-- ufw: Benutzerfreundliche Abstraktion
+- iptables :: Traditionelles (veraltetes), mächtiges Firewall-System.
+- nftables :: Moderner Nachfolger von =iptables= mit besserer Performance und einfacher Syntax.
+- ufw (Uncomplicated Firewall) :: Ein benutzerfreundliches Frontend für =iptables= / =nft=, ideal für einfache Konfigurationen.
 
 *** Grundlegende Konfiguration
 #+BEGIN_SRC sh
 ufw enable              # Firewall aktivieren
 ufw allow 22/tcp        # SSH-Port öffnen
-ufw status             # Firewall-Status anzeigen
+ufw status              # Firewall-Status anzeigen
 #+END_SRC
+
+#+begin_quote
+*Erläuterungen:*
+1. *Firewall aktivieren:*
+   - Mit =ufw enable= wird die Firewall aktiviert und beginnt, Regeln durchzusetzen.
+   - Die Konfiguration wird aus den vordefinierten Profilen und Regeln geladen.
+
+2. *Ports freigeben:*
+   - =ufw allow 22/tcp= erlaubt eingehende Verbindungen auf Port 22 (TCP), z. B. für SSH.
+   - Alternative: =ufw allow 80= für HTTP ohne Nennung des Layer 4 Protokolls.
+
+3. *Firewall-Status prüfen:*
+   - Mit =ufw status= kannst du überprüfen, welche Regeln aktuell aktiv sind.
+
+*Zusätzlicher Hinweis:*
+Für fortgeschrittene Einstellungen kann eine Kombination aus =ufw= und =iptables= oder ein Wechsel zu =nftables= sinnvoll sein.
+#+end_quote
 
 ** Praktische Übungen
 1. Paketmanagement durchführen:
@@ -314,8 +421,8 @@ ufw status             # Firewall-Status anzeigen
 
 2. Benutzer einrichten:
    #+BEGIN_SRC sh
-   sudo useradd -m -s /bin/bash newuser
-   sudo passwd newuser
+   sudo useradd -m -s /bin/bash mohamad
+   sudo passwd mohamad
    #+END_SRC
 
 3. Firewall konfigurieren:
@@ -378,48 +485,93 @@ rsync -avz /quelle /backup   # Mit Komprimierung
 #+END_SRC
 
 *** Wichtige Optionen
-- -a :: Archiv-Modus (erhält Metadaten)
-- -v :: Ausführliche Ausgabe
-- -z :: Komprimierung während der Übertragung
-- --delete :: Löscht Dateien im Ziel, die in der Quelle nicht mehr existieren
+- =-a= :: Archiv-Modus (erhält Metadaten)
+- =-v= :: Ausführliche Ausgabe
+- =-z= :: Komprimierung während der Übertragung
+- =--delete= :: Löscht Dateien im Ziel, die in der Quelle nicht mehr existieren
 
 ** tar Archivierung (nur FISI)
 *** Grundlegende Befehle
 #+BEGIN_SRC sh
-tar -cvf backup.tar /quelle     # Archiv erstellen
-tar -xvf backup.tar            # Archiv entpacken
-tar -czvf backup.tar.gz /quelle # Mit Komprimierung
+tar cvf backup.tar /quelle     # Archiv erstellen
+tar xvf backup.tar            # Archiv entpacken
+tar czvf backup.tar.gz /quelle # Mit Komprimierung
 #+END_SRC
 
 *** Wichtige Optionen
-- c :: Archiv erstellen
-- x :: Archiv entpacken
-- v :: Ausführliche Ausgabe
-- f :: Archivdatei angeben
-- z :: gzip-Komprimierung
+- =c= :: Archiv erstellen
+- =x= :: Archiv entpacken
+- =v= :: Ausführliche Ausgabe
+- =f= :: Archivdatei angeben
+- =z= :: gzip-Komprimierung
 
 * Loganalyse
+Die Analyse von Systemlogs ist essenziell für die Diagnose und Überwachung eines Linux-Systems. Logs geben Einblick in den Zustand des Systems, Authentifizierungen, Fehler und vieles mehr.
+
 ** Systemlogs
+Systemlogs enthalten Meldungen des Kernels, von Diensten und Anwendungen. Die Logs befinden sich standardmäßig unter `/var/log`.
+
 *** Wichtige Log-Dateien
 #+BEGIN_SRC sh
 /var/log/syslog              # Allgemeine Systemmeldungen
-/var/log/auth.log           # Authentifizierungsmeldungen
-/var/log/kern.log          # Kernel-Meldungen
+/var/log/auth.log            # Authentifizierungsmeldungen
+/var/log/kern.log            # Kernel-Meldungen
 #+END_SRC
+**Erläuterungen:**  
+1. **/var/log/syslog:**  
+   - Enthält allgemeine Systemmeldungen und Protokolle von vielen Diensten.  
+   - Typischer Ausgangspunkt für die Fehlersuche.
+
+2. **/var/log/auth.log:**  
+   - Protokolliert Anmeldeversuche und Authentifizierungsaktivitäten, z. B. erfolgreiche oder fehlgeschlagene SSH-Logins.  
+   - Besonders nützlich für Sicherheitsanalysen.
+
+3. **/var/log/kern.log:**  
+   - Enthält Meldungen des Kernels, wie Hardwarefehler oder Kernel-Warnungen.  
+   - Hilfreich bei der Diagnose von Treiberproblemen oder Hardwarefehlern.
 
 *** Log-Analyse-Befehle
 #+BEGIN_SRC sh
 dmesg                       # Kernel-Ring-Buffer anzeigen
-dmesg | grep -i error      # Nach Fehlern suchen
-tail -f /var/log/syslog    # Logs in Echtzeit verfolgen
+dmesg | grep -i error       # Nach Fehlern suchen
+tail -f /var/log/syslog     # Logs in Echtzeit verfolgen
 #+END_SRC
+**Erläuterungen:**  
+1. **`dmesg`:**  
+   - Zeigt die Kernel-Nachrichten (Ring-Buffer) an.  
+   - Besonders nützlich für Boot-Probleme oder Hardware-Fehler.  
+   - Beispiel: `dmesg | grep usb` zeigt USB-bezogene Nachrichten.
+
+2. **Nach Fehlern suchen:**  
+   - `dmesg | grep -i error` filtert Nachrichten, die den Begriff "error" enthalten.  
+   - Der Schalter `-i` macht die Suche groß-/kleinschreibungsunabhängig.
+
+3. **Logs in Echtzeit verfolgen:**  
+   - Mit `tail -f /var/log/syslog` kannst du laufende Systemmeldungen in Echtzeit überwachen.  
+   - Ideal zur Beobachtung von Prozessen, die gerade Fehler werfen oder Debugging erfordern.
 
 ** Log-Filterung
+Logs können umfangreich sein. Mit Filterbefehlen kannst du gezielt relevante Informationen extrahieren.
+
 *** Grundlegende Filterbefehle
 #+BEGIN_SRC sh
 grep 'ssh' /var/log/auth.log           # SSH-Einträge finden
 dmesg | grep 'ssh' >> ssh.log         # SSH-Meldungen in Datei anhängen
 #+END_SRC
+
+#+begin_quote
+*Erläuterungen:*
+1. *Suchen nach Schlüsselwörtern:
+   - Mit =grep 'ssh' /var/log/auth.log= kannst du alle Einträge finden, die mit SSH zu tun haben.  
+   - Praktisch für die Überprüfung von SSH-Zugriffen oder Angriffen.
+
+2. *Ergebnisse speichern:*
+   - Mit =dmesg | grep 'ssh' >> ssh.log= werden gefilterte Nachrichten in die Datei =ssh.log= angehängt.  
+   - Hinweis :: Verwende =>= statt =>>=, wenn du den Inhalt der Datei überschreiben möchtest.
+
+*Zusätzlicher Tipp:*
+- Erweiterte Tools :: Tools wie =logwatch= oder =journalctl= bieten detailliertere Analyse- und Filteroptionen.
+#+end_quote
 
 ** Praktische Übungen
 1. Inkrementelles Backup erstellen:
