@@ -26,22 +26,22 @@
 Das Linux-Dateisystem ist hierarchisch aufgebaut und folgt dem Filesystem Hierarchy Standard (FHS). Dieses Modul vermittelt die grundlegenden Befehle zur Navigation und Verwaltung von Dateien und Verzeichnissen sowie das Verständnis des Linux-Berechtigungssystems.
 
 *** Wichtige Verzeichnisse im Linux-System
-- / :: Das Wurzelverzeichnis (Root)
-- /home :: Benutzerverzeichnisse
-- /etc :: Systemweite Konfigurationsdateien
-- /var :: Variable Daten (Logs, Mails, etc.)
-- /tmp :: Temporäre Dateien
-- /usr :: Installierte Software und Bibliotheken
-- /bin :: Essentielle Systembefehle
-- /sbin :: Systembefehle für die Administration
+  - / :: Das Wurzelverzeichnis (Root)
+  - /home :: Benutzerverzeichnisse
+  - /etc :: Systemweite Konfigurationsdateien
+  - /var :: Variable Daten (Logs, Mails, etc.)
+  - /tmp :: Temporäre Dateien
+  - /usr :: Installierte Software und Bibliotheken
+  - /bin :: Essentielle Systembefehle
+  - /sbin :: Systembefehle für die Administration
 
 ** Lernziele
 Nach Abschluss dieses Moduls können Sie:
-- Sicher im Linux-Dateisystem navigieren
-- Dateien und Verzeichnisse erstellen, kopieren, verschieben und löschen
-- Dateiberechtigungen verstehen und verwalten
-- Hard- und Softlinks erstellen und deren Unterschiede verstehen
-- Grundlegende Dateioperationen durchführen
+  - Sicher im Linux-Dateisystem navigieren
+  - Dateien und Verzeichnisse erstellen, kopieren, verschieben und löschen
+  - Dateiberechtigungen verstehen und verwalten
+  - Hard- und Softlinks erstellen und deren Unterschiede verstehen
+  - Grundlegende Dateioperationen durchführen
 
 ** Grundlegende Navigation
 *** Der pwd-Befehl
@@ -49,9 +49,9 @@ Nach Abschluss dieses Moduls können Sie:
 pwd
 #+END_SRC
 Erläuterung:
-- Zeigt den absoluten Pfad des aktuellen Verzeichnisses
-- Nützlich zur Orientierung in tiefen Verzeichnisstrukturen
-- Wichtig für Skripte, die den aktuellen Pfad benötigen
+  - Zeigt den absoluten Pfad des aktuellen Verzeichnisses
+  - Nützlich zur Orientierung in tiefen Verzeichnisstrukturen
+  - Wichtig für Skripte, die den aktuellen Pfad benötigen
 
 *** Der cd-Befehl
 #+BEGIN_SRC sh
@@ -62,11 +62,11 @@ cd ~                      # Zum Home-Verzeichnis
 cd -                      # Zum vorherigen Verzeichnis
 #+END_SRC
 Erläuterung:
-- =cd= ohne Parameter wechselt zum Home-Verzeichnis
-- =..= bezeichnet das übergeordnete Verzeichnis
-- =.= bezeichnet das aktuelle Verzeichnis
-- Absolute Pfade beginnen mit =/=, relative nicht
-- Tilde (=~=) ist ein Shortcut für das eigene Home-Verzeichnis
+  - =cd= ohne Parameter wechselt zum Home-Verzeichnis
+  - =..= bezeichnet das übergeordnete Verzeichnis
+  - =.= bezeichnet das aktuelle Verzeichnis
+  - Absolute Pfade beginnen mit =/=, relative nicht
+  - Tilde (=~=) ist ein Shortcut für das eigene Home-Verzeichnis
 
 *** Der ls-Befehl
 #+BEGIN_SRC sh
@@ -77,14 +77,14 @@ ls -lh                    # Mit menschenlesbaren Größen
 ls -R                     # Rekursive Auflistung
 #+END_SRC
 Erläuterung der =ls -l= Ausgabe:
-- Erstes Zeichen: Dateityp (=d= : Verzeichnis, =l= : Link, =-= : normale Datei)
-- Nächste 9 Zeichen: Berechtigungen (=rwx= für user, group, others)
-- Anzahl der Links
-- Besitzer
-- Gruppe
-- Größe
-- Datum der letzten Änderung
-- Name
+  - Erstes Zeichen: Dateityp (=d= : Verzeichnis, =l= : Link, =-= : normale Datei)
+  - Nächste 9 Zeichen: Berechtigungen (=rwx= für user, group, others)
+  - Anzahl der Links
+  - Besitzer
+  - Gruppe
+  - Größe
+  - Datum der letzten Änderung
+  - Name
 
 ** Datei- und Verzeichnisoperationen
 *** Verzeichnisse erstellen mit mkdir
@@ -95,10 +95,10 @@ mkdir -m 755 geschuetzt          # Mit spezifischen Rechten
 mkdir projekt{1..5}              # Mehrere Verzeichnisse
 #+END_SRC
 Erläuterung:
-- =-p= verhindert Fehler, wenn übergeordnete Verzeichnisse fehlen
-- =-m= setzt direkt die Zugriffsrechte
-- Geschweiften Klammern erlauben Muster-Expansion
-- Standardrechte werden durch umask beeinflusst
+  - =-p= verhindert Fehler, wenn übergeordnete Verzeichnisse fehlen
+  - =-m= setzt direkt die Zugriffsrechte
+  - Geschweiften Klammern erlauben Muster-Expansion
+  - Standardrechte werden durch umask beeinflusst
 
 *** Dateien kopieren mit cp
 #+BEGIN_SRC sh
@@ -108,11 +108,11 @@ cp -a quelle ziel               # Archivmodus (erhält Attribute)
 cp -u *.txt backup/             # Nur neuere Dateien kopieren
 #+END_SRC
 Erläuterung:
-- =-r= kopiert Verzeichnisse rekursiv (funktiert auch mit großen =-R=)
-- =-a= entspricht =-dR --preserve=all=, kopiert Nutzerrechte, Zugriffszeiten, usw.
-- =-i= fragt vor Überschreiben
-- =-u= aktualisiert nur wenn Quelle neuer ist
-- =-v= zeigt kopierte Dateien an
+  - =-r= kopiert Verzeichnisse rekursiv (funktiert auch mit großen =-R=)
+  - =-a= entspricht =-dR --preserve=all=, kopiert Nutzerrechte, Zugriffszeiten, usw.
+  - =-i= fragt vor Überschreiben
+  - =-u= aktualisiert nur wenn Quelle neuer ist
+  - =-v= zeigt kopierte Dateien an
 
 *** Dateien/Verzeichnisse verschieben mit mv
 #+BEGIN_SRC sh
@@ -122,10 +122,10 @@ mv -i quelle ziel              # Interaktiver Modus
 mv -u *.txt ziel/              # Nur neuere Dateien
 #+END_SRC
 Erläuterung:
-- Vorsicht: =mv= überschreibt ohne Nachfrage
-- =-i= für interaktiven Modus empfohlen
-- Wenn Ziel ein Verzeichnis ist: Verschieben
-- Wenn Ziel eine Datei ist: Umbenennen
+  - Vorsicht: =mv= überschreibt ohne Nachfrage
+  - =-i= für interaktiven Modus empfohlen
+  - Wenn Ziel ein Verzeichnis ist: Verschieben
+  - Wenn Ziel eine Datei ist: Umbenennen
 
 *** Dateien/Verzeichnisse löschen
 #+BEGIN_SRC sh
@@ -135,23 +135,23 @@ rm -f unerwuenscht.txt         # Forciertes Löschen
 rmdir leeres_verzeichnis       # Leeres Verzeichnis löschen
 #+END_SRC
 Erläuterung:
-- =rm= löscht unwiderruflich! Kein Papierkorb!
-- =-r= für rekursives Löschen von Verzeichnissen
-- =-f= überspringt Nachfragen und nicht-existente Dateien
-- =rmdir= löscht nur leere Verzeichnisse
-- Vorsicht mit =rm -rf /= oder =rm -rf *=
+  - =rm= löscht unwiderruflich! Kein Papierkorb!
+  - =-r= für rekursives Löschen von Verzeichnissen
+  - =-f= überspringt Nachfragen und nicht-existente Dateien
+  - =rmdir= löscht nur leere Verzeichnisse
+  - Vorsicht mit =rm -rf /= oder =rm -rf *=
 
 ** Dateiberechtigungen
 *** Grundlagen des Berechtigungssystems
 Linux unterscheidet drei Berechtigungsebenen:
-- =u= (user): Eigentümer der Datei
-- =g= (group): Gruppe der Datei
-- =o= (others): Alle anderen Benutzer
+  - =u= (user): Eigentümer der Datei
+  - =g= (group): Gruppe der Datei
+  - =o= (others): Alle anderen Benutzer
 
 Und drei Arten von Rechten:
-- =r= (read): Lesen/Anzeigen
-- =w= (write): Schreiben/Ändern
-- =x= (execute): Ausführen/Durchsuchen bei Verzeichnissen
+  - =r= (read): Lesen/Anzeigen
+  - =w= (write): Schreiben/Ändern
+  - =x= (execute): Ausführen/Durchsuchen bei Verzeichnissen
 
 *** chmod - Berechtigungen ändern
 #+BEGIN_SRC sh
@@ -161,13 +161,13 @@ chmod -R g+rw verzeichnis       # Rekursiv für Gruppe
 chmod a+r datei.txt             # Für alle lesbar
 #+END_SRC
 Erläuterung numerische Notation:
-- Erste Ziffer: Besitzer (=4=r=, =2=w=, =1=x=)
-- Zweite Ziffer: Gruppe
-- Dritte Ziffer: Andere
+  - Erste Ziffer: Besitzer (=4=r=, =2=w=, =1=x=)
+  - Zweite Ziffer: Gruppe
+  - Dritte Ziffer: Andere
 Beispiele:
-- 755: =rwxr-xr-x=
-- 644: =rw-r--r--=
-- 700: =rwx------=
+  - 755: =rwxr-xr-x=
+  - 644: =rw-r--r--=
+  - 700: =rwx------=
 
 *** chown - Besitzer ändern
 #+BEGIN_SRC sh
@@ -176,10 +176,10 @@ chown benutzer:gruppe datei    # Besitzer und Gruppe
 chown -R user:group verz      # Rekursiv ändern
 #+END_SRC
 Erläuterung:
-- Nur root kann Besitzer ändern
-- =:gruppe= ändert nur die Gruppe
-- =-R= für rekursive Änderung
-- Benutzer muss existieren
+  - Nur root kann Besitzer ändern
+  - =:gruppe= ändert nur die Gruppe
+  - =-R= für rekursive Änderung
+  - Benutzer muss existieren
 
 ** Links im Linux-Dateisystem
 *** Hardlinks erstellen
@@ -187,20 +187,20 @@ Erläuterung:
 ln ziel link                   # Hardlink erstellen
 #+END_SRC
 Eigenschaften:
-- Gleiche Inode (Eintrag in Dateizuordnungstabelle des Dateisystems) wie Original
-- Nur für Dateien möglich (nicht für Verzeichnisse)
-- Nicht über Dateisystemgrenzen
-- Löschen eines Links reduziert Link-Count
+  - Gleiche Inode (Eintrag in Dateizuordnungstabelle des Dateisystems) wie Original
+  - Nur für Dateien möglich (nicht für Verzeichnisse)
+  - Nicht über Dateisystemgrenzen
+  - Löschen eines Links reduziert Link-Count
 
 *** Symbolische Links (Softlinks)
 #+BEGIN_SRC sh
 ln -s ziel link               # Symbolischen Link erstellen
 #+END_SRC
 Eigenschaften:
-- Eigene Inode (Eintrag in Dateizuordnungstabelle des Dateisystems)
-- Kann auf Verzeichnisse zeigen
-- Funktioniert über Dateisystemgrenzen
-- Wird ungültig wenn Ziel verschoben/gelöscht wird
+  - Eigene Inode (Eintrag in Dateizuordnungstabelle des Dateisystems)
+  - Kann auf Verzeichnisse zeigen
+  - Funktioniert über Dateisystemgrenzen
+  - Wird ungültig wenn Ziel verschoben/gelöscht wird
 
 ** Praktische Übungen
 1. Erstellen Sie eine Verzeichnisstruktur für ein Projekt:
@@ -222,11 +222,11 @@ Eigenschaften:
    #+END_SRC
 
 ** Sicherheitshinweise
-- Vorsicht bei der Verwendung von =rm -rf=
-- Backup wichtiger Dateien vor Änderungen
-- Berechtigungen restriktiv setzen
-- Root-Rechte nur wenn nötig verwenden
-- Symbolische Links prüfen vor Verwendung
+  - Vorsicht bei der Verwendung von =rm -rf=
+  - Backup wichtiger Dateien vor Änderungen
+  - Berechtigungen restriktiv setzen
+  - Root-Rechte nur wenn nötig verwenden
+  - Symbolische Links prüfen vor Verwendung
 
 
 * Paketverwaltung
@@ -236,12 +236,12 @@ Eigenschaften:
 apt update                 # Paketlisten aktualisieren
 #+END_SRC
 #+begin_quote
-- *Erläuterungen:* 
-- Zweck :: Mit dem Befehl  werden die Paketquellen auf den neuesten Stand gebracht, d. h., die lokalen Listen der verfügbaren Softwarepakete werden mit den Repositorys synchronisiert.
-- *Wann ausführen?*
+  - *Erläuterungen:* 
+  - Zweck :: Mit dem Befehl  werden die Paketquellen auf den neuesten Stand gebracht, d. h., die lokalen Listen der verfügbaren Softwarepakete werden mit den Repositorys synchronisiert.
+  - *Wann ausführen?*
   - Vor der Installation neuer Software.
   - Wenn der letzte Aufruf von =apt update= mehr als 24 Stunden zurückliegt.
-- Hinweis :: Dieser Befehl aktualisiert *nur* die Paketlisten, *nicht* die installierte Software selbst.
+  - Hinweis :: Dieser Befehl aktualisiert *nur* die Paketlisten, *nicht* die installierte Software selbst.
 
 #+end_quote
 *** Software installieren und aktualisieren
@@ -270,7 +270,7 @@ apt autoremove             # Nicht mehr benötigte Abhängigkeiten entfernen
    - Mit =apt autoremove= werden automatisch Pakete entfernt, die nicht mehr benötigt werden, z. B. Abhängigkeiten von zuvor deinstallierten Paketen.
 
 *Zusätzliche Hinweise:*
-- Sicherheitsupdates :: Für sicherheitskritische Updates solltest du =apt upgrade= regelmäßig ausführen.
+  - Sicherheitsupdates :: Für sicherheitskritische Updates solltest du =apt upgrade= regelmäßig ausführen.
 #+end_quote
 
 * Benutzerverwaltung
@@ -282,9 +282,9 @@ sudo befehl              # Einzelnen Befehl mit root-Rechten ausführen
 #+END_SRC
 
 *** Voraussetzungen
-- =su= :: root-Benutzer muss existieren
-- =sudo= :: Benutzer muss in =/etc/sudoers= eingetragen sein, z. B. indem er der Gruppe =sudo= angehört.
-- Sicherheitsempfehlung :: =sudo= bevorzugen
+  - =su= :: root-Benutzer muss existieren
+  - =sudo= :: Benutzer muss in =/etc/sudoers= eingetragen sein, z. B. indem er der Gruppe =sudo= angehört.
+  - Sicherheitsempfehlung :: =sudo= bevorzugen
 
 ** Benutzer und Gruppen
 Die Verwaltung von Benutzern und Gruppen ermöglicht die Organisation von Rechten und Zugriffssteuerung auf einem Linux-System.
@@ -385,9 +385,9 @@ chmod +t verzeichnis     # Sticky-Bit setzen
 Firewalls schützen ein System vor unbefugten Netzwerkzugriffen. Es gibt verschiedene Firewall-Lösungen:
 
 *** Verfügbare Systeme
-- iptables :: Traditionelles (veraltetes), mächtiges Firewall-System.
-- nftables :: Moderner Nachfolger von =iptables= mit besserer Performance und einfacher Syntax.
-- ufw (Uncomplicated Firewall) :: Ein benutzerfreundliches Frontend für =iptables= / =nft=, ideal für einfache Konfigurationen.
+  - iptables :: Traditionelles (veraltetes), mächtiges Firewall-System.
+  - nftables :: Moderner Nachfolger von =iptables= mit besserer Performance und einfacher Syntax.
+  - ufw (Uncomplicated Firewall) :: Ein benutzerfreundliches Frontend für =iptables= / =nft=, ideal für einfache Konfigurationen.
 
 *** Grundlegende Konfiguration
 #+BEGIN_SRC sh
@@ -432,11 +432,11 @@ Für fortgeschrittene Einstellungen kann eine Kombination aus =ufw= und =iptable
    #+END_SRC
 
 ** Sicherheitshinweise
-- Regelmäßige System-Updates durchführen
-- Starke Passwörter verwenden
-- Minimale Rechte vergeben
-- Firewall-Regeln regelmäßig prüfen
-- sudo-Rechte nur bei Bedarf vergeben
+  - Regelmäßige System-Updates durchführen
+  - Starke Passwörter verwenden
+  - Minimale Rechte vergeben
+  - Firewall-Regeln regelmäßig prüfen
+  - sudo-Rechte nur bei Bedarf vergeben
 
   :LaTeX_PROPERTIES:
 #+LANGUAGE: de
@@ -463,17 +463,17 @@ Für fortgeschrittene Einstellungen kann eine Kombination aus =ufw= und =iptable
 * Backup-Strategien
 ** Backup-Arten
 *** Grundlegende Backup-Typen
-- Vollbackup: Sicherung aller Daten
-- Differentielles Backup: Sicherung aller Änderungen seit letztem Vollbackup
-- Inkrementelles Backup: Sicherung aller Änderungen seit letztem Backup
+  - Vollbackup: Sicherung aller Daten
+  - Differentielles Backup: Sicherung aller Änderungen seit letztem Vollbackup
+  - Inkrementelles Backup: Sicherung aller Änderungen seit letztem Backup
 
 *** Moderne Backup-Lösungen
 **** BorgBackup und Restic
 Vorteile:
-- Deduplizierte Backups (Speicherplatzersparnis)
-- Verschlüsselte Backups
-- Plattformübergreifend nutzbar
-- Open-Source
+  - Deduplizierte Backups (Speicherplatzersparnis)
+  - Verschlüsselte Backups
+  - Plattformübergreifend nutzbar
+  - Open-Source
 
 * rsync und tar
 ** rsync Grundlagen
@@ -485,10 +485,10 @@ rsync -avz /quelle /backup   # Mit Komprimierung
 #+END_SRC
 
 *** Wichtige Optionen
-- =-a= :: Archiv-Modus (erhält Metadaten)
-- =-v= :: Ausführliche Ausgabe
-- =-z= :: Komprimierung während der Übertragung
-- =--delete= :: Löscht Dateien im Ziel, die in der Quelle nicht mehr existieren
+  - =-a= :: Archiv-Modus (erhält Metadaten)
+  - =-v= :: Ausführliche Ausgabe
+  - =-z= :: Komprimierung während der Übertragung
+  - =--delete= :: Löscht Dateien im Ziel, die in der Quelle nicht mehr existieren
 
 ** tar Archivierung (nur FISI)
 *** Grundlegende Befehle
@@ -499,17 +499,17 @@ tar czvf backup.tar.gz /quelle # Mit Komprimierung
 #+END_SRC
 
 *** Wichtige Optionen
-- =c= :: Archiv erstellen
-- =x= :: Archiv entpacken
-- =v= :: Ausführliche Ausgabe
-- =f= :: Archivdatei angeben
-- =z= :: gzip-Komprimierung
+  - =c= :: Archiv erstellen
+  - =x= :: Archiv entpacken
+  - =v= :: Ausführliche Ausgabe
+  - =f= :: Archivdatei angeben
+  - =z= :: gzip-Komprimierung
 
 * Loganalyse
 Die Analyse von Systemlogs ist essenziell für die Diagnose und Überwachung eines Linux-Systems. Logs geben Einblick in den Zustand des Systems, Authentifizierungen, Fehler und vieles mehr.
 
 ** Systemlogs
-Systemlogs enthalten Meldungen des Kernels, von Diensten und Anwendungen. Die Logs befinden sich standardmäßig unter `/var/log`.
+Systemlogs enthalten Meldungen des Kernels, von Diensten und Anwendungen. Die Logs befinden sich standardmäßig unter =/var/log=.
 
 *** Wichtige Log-Dateien
 #+BEGIN_SRC sh
@@ -537,17 +537,17 @@ dmesg | grep -i error       # Nach Fehlern suchen
 tail -f /var/log/syslog     # Logs in Echtzeit verfolgen
 #+END_SRC
 **Erläuterungen:**  
-1. **`dmesg`:**  
+1. **=dmesg=:**  
    - Zeigt die Kernel-Nachrichten (Ring-Buffer) an.  
    - Besonders nützlich für Boot-Probleme oder Hardware-Fehler.  
-   - Beispiel: `dmesg | grep usb` zeigt USB-bezogene Nachrichten.
+   - Beispiel: =dmesg | grep usb= zeigt USB-bezogene Nachrichten.
 
 2. **Nach Fehlern suchen:**  
-   - `dmesg | grep -i error` filtert Nachrichten, die den Begriff "error" enthalten.  
-   - Der Schalter `-i` macht die Suche groß-/kleinschreibungsunabhängig.
+   - =dmesg | grep -i error= filtert Nachrichten, die den Begriff "error" enthalten.  
+   - Der Schalter =-i= macht die Suche groß-/kleinschreibungsunabhängig.
 
 3. **Logs in Echtzeit verfolgen:**  
-   - Mit `tail -f /var/log/syslog` kannst du laufende Systemmeldungen in Echtzeit überwachen.  
+   - Mit =tail -f /var/log/syslog= kannst du laufende Systemmeldungen in Echtzeit überwachen.  
    - Ideal zur Beobachtung von Prozessen, die gerade Fehler werfen oder Debugging erfordern.
 
 ** Log-Filterung
@@ -570,47 +570,94 @@ dmesg | grep 'ssh' >> ssh.log         # SSH-Meldungen in Datei anhängen
    - Hinweis :: Verwende =>= statt =>>=, wenn du den Inhalt der Datei überschreiben möchtest.
 
 *Zusätzlicher Tipp:*
-- Erweiterte Tools :: Tools wie =logwatch= oder =journalctl= bieten detailliertere Analyse- und Filteroptionen.
+  - Erweiterte Tools :: Tools wie =logwatch= oder =journalctl= bieten detailliertere Analyse- und Filteroptionen.
 #+end_quote
 
 ** Praktische Übungen
-1. Inkrementelles Backup erstellen:
+1. Vollbackup erstellen:
    #+BEGIN_SRC sh
-   rsync -a --link-dest=../backup.1 /quelle /backup.0
+   sudo mkdir -m 777 /backup.0
+   rsync -av --progress /home/bros /backup.0
    #+END_SRC
+
+#+begin_quote
+  - Was bewirkt, das =-a=, bzw. das =-v=?
+#+end_quote
 
 2. Logs überwachen:
    #+BEGIN_SRC sh
-   tail -f /var/log/auth.log | grep --line-buffered 'ssh'
+   tail -f /var/log/auth.log | grep  'ssh'
    #+END_SRC
 
 3. Komprimiertes Backup erstellen:  (nur FISI)
    #+BEGIN_SRC sh
-   tar -czvf backup-$(date +%Y%m%d).tar.gz /home/user/data
+   tar -czvf backup-$(date +%Y%m%d).tar.gz /home/bros
    #+END_SRC
 
+#+begin_quote
+  - Warum ist das =z= notwendig?
+  - Was bewirkt $(=date %Y%m%d=)?
+  - Versuchen Sie mit =man date= herauszufinden, wie Sie das Datumsformat anpassen können.
+#+end_quote
+
 ** Sicherheitshinweise
-- Regelmäßige Backup-Tests durchführen
-- Backups verschlüsselt speichern
-- Backup-Medien sicher aufbewahren
-- Log-Dateien regelmäßig prüfen
-- Backup-Strategie dokumentieren
+  - Regelmäßige Backup-Tests durchführen
+  - Backups verschlüsselt speichern
+  - Backup-Medien sicher aufbewahren
+  - Log-Dateien regelmäßig prüfen
+  - Backup-Strategie dokumentieren
 
 * Netzwerkdiagnose
+Die Netzwerkdiagnose ist essenziell, um Verbindungsprobleme, DNS-Probleme oder Routingfehler zu identifizieren und zu beheben.
+
 ** Grundlegende Netzwerkbefehle
+Diese Befehle helfen bei der Analyse von Netzwerkproblemen und der Überprüfung der Netzwerkkonfiguration.
+
 *** Verbindungstests
 #+BEGIN_SRC sh
 ping hostname              # Verfügbarkeit testen
-traceroute hostname       # Routing-Pfad anzeigen
-netstat                  # Netzwerkverbindungen anzeigen
+traceroute hostname        # Routing-Pfad anzeigen
+netstat                    # Netzwerkverbindungen anzeigen
 #+END_SRC
+#+begin_quote
+*Erläuterungen:*
+1. =ping hostname=:
+   - Sendet ICMP-Pakete an den angegebenen Host, um dessen Erreichbarkeit und die Antwortzeit zu testen.  
+   - Beispiel: =ping google.com= prüft, ob die Domain erreichbar ist.
+   - **Hinweis:** Manche Hosts blockieren ICMP-Anfragen, daher kann der Test fehlschlagen, obwohl der Host erreichbar ist.
 
+2. =traceroute hostname=:
+   - Zeigt den Routing-Pfad (Hop-by-Hop) zum angegebenen Host.  
+   - Hilfreich, um herauszufinden, wo Verbindungen blockiert oder verzögert werden.  
+   - Beispiel: =traceroute example.com=.  
+
+3. =netstat=:
+   - Listet aktive Netzwerkverbindungen und Ports auf.  
+   - Beispiel: =netstat -tuln= zeigt aktive TCP- und UDP-Ports im numerischen Format.  
+   - **Hinweis:** Auf neueren Systemen ist der Ersatz =ss= empfohlen: =ss -tuln=.
+#+end_quote
 *** Netzwerkkonfiguration
 #+BEGIN_SRC sh
-ip addr                  # IP-Adressen anzeigen
-ip route                # Routing-Tabelle anzeigen
-nslookup domain        # DNS-Auflösung
+ip addr                    # IP-Adressen anzeigen
+ip route                   # Routing-Tabelle anzeigen
+nslookup domain            # DNS-Auflösung prüfen
 #+END_SRC
+#+begin_quote
+Erläuterungen:
+1. =ip addr=:
+   - Zeigt die IP-Adressen und Schnittstellen des Systems an.  
+   - Beispiel: =ip addr show= zeigt alle Netzwerkschnittstellen und ihre zugewiesenen IP-Adressen.  
+
+2. =ip route=:
+   - Listet die Routing-Tabelle auf, um zu sehen, wie das System Pakete weiterleitet.  
+   - Beispiel: =ip route show= zeigt Standardrouten und spezifische Routen.  
+   - Besonders nützlich, wenn Verbindungen zu bestimmten Netzwerken nicht funktionieren.
+
+3. =nslookup domain=:
+   - Prüft die DNS-Auflösung für eine angegebene Domain.  
+   - Beispiel: =nslookup example.com= zeigt die IP-Adresse(n) der Domain.  
+   - **Hinweis:** Für detailliertere DNS-Analysen kann =dig= verwendet werden.
+#+end_quote
 
 * SSH
 ** SSH-Konfiguration
@@ -621,10 +668,10 @@ ssh-copy-id user@host           # Öffentlichen Schlüssel kopieren
 #+END_SRC
 
 *** Vorteile der Public-Key-Authentifizierung
-- Höhere Sicherheit (keine Brute-Force-Angriffe)
-- Bequeme Nutzung (kein Passwort nötig)
-- Erleichtert Automatisierung
-- ED25519 bietet hohe Sicherheit bei kurzer Schlüssellänge
+  - Höhere Sicherheit (keine Brute-Force-Angriffe)
+  - Bequeme Nutzung (kein Passwort nötig)
+  - Erleichtert Automatisierung
+  - ED25519 bietet hohe Sicherheit bei kurzer Schlüssellänge
 
 ** SSH-Verbindungen
 *** Grundlegende Befehle
@@ -661,10 +708,10 @@ pdbedit -L                   # Benutzer auflisten
 
 *** Fehlerbehebung
 Häufige Probleme:
-- Falsches Passwort (Caps-Lock prüfen)
-- Kein Samba-Passwort gesetzt
-- Fehlende Gruppenmitgliedschaft
-- Falsche Berechtigungen im Dateisystem
+  - Falsches Passwort (Caps-Lock prüfen)
+  - Kein Samba-Passwort gesetzt
+  - Fehlende Gruppenmitgliedschaft
+  - Falsche Berechtigungen im Dateisystem
 
 * Dienste-Verwaltung
 ** Systemd
@@ -712,11 +759,11 @@ lsblk -f                # Mit Dateisysteminformationen
 lsblk -m               # Mit Berechtigungen
 #+END_SRC
 Ausgabe enthält:
-- NAME: Gerätename
-- MAJ:MIN: Major/Minor-Nummer
-- SIZE: Kapazität
-- TYPE: Gerätetyp
-- MOUNTPOINT: Einhängepunkt
+  - NAME: Gerätename
+  - MAJ:MIN: Major/Minor-Nummer
+  - SIZE: Kapazität
+  - TYPE: Gerätetyp
+  - MOUNTPOINT: Einhängepunkt
 
 *** Festplatten und Controller
 #+BEGIN_SRC sh
@@ -732,11 +779,11 @@ lspci -v              # Ausführliche Informationen
 lspci -k             # Mit Kernelmodulen
 #+END_SRC
 Zeigt an:
-- Grafikkarten
-- Netzwerkkarten
-- USB-Controller
-- SATA-Controller
-- Andere PCI-Geräte
+  - Grafikkarten
+  - Netzwerkkarten
+  - USB-Controller
+  - SATA-Controller
+  - Andere PCI-Geräte
 
 *** USB-Geräte
 #+BEGIN_SRC sh
@@ -754,12 +801,12 @@ df -h                # Mit menschenlesbaren Größen
 df -T               # Mit Dateisystemtyp
 #+END_SRC
 Ausgabe enthält:
-- Filesystem: Gerätename
-- Size: Gesamtgröße
-- Used: Genutzter Speicher
-- Available: Verfügbarer Speicher
-- Use%: Prozentuale Nutzung
-- Mounted on: Einhängepunkt
+  - Filesystem: Gerätename
+  - Size: Gesamtgröße
+  - Used: Genutzter Speicher
+  - Available: Verfügbarer Speicher
+  - Use%: Prozentuale Nutzung
+  - Mounted on: Einhängepunkt
 
 *** Verzeichnisgrößen
 #+BEGIN_SRC sh
@@ -776,12 +823,12 @@ free -h             # Mit menschenlesbaren Größen
 free -s 1          # Aktualisierung jede Sekunde
 #+END_SRC
 Zeigt an:
-- total: Gesamter RAM
-- used: Genutzter RAM
-- free: Freier RAM
-- shared: Geteilter Speicher
-- buff/cache: Puffer/Cache
-- available: Verfügbar für neue Prozesse
+  - total: Gesamter RAM
+  - used: Genutzter RAM
+  - free: Freier RAM
+  - shared: Geteilter Speicher
+  - buff/cache: Puffer/Cache
+  - available: Verfügbar für neue Prozesse
 
 ** Praktische Beispiele
 1. Systeminformationen sammeln:
@@ -794,26 +841,30 @@ Zeigt an:
    df -h >> sysinfo.txt
    #+END_SRC
 
+#+begin_quote
+  - =echo -e= :: Erlaubt die Nutzung von Escapesequenzen wie =\n= für einen Zeilenumbruch.
+  - Was bewirkt =>>=? Was passiert, wenn Sie stattdessen =>= nutzen.
+  - Was bewirkt die Option =-h= beim =df=-Befehl?
+#+end_quote
+
 2. Speicherauslastung überwachen:
    #+BEGIN_SRC sh
    watch -n 1 'free -h; echo; df -h'
    #+END_SRC
 
+#+begin_quote
+  - =watch -n 1= :: Bewirkt das der nachfolgende Befehl jede Sekunde neu aufgerufen wird.
+    - Sie können mit =Strg-C= abbrechen.
+  - Was ist der Unterschied zwischen =free= und =df=
+#+end_quote
+
 3. Große Dateien finden:
    #+BEGIN_SRC sh
-   du -ah /home | sort -hr | head -n 10
+   du -ah /home | sort -hr | head -n 20
    #+END_SRC
 
-** Sicherheitshinweise
-- Regelmäßige Überwachung der Speichernutzung
-- Warnung bei niedriger Speicherkapazität
-- Frühe Erkennung von Hardware-Problemen
-- Dokumentation der Systemkonfiguration
-- Sicherung wichtiger Systeminformationen
-
-** Sicherheitshinweise
-- SSH-Schlüssel sicher aufbewahren
-- Regelmäßige Überprüfung der Dienste-Logs
-- Zugriffsbeschränkungen durch Firewall
-- Starke Passwörter für Samba-Benutzer
-- Regelmäßige Updates der Dienste
+#+begin_quote
+  - =du -a= :: Dateigröße für alle Dateien (nicht nur Verzeichnisse) ausgeben.
+  - Was bewirken die Optionen =-hr= beim =sort=-Befehl?
+  - Was bewirkt die Option =-n 20= beim =head=-Befehl?
+#+end_quote
