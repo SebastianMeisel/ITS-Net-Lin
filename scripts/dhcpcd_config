@@ -1,0 +1,280 @@
+#!/usr/bin/env python3
+import subprocess
+import sys
+import os
+import re
+import ipaddress
+from typing import Tuple
+
+def check_root_privileges() -> bool:
+    """Check if script is running with root privileges."""
+    return os.geteuid() == 0
+
+def install_required_packages() -> bool:
+    """Install required packages if not present."""
+    try:
+        packages = ['vlan', 'isc-dhcp-server']
+        print("Checking and installing required packages...")
+        subprocess.run(['apt-get', 'update'], check=True)
+        subprocess.run(['apt-get', 'install', '-y'] + packages, check=True)
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"Error installing packages: {e}")
+        return False
+
+def validate_vlan_id(vlan_id: str) -> bool:
+    """Validate VLAN ID is between 1 and 4094."""
+    try:
+        vid = int(vlan_id)
+        return 1 <= vid <= 4094
+    except ValueError:
+        return False
+
+def validate_ip_network(network: str) -> bool:
+    """Validate IP network in CIDR notation."""
+    try:
+        ipaddress.ip_network(network)
+        return True
+    except ValueError:
+        return False
+
+def configure_vlan(interface: str, vlan_id: int, network: str) -> bool:
+    """Configure VLAN interface using modern ip command."""
+    try:
+        # Parse network address
+        network_addr = ipaddress.ip_network(network)
+        
+        # Enable VLAN module
+        subprocess.run(['modprobe', '8021q'], check=True)
+        
+        # Create VLAN interface using ip command
+        vlan_interface = f"{interface}.{vlan_id}"
+        subprocess.run(['ip', 'link', 'add', 'link', interface, 'name', 
+                       vlan_interface, 'type', 'vlan', 'id', str(vlan_id)], check=True)
+        
+        # Set IP address for VLAN interface
+        subprocess.run(['ip', 'addr', 'add', 
+                       f"{network_addr.network_address + 1}/{network_addr.prefixlen}", 
+                       'dev', vlan_interface], check=True)
+        
+        # Bring up the interface
+        subprocess.run(['ip', 'link', 'set', vlan_interface, 'up'], check=True)
+        
+        # Add configuration to /etc/network/interfaces for persistence
+        with open('/etc/network/interfaces', 'a') as f:
+            f.write(f"\n# VLAN {vlan_id} interface\n")
+            f.write(f"auto {vlan_interface}\n")
+            f.write(f"iface {vlan_interface} inet static\n")
+            f.write(f"    address {network_addr.network_address + 1}\n")
+            f.write(f"    netmask {network_addr.netmask}\n")
+            f.write(f"    vlan-raw-device {interface}\n")
+        
+        return True
+    except Exception as e:
+        print(f"Error configuring VLAN: {e}")
+        return False
+
+def configure_dhcp(interface: str, vlan_id: int, network: str) -> bool:
+    """Configure DHCP server for VLAN."""
+    try:
+        network_addr = ipaddress.ip_network(network)
+        vlan_interface = f"{interface}.{vlan_id}"
+        
+        # Configure DHCP server
+        dhcp_conf = f"""
+# DHCP configuration for VLAN {vlan_id}
+subnet {network_addr.network_address} netmask {network_addr.netmask} {{
+    range {network_addr.network_address + 2} {network_addr.broadcast_address - 1};
+    option routers {network_addr.network_address + 1};
+    option domain-name-servers 8.8.8.8, 8.8.4.4;
+    default-lease-time 600;
+    max-lease-time 7200;
+}}
+"""
+        # Add DHCP configuration
+        with open('/etc/dhcp/dhcpd.conf', 'a') as f:
+            f.write(dhcp_conf)
+        
+        # Configure DHCP server to listen on VLAN interface
+        with open('/etc/default/isc-dhcp-server', 'r+') as f:
+            content = f.read()
+            if 'INTERFACESv4' in content:
+                content = re.sub(r'INTERFACESv4=".*"', f'INTERFACESv4="{vlan_interface}"', content)
+            else:
+                content += f'\nINTERFACESv4="{vlan_interface}"'
+            f.seek(0)
+            f.write(content)
+            f.truncate()
+        
+        # Restart DHCP server
+        subprocess.run(['systemctl', 'restart', 'isc-dhcp-server'], check=True)
+        return True
+    except Exception as e:
+        print(f"Error configuring DHCP: {e}")
+        return False
+
+
+def configure_ip_forwarding() -> bool:
+    """Enable IP forwarding via sysctl."""
+    try:
+        # Enable IP forwarding immediately
+        subprocess.run(['sysctl', '-w', 'net.ipv4.ip_forward=1'], check=True)
+        
+        # Make IP forwarding persistent
+        sysctl_file = '/etc/sysctl.d/99-ip-forward.conf'
+        with open(sysctl_file, 'w') as f:
+            f.write("# Enable IP forwarding\n")
+            f.write("net.ipv4.ip_forward=1\n")
+        
+        return True
+    except Exception as e:
+        print(f"Error configuring IP forwarding: {e}")
+        return False
+
+def configure_nftables(interface: str, vlan_id: int, network: str) -> bool:
+    """Configure nftables for NAT and forwarding."""
+    try:
+        vlan_interface = f"{interface}.{vlan_id}"
+        network_addr = ipaddress.ip_network(network)
+        
+        # Create nftables configuration
+        nft_rules = f"""#!/usr/sbin/nft -f
+
+# Clear existing rules
+flush ruleset
+
+# Define tables and chains
+table ip nat {{
+    chain prerouting {{
+        type nat hook prerouting priority 0;
+    }}
+    
+    chain postrouting {{
+        type nat hook postrouting priority 100;
+        # Masquerade traffic from VLAN network
+        oifname "{interface}" ip saddr {network_addr} counter masquerade
+    }}
+}}
+
+table ip filter {{
+    chain input {{
+        type filter hook input priority 0;
+        policy accept;
+    }}
+    
+    chain forward {{
+        type filter hook forward priority 0;
+        policy drop;
+        
+        # Allow established/related connections
+        ct state established,related accept
+        
+        # Allow forwarding from VLAN network
+        iifname "{vlan_interface}" accept
+        
+        # Allow forwarding to VLAN network for established connections
+        oifname "{vlan_interface}" ct state established,related accept
+    }}
+    
+    chain output {{
+        type filter hook output priority 0;
+        policy accept;
+    }}
+}}
+"""
+        # Write nftables rules
+        nft_file = '/etc/nftables.conf'
+        with open(nft_file, 'w') as f:
+            f.write(nft_rules)
+        
+        # Enable and start nftables service
+        subprocess.run(['systemctl', 'enable', 'nftables'], check=True)
+        subprocess.run(['systemctl', 'restart', 'nftables'], check=True)
+        
+        return True
+    except Exception as e:
+        print(f"Error configuring nftables: {e}")
+        return False
+
+def install_required_packages() -> bool:
+    """Install required packages if not present."""
+    try:
+        packages = ['vlan', 'isc-dhcp-server', 'nftables']
+        print("Checking and installing required packages...")
+        subprocess.run(['apt-get', 'update'], check=True)
+        subprocess.run(['apt-get', 'install', '-y'] + packages, check=True)
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"Error installing packages: {e}")
+        return False
+
+def main():
+    if not check_root_privileges():
+        print("This script must be run as root!")
+        sys.exit(1)
+    
+    if not install_required_packages():
+        print("Failed to install required packages!")
+        sys.exit(1)
+    
+    # Get user input
+    print("\nVLAN and DHCP Configuration Script")
+    print("==================================")
+    
+    while True:
+        interface = input("\nEnter the physical interface name (e.g., eth0): ").strip()
+        if os.path.exists(f"/sys/class/net/{interface}"):
+            break
+        print("Interface does not exist! Please try again.")
+    
+    while True:
+        vlan_id = input("Enter VLAN ID (1-4094): ").strip()
+        if validate_vlan_id(vlan_id):
+            vlan_id = int(vlan_id)
+            break
+        print("Invalid VLAN ID! Please enter a number between 1 and 4094.")
+    
+    while True:
+        network = input("Enter network address in CIDR notation (e.g., 192.168.10.0/24): ").strip()
+        if validate_ip_network(network):
+            break
+        print("Invalid network address! Please use CIDR notation (e.g., 192.168.10.0/24)")
+    
+    # Configure VLAN
+    print("\nConfiguring VLAN interface...")
+    if not configure_vlan(interface, vlan_id, network):
+        print("Failed to configure VLAN interface!")
+        sys.exit(1)
+    
+    # Configure DHCP
+    print("Configuring DHCP server...")
+    if not configure_dhcp(interface, vlan_id, network):
+        print("Failed to configure DHCP server!")
+        sys.exit(1)
+    
+    # Configure IP forwarding
+    print("\nConfiguring IP forwarding...")
+    if not configure_ip_forwarding():
+        print("Failed to configure IP forwarding!")
+        sys.exit(1)
+    
+    # Configure nftables
+    print("Configuring nftables for NAT and forwarding...")
+    if not configure_nftables(interface, vlan_id, network):
+        print("Failed to configure nftables!")
+        sys.exit(1)
+    
+    print("\nConfiguration completed successfully!")
+    print(f"VLAN interface {interface}.{vlan_id} has been created")
+    print(f"DHCP server has been configured for network {network}")
+    print("IP forwarding has been enabled")
+    print("NAT and forwarding rules have been configured with nftables")
+    print("\nPlease review the configuration files:")
+    print("- /etc/network/interfaces")
+    print("- /etc/dhcp/dhcpd.conf")
+    print("- /etc/default/isc-dhcp-server")
+    print("- /etc/nftables.conf")
+    print("- /etc/sysctl.d/99-ip-forward.conf")
+
+if __name__ == "__main__":
+    main()
