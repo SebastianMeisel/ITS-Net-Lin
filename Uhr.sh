@@ -55,7 +55,14 @@ while true; do
 		done
 		# Nach jeder Zeile der Ziffern wird ein Zeilenumbruch ausgegeben.
 		printf "\n"
+
 	done
 
+	# Datum im Format Wochentag, Tag. Monat. Jahr in Variable speichern 
+	DATUM=$(date +"%A, %d. %B. %Y")
+	# Textbreite der Uhr speichern
+	UHRBREITE=64
+	# Datum zentriert ausgeben.
+	printf "\n%$((($UHRBREITE+${#DATUM})/2))s\n" "${DATUM}"
 	sleep 1 # 1 Sekunde warten und dann die Schleife neu starten.
 done
