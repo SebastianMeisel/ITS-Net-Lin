@@ -275,6 +275,69 @@ def configure_ip_forwarding() -> bool:
         print(f"Error configuring IP forwarding: {e}")
         return False
 
+def configure_nftables(dhcp_interface: str, client_interface: str, network: str) -> bool:
+    """Configure nftables for NAT and forwarding."""
+    try:
+        network_addr = ipaddress.ip_network(network)
+        
+        # Create nftables configuration
+        nft_rules = f"""#!/usr/sbin/nft -f
+
+# Clear existing rules
+flush ruleset
+
+# Define tables and chains
+table ip nat {{
+    chain prerouting {{
+        type nat hook prerouting priority 0;
+    }}
+    
+    chain postrouting {{
+        type nat hook postrouting priority 100;
+        # Masquerade traffic from DHCP network
+        oifname "{client_interface}" ip saddr {network_addr} counter masquerade
+    }}
+}}
+
+table ip filter {{
+    chain input {{
+        type filter hook input priority 0;
+        policy accept;
+    }}
+    
+    chain forward {{
+        type filter hook forward priority 0;
+        policy drop;
+        
+        # Allow established/related connections
+        ct state established,related accept
+        
+        # Allow forwarding from DHCP network to client interface
+        iifname "{dhcp_interface}" oifname "{client_interface}" accept
+        
+        # Allow forwarding to DHCP network for established connections
+        iifname "{client_interface}" oifname "{dhcp_interface}" ct state established,related accept
+    }}
+    
+    chain output {{
+        type filter hook output priority 0;
+        policy accept;
+    }}
+}}
+"""
+        # Write nftables rules
+        with open('/etc/nftables.conf', 'w') as f:
+            f.write(nft_rules)
+        
+        # Enable and start nftables service
+        subprocess.run(['systemctl', 'enable', 'nftables'], check=True)
+        subprocess.run(['systemctl', 'restart', 'nftables'], check=True)
+        
+        return True
+    except Exception as e:
+        print(f"Error configuring nftables: {e}")
+        return False
+    
 def install_required_packages() -> bool:
     """Install required packages."""
     try:
@@ -361,21 +424,8 @@ def main():
         if validate_ip_network(network):
             break
         print("Ungültige Netzwerkadresse! Bitte verwenden Sie die CIDR-Notation (z.B. 192.168.10.0/24)")
-    
-    # Frage nach Bereinigung vor der neuen Konfiguration
-    if input("\nMöchten Sie vor der Konfiguration bestehende Einstellungen bereinigen? (j/n): ").lower() == 'j':
-        if not cleanup_configuration(dhcp_interface, client_interface):
-            print("Warnung: Bereinigung konnte nicht vollständig durchgeführt werden.")
-            if input("Möchten Sie trotzdem fortfahren? (j/n): ").lower() != 'j':
-                sys.exit(0)
-    
-    # Clean existing DHCP configuration
-    print("\nBereinige bestehende DHCP-Konfiguration...")
-    if not clean_dhcp_config():
-        print("Fehler beim Bereinigen der DHCP-Konfiguration!")
-        sys.exit(1)
-    
-    # Configure DHCP server
+
+# Configure DHCP server
     print("Konfiguriere DHCP-Server...")
     if not configure_dhcp_server(dhcp_interface, network):
         print("Fehler bei der Konfiguration des DHCP-Servers!")
