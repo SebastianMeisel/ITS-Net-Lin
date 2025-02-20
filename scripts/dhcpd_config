@@ -13,6 +13,109 @@ def check_root_privileges() -> bool:
     """Check if script is running with root privileges."""
     return os.geteuid() == 0
 
+def cleanup_configuration(dhcp_interface: str = None, client_interface: str = None) -> bool:
+    """
+    Bereinigt alle Änderungen an der Netzwerk- und DHCP-Server-Konfiguration.
+    Parameter sind optional - wenn nicht angegeben, werden alle Schnittstellen bereinigt.
+    """
+    try:
+        print("Starte Bereinigung der Konfigurationen...")
+        
+        # DHCP-Server stoppen
+        print("Stoppe DHCP-Server...")
+        subprocess.run(['systemctl', 'stop', 'isc-dhcp-server'], check=False)
+        
+        # DHCP-Konfiguration zurücksetzen
+        print("Setze DHCP-Konfiguration zurück...")
+        dhcp_conf = '/etc/dhcp/dhcpd.conf'
+        backup_file = f'{dhcp_conf}.backup'
+        if os.path.exists(backup_file):
+            subprocess.run(['cp', backup_file, dhcp_conf], check=False)
+        else:
+            # Erstelle minimale Konfiguration falls kein Backup vorhanden
+            with open(dhcp_conf, 'w') as f:
+                f.write("""# Default DHCP configuration
+default-lease-time 600;
+max-lease-time 7200;
+""")
+        
+        # DHCP-Interface-Konfiguration zurücksetzen
+        print("Setze DHCP-Interface-Konfiguration zurück...")
+        try:
+            with open('/etc/default/isc-dhcp-server', 'r+') as f:
+                content = f.read()
+                content = re.sub(r'INTERFACESv4=".*"', 'INTERFACESv4=""', content)
+                f.seek(0)
+                f.write(content)
+                f.truncate()
+        except Exception as e:
+            print(f"Fehler beim Zurücksetzen der DHCP-Interface-Konfiguration: {e}")
+        
+        # NFTables-Regeln zurücksetzen
+        print("Setze NFTables-Regeln zurück...")
+        try:
+            with open('/etc/nftables.conf', 'w') as f:
+                f.write("""#!/usr/sbin/nft -f
+
+# Leere Regeln
+flush ruleset
+
+table ip filter {
+    chain input {
+        type filter hook input priority 0;
+        policy accept;
+    }
+    
+    chain forward {
+        type filter hook forward priority 0;
+        policy accept;
+    }
+    
+    chain output {
+        type filter hook output priority 0;
+        policy accept;
+    }
+}
+""")
+            subprocess.run(['nft', '-f', '/etc/nftables.conf'], check=False)
+        except Exception as e:
+            print(f"Fehler beim Zurücksetzen der NFTables-Regeln: {e}")
+        
+        # IP-Forwarding deaktivieren
+        print("Deaktiviere IP-Forwarding...")
+        try:
+            subprocess.run(['sysctl', '-w', 'net.ipv4.ip_forward=0'], check=False)
+            if os.path.exists('/etc/sysctl.d/99-ip-forward.conf'):
+                os.remove('/etc/sysctl.d/99-ip-forward.conf')
+        except Exception as e:
+            print(f"Fehler beim Deaktivieren des IP-Forwardings: {e}")
+        
+        # Netzwerkschnittstellen zurücksetzen
+        if dhcp_interface:
+            print(f"Setze DHCP-Schnittstelle {dhcp_interface} zurück...")
+            try:
+                subprocess.run(['ip', 'addr', 'flush', 'dev', dhcp_interface], check=False)
+                subprocess.run(['dhclient', '-r', dhcp_interface], check=False)
+                subprocess.run(['dhclient', dhcp_interface], check=False)
+            except Exception as e:
+                print(f"Fehler beim Zurücksetzen der DHCP-Schnittstelle: {e}")
+        
+        if client_interface:
+            print(f"Setze Client-Schnittstelle {client_interface} zurück...")
+            try:
+                subprocess.run(['ip', 'addr', 'flush', 'dev', client_interface], check=False)
+                subprocess.run(['dhclient', '-r', client_interface], check=False)
+                subprocess.run(['dhclient', client_interface], check=False)
+            except Exception as e:
+                print(f"Fehler beim Zurücksetzen der Client-Schnittstelle: {e}")
+        
+        print("Bereinigung abgeschlossen.")
+        return True
+        
+    except Exception as e:
+        print(f"Fehler bei der Gesamtbereinigung: {e}")
+        return False
+
 def get_network_interfaces() -> List[Dict[str, str]]:
     """Get list of available network interfaces using NetworkManager."""
     interfaces = []
