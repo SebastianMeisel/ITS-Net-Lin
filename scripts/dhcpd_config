@@ -304,5 +304,7 @@ def main():
     print("- /etc/dhcp/dhcpd.conf")
     print("- /etc/default/isc-dhcp-server")
     print("- /etc/nftables.conf")
-    print("- /etc/sysctl.d/99-ip-forward.conf")if __name__ == "__main__":
+    print("- /etc/sysctl.d/99-ip-forward.conf")
+
+if __name__ == "__main__":
     main()
