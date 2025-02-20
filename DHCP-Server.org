@@ -66,8 +66,8 @@ Gehen Sie nun in Einstellungen für den Klon.
 
 ** Download
 
-Laden Sie das Skript [[https://github.com/SebastianMeisel/ITS-Net-Lin/blob/main/scripts/dhcpcd_config][dhcp_config (Python-Skript)]] …
-  1) über den Download-Button von GitHub.
+Laden Sie das Skript [[https://github.com/SebastianMeisel/ITS-Net-Lin/blob/main/scripts/dhcpcd_config][~dhcp_config~ (Python-Skript)]] …
+  1) über den Download-Button von GitHub herunter.
 
 #+ATTR_HTML: :width 50%
 #+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
@@ -87,6 +87,10 @@ scp .\Downloads\dhcp_config debian:~
 
 Loggen Sie sich auf Debian ein. Erteilen Sie Ausführungsrechte und rufen Sie das Skript auf:
 
+#+begin_quote
+ - !!! Wichtig !!!: Wenn Sie das Skript wegen Problemen noch einmal starten müssen gehen Sie zunächst zum Abschnitt [[*DHCP-Server-Konfiguration bereinigen]].
+#+end_quote
+
 #+BEGIN_SRC Powershell
 ssh debian
 chmod 777 dhcp_config
@@ -94,16 +98,38 @@ sudo ./dhcp_config
 #+END_SRC
 
 Wählen Sie:
-  1) ~eth1~ als Interface für den DHCP-Server.
-  2) ~eth0~ als Interface für den Externe Verbindungen.
-  3) ~192.168.10.0/24~ als Netzwerkadresse.
+  1) Option ~1~: Neue Konfiguration einrichten.
+  2) ~eth1~ als Interface für den DHCP-Server.
+  3) ~eth0~ als Interface für den Externe Verbindungen.
+  4) ~192.168.10.0/24~ als Netzwerkadresse.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/DHCP-15.png]]
+
+* Klon starten
+
+Starten nun mit ~Clone~ im HyperV-Manager. Überprüfen Sie im HyperV-Manager, dass der Clone eine IP-Adresse im Netzwerk ~192.168.10.0/24~ hat.
+  1) Wähle sie die VM ~Clone~ aus.
+  2) Überprüfen Sie die Adresse unter ~Netzwerk~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/DHCP-07.png]]
+
+* DHCP-Server-Konfiguration bereinigen
+
+Bei Problemen mit den DHCP-Server-Konfigurations-Skript können Sie die Änderungen zurücksetzen, in dem Sie das Skript neu starten:
+
+#+BEGIN_SRC bash
+sudo ~/dhcp_config
+#+END_SRC
+
+Wählen Sie bei der ersten Frage ~1~ um die Bereinigung durchzuführen und lassen Sie die weiteren Eingaben leer.
 
 #+ATTR_HTML: :width 50%
 #+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
 #+ATTR_ORG: :width 700
 [[file:Bilder/DHCP-05.png]]
-
-* Klon starten
-
-Starten und verbinden Sie sich nun mit ~Clone~ im HyperV-Manager. Nach dem Start sollten Sie nun eine funktionierende
-Internetverbindung haben. Sie können das im Terminal mit =ping example.com= überprüfen.
