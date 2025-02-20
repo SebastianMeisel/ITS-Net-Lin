@@ -115,7 +115,7 @@ Starten nun mit ~Clone~ im HyperV-Manager. Überprüfen Sie im HyperV-Manager, d
   2) Überprüfen Sie die Adresse unter ~Netzwerk~.
 
 #+ATTR_HTML: :width 50%
-#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_LATEX: :width .6\linewidth :placement [!htpb]
 #+ATTR_ORG: :width 700
 [[file:Bilder/DHCP-07.png]]
 
@@ -127,9 +127,11 @@ Bei Problemen mit den DHCP-Server-Konfigurations-Skript können Sie die Änderun
 sudo ~/dhcp_config
 #+END_SRC
 
-Wählen Sie bei der ersten Frage ~1~ um die Bereinigung durchzuführen und lassen Sie die weiteren Eingaben leer.
+Wählen Sie
+  1) bei der ersten Frage ~1~ um die Bereinigung durchzuführen und lassen Sie
+  2) die weiteren Eingaben leer.
 
 #+ATTR_HTML: :width 50%
-#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_LATEX: :width .6\linewidth :placement [!htpb]
 #+ATTR_ORG: :width 700
 [[file:Bilder/DHCP-05.png]]
