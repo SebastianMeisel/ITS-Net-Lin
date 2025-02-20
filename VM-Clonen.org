@@ -20,8 +20,7 @@
 #+SUBTITLE: ITS-Net-Lin
 #+AUTHOR: Sebastian Meisel
 
-* Schritte zum Klonen einer VM in Hyper-V
-** 1. Exportieren der VM
+* Exportieren der VM
  1) Wählen Sie die zu klonende VM (z. B. „Debian_FISIB”) aus.
     - Stellen Sie sicher, dass die VM, die Sie klonen möchten, ausgeschaltet ist (Status: „Aus“).
  2) Klicken Sie im rechten Bereich unter „Aktionen” auf „Exportieren...”.
@@ -213,11 +212,11 @@ Setzen Sie unter „Ziel auswählen” den Haken bei „Virtuellen Computer an e
 #+ATTR_ORG: :width 700
 [[file:/home/sebastian/git/ITS-Net-Lin/Bilder/Clone-24.png]]
 
-** 2. Hostnamen anpassen
+* Hostnamen anpassen
 
 Starten Sie die VM, melden Sie sich an und starten Sie den Terminal-Emulator.
 
-*** =hostnamectl=
+** =hostnamectl=
 
 Auf modernen Systemen bietet =hostnamectl= die beste Möglichkeit den Hostnamen anzupassen, unter dem der Rechner (in diesem Fall die VM) erreichbar ist. Es ist wichtig, dass jeder Rechnen einen individuellen Hostnamen hat.
 
@@ -256,7 +255,7 @@ echo "clone" | sudo tee /etc/hostname
 - =| sudo tee= :: schreibt die Ausgabe des vorangehenden Befehl mit Super-User-Rechten und die folgende Datei und gibt sie gleichzeitig in der Shell aus.
 #+end_quote
 
-** SSH-Anmeldung per Passwort zulassen
+* SSH-Anmeldung per Passwort zulassen
 
 Für den Klon soll ein eigener Schlüssel installiert werden. Damit dieser übertragen werden kann, muss zunächst die Anmeldung per Passwort vorübergehend erlaubt werden.
 

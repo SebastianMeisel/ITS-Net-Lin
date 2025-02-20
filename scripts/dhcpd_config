@@ -1,0 +1,308 @@
+#!/usr/bin/env python3
+import subprocess
+import sys
+import os
+import re
+import ipaddress
+from typing import List, Dict
+import json
+import dbus
+from pathlib import Path
+
+def check_root_privileges() -> bool:
+    """Check if script is running with root privileges."""
+    return os.geteuid() == 0
+
+def get_network_interfaces() -> List[Dict[str, str]]:
+    """Get list of available network interfaces using NetworkManager."""
+    interfaces = []
+    try:
+        # Get NetworkManager interface through D-Bus
+        bus = dbus.SystemBus()
+        proxy = bus.get_object("org.freedesktop.NetworkManager", 
+                              "/org/freedesktop/NetworkManager")
+        nm = dbus.Interface(proxy, "org.freedesktop.NetworkManager")
+        
+        # Get all devices
+        devices = nm.GetDevices()
+        for d in devices:
+            device = bus.get_object("org.freedesktop.NetworkManager", d)
+            props = dbus.Interface(device, "org.freedesktop.DBus.Properties")
+            
+            # Get device properties
+            interface_name = str(props.Get("org.freedesktop.NetworkManager.Device", "Interface"))
+            device_type = int(props.Get("org.freedesktop.NetworkManager.Device", "DeviceType"))
+            state = int(props.Get("org.freedesktop.NetworkManager.Device", "State"))
+            
+            # Skip loopback and virtual interfaces
+            if interface_name != 'lo' and not '.' in interface_name and device_type == 1:  # 1 = NM_DEVICE_TYPE_ETHERNET
+                # Get MAC address
+                hw_address = str(props.Get("org.freedesktop.NetworkManager.Device", "HwAddress"))
+                
+                interfaces.append({
+                    'name': interface_name,
+                    'state': 'up' if state == 100 else 'down',  # 100 = NM_DEVICE_STATE_ACTIVATED
+                    'mac': hw_address
+                })
+        return interfaces
+    except Exception as e:
+        print(f"Error getting network interfaces: {e}")
+        return []
+
+def display_network_interfaces(interfaces: List[Dict[str, str]]) -> None:
+    """Display available network interfaces in a formatted table."""
+    print("\nAvailable Network Interfaces:")
+    print("=" * 50)
+    print(f"{'Name':<12} {'Status':<10} {'MAC Address':<20}")
+    print("-" * 50)
+    for interface in interfaces:
+        print(f"{interface['name']:<12} {interface['state']:<10} {interface['mac']:<20}")
+    print("-" * 50)
+
+def validate_ip_network(network: str) -> bool:
+    """Validate IP network in CIDR notation."""
+    try:
+        ipaddress.ip_network(network)
+        return True
+    except ValueError:
+        return False
+
+def configure_dhcp_server(interface: str, network: str) -> bool:
+    """Configure DHCP server using NetworkManager."""
+    try:
+        network_addr = ipaddress.ip_network(network)
+        static_ip = str(network_addr.network_address + 1)
+        prefix_len = str(network_addr.prefixlen)
+
+        # Create NetworkManager connection profile
+        connection_name = f"dhcp-server-{interface}"
+        
+        # Create connection settings
+        connection_settings = {
+            "connection": {
+                "type": "ethernet",
+                "interface-name": interface,
+                "id": connection_name,
+                "autoconnect": True
+            },
+            "ipv4": {
+                "method": "manual",
+                "addresses": [[static_ip, prefix_len, "0.0.0.0"]],
+                "dns": ["8.8.8.8", "8.8.4.4"],
+                "dns-search": [],
+                "may-fail": False
+            },
+            "ipv6": {
+                "method": "disabled"
+            }
+        }
+
+        # Save connection profile
+        subprocess.run([
+            "nmcli", "connection", "add",
+            "type", "ethernet",
+            "con-name", connection_name,
+            "ifname", interface,
+            "ipv4.method", "manual",
+            "ipv4.addresses", f"{static_ip}/{prefix_len}",
+            "ipv4.dns", "8.8.8.8,8.8.4.4"
+        ], check=True)
+
+        # Configure DHCP server
+        dhcp_conf = f"""# DHCP configuration for {interface}
+subnet {network_addr.network_address} netmask {network_addr.netmask} {{
+    range {network_addr.network_address + 2} {network_addr.broadcast_address - 1};
+    option routers {static_ip};
+    option domain-name-servers 8.8.8.8, 8.8.4.4;
+    default-lease-time 600;
+    max-lease-time 7200;
+}}
+"""
+        # Add DHCP configuration
+        with open('/etc/dhcp/dhcpd.conf', 'a') as f:
+            f.write(dhcp_conf)
+
+        # Configure DHCP server to listen on the interface
+        with open('/etc/default/isc-dhcp-server', 'w') as f:
+            f.write(f'INTERFACESv4="{interface}"\n')
+
+        # Activate the connection
+        subprocess.run(["nmcli", "connection", "up", connection_name], check=True)
+        
+        # Restart DHCP server
+        subprocess.run(['systemctl', 'restart', 'isc-dhcp-server'], check=True)
+        
+        return True
+    except Exception as e:
+        print(f"Error configuring DHCP server: {e}")
+        return False
+
+def configure_client_interface(interface: str) -> bool:
+    """Configure client interface using NetworkManager."""
+    try:
+        connection_name = f"client-{interface}"
+        
+        # Create connection profile
+        subprocess.run([
+            "nmcli", "connection", "add",
+            "type", "ethernet",
+            "con-name", connection_name,
+            "ifname", interface,
+            "ipv4.method", "auto"
+        ], check=True)
+
+        # Activate the connection
+        subprocess.run(["nmcli", "connection", "up", connection_name], check=True)
+        
+        return True
+    except Exception as e:
+        print(f"Error configuring client interface: {e}")
+        return False
+
+def configure_ip_forwarding() -> bool:
+    """Enable IP forwarding."""
+    try:
+        sysctl_file = '/etc/sysctl.d/99-ip-forward.conf'
+        with open(sysctl_file, 'w') as f:
+            f.write("net.ipv4.ip_forward=1\n")
+        
+        subprocess.run(['sysctl', '-p', sysctl_file], check=True)
+        return True
+    except Exception as e:
+        print(f"Error configuring IP forwarding: {e}")
+        return False
+
+def install_required_packages() -> bool:
+    """Install required packages."""
+    try:
+        packages = ['isc-dhcp-server', 'nftables', 'network-manager']
+        print("Checking and installing required packages...")
+        subprocess.run(['apt-get', 'update'], check=True)
+        subprocess.run(['apt-get', 'install', '-y'] + packages, check=True)
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"Error installing packages: {e}")
+        return False
+
+def main():
+    if not check_root_privileges():
+        print("Dieses Skript muss als Root ausgeführt werden!")
+        sys.exit(1)
+    
+    print("\nDHCP-Server und NAT-Konfigurationsskript")
+    print("======================================")
+    
+    # Option zum Bereinigen oder Konfigurieren
+    print("\nAktionen:")
+    print("1. Neue Konfiguration einrichten")
+    print("2. Bestehende Konfiguration bereinigen")
+    choice = input("Wählen Sie eine Option (1/2): ").strip()
+    
+    if choice == "2":
+        # Bereinigungsmodus
+        interfaces = get_network_interfaces()
+        if interfaces:
+            display_network_interfaces(interfaces)
+            dhcp_if = input("\nGeben Sie die zu bereinigende DHCP-Schnittstelle ein (leer lassen für alle): ").strip()
+            client_if = input("Geben Sie die zu bereinigende Client-Schnittstelle ein (leer lassen für alle): ").strip()
+            
+            dhcp_if = dhcp_if if dhcp_if and any(iface['name'] == dhcp_if for iface in interfaces) else None
+            client_if = client_if if client_if and any(iface['name'] == client_if for iface in interfaces) else None
+            
+            if cleanup_configuration(dhcp_if, client_if):
+                print("Bereinigung erfolgreich abgeschlossen.")
+            else:
+                print("Bereinigung konnte nicht vollständig durchgeführt werden.")
+        else:
+            print("Keine Netzwerkschnittstellen gefunden!")
+            if input("Möchten Sie trotzdem die Konfigurationen bereinigen? (j/n): ").lower() == 'j':
+                if cleanup_configuration():
+                    print("Bereinigung erfolgreich abgeschlossen.")
+                else:
+                    print("Bereinigung konnte nicht vollständig durchgeführt werden.")
+        sys.exit(0)
+    
+    # Standard-Konfigurationsmodus fortsetzen
+    if not install_required_packages():
+        print("Fehler beim Installieren der erforderlichen Pakete!")
+        sys.exit(1)
+    
+    # Get and display available interfaces
+    interfaces = get_network_interfaces()
+    if not interfaces:
+        print("Keine Netzwerkschnittstellen gefunden!")
+        sys.exit(1)
+    
+    display_network_interfaces(interfaces)
+    
+    # Get DHCP server interface
+    while True:
+        dhcp_interface = input("\nGeben Sie den Schnittstellennamen für den DHCP-Server ein: ").strip()
+        if any(iface['name'] == dhcp_interface for iface in interfaces):
+            break
+        print("Schnittstelle existiert nicht! Bitte wählen Sie aus der Liste.")
+    
+    # Get client interface
+    while True:
+        client_interface = input("Geben Sie den Schnittstellennamen für die externe Verbindung ein: ").strip()
+        if any(iface['name'] == client_interface for iface in interfaces):
+            if client_interface != dhcp_interface:
+                break
+            print("Bitte wählen Sie eine andere Schnittstelle als die DHCP-Server-Schnittstelle.")
+        else:
+            print("Schnittstelle existiert nicht! Bitte wählen Sie aus der Liste.")
+    
+    # Get network for DHCP
+    while True:
+        network = input("Geben Sie die Netzwerkadresse in CIDR-Notation ein (z.B. 192.168.10.0/24): ").strip()
+        if validate_ip_network(network):
+            break
+        print("Ungültige Netzwerkadresse! Bitte verwenden Sie die CIDR-Notation (z.B. 192.168.10.0/24)")
+    
+    # Frage nach Bereinigung vor der neuen Konfiguration
+    if input("\nMöchten Sie vor der Konfiguration bestehende Einstellungen bereinigen? (j/n): ").lower() == 'j':
+        if not cleanup_configuration(dhcp_interface, client_interface):
+            print("Warnung: Bereinigung konnte nicht vollständig durchgeführt werden.")
+            if input("Möchten Sie trotzdem fortfahren? (j/n): ").lower() != 'j':
+                sys.exit(0)
+    
+    # Clean existing DHCP configuration
+    print("\nBereinige bestehende DHCP-Konfiguration...")
+    if not clean_dhcp_config():
+        print("Fehler beim Bereinigen der DHCP-Konfiguration!")
+        sys.exit(1)
+    
+    # Configure DHCP server
+    print("Konfiguriere DHCP-Server...")
+    if not configure_dhcp_server(dhcp_interface, network):
+        print("Fehler bei der Konfiguration des DHCP-Servers!")
+        sys.exit(1)
+
+    # Configure client interface
+    print("Konfiguriere Client-Schnittstelle...")
+    if not configure_client_interface(client_interface):
+        print("Fehler bei der Konfiguration der Client-Schnittstelle!")
+        sys.exit(1)
+
+    # Configure IP forwarding
+    print("Konfiguriere IP-Forwarding...")
+    if not configure_ip_forwarding():
+        print("Fehler bei der Konfiguration des IP-Forwardings!")
+        sys.exit(1)
+    
+    # Configure nftables
+    print("Konfiguriere NFTables für NAT und Forwarding...")
+    if not configure_nftables(dhcp_interface, client_interface, network):
+        print("Fehler bei der Konfiguration von NFTables!")
+        sys.exit(1)
+    
+    print("\nKonfiguration erfolgreich abgeschlossen!")
+    print(f"DHCP-Server läuft auf Schnittstelle {dhcp_interface}")
+    print(f"Externe Verbindung ist auf Schnittstelle {client_interface} konfiguriert")
+    print(f"DHCP-Netzwerk ist als {network} konfiguriert")
+    print("\nBitte überprüfen Sie die Konfigurationsdateien:")
+    print("- /etc/dhcp/dhcpd.conf")
+    print("- /etc/default/isc-dhcp-server")
+    print("- /etc/nftables.conf")
+    print("- /etc/sysctl.d/99-ip-forward.conf")if __name__ == "__main__":
+    main()

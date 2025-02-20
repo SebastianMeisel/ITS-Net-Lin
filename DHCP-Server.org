@@ -1,0 +1,109 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: DHCP-Server einrichten
+#+SUBTITLE: ITS-Net-Lin
+#+AUTHOR: Sebastian Meisel
+
+* VM Klonen
+
+Klonen Sie zunächst die VM wie unter [[file:VM-Clonen.pdf][VM-Clonen.pdf]] beschrieben.
+
+* Netzwerkkarte zum Server hinzufügen
+
+Öffnen Sie im HyperV-Manager die Einstellung für die Debian-VM.
+ 1) Wählen sie unter ~Handware hinzufügen~ …
+ 2) ~Netzwerkkarte~.
+ 3) Bestätigen Sie mit ~hizufügen~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/DHCP-01.png]]
+
+  1) Konfigurieren Sie nun die zweite ~Netzwerkkarte~.
+  2) Wählen Sie den ~Default Switch~ unter ~Virtueller Switch~.
+  3) Aktivieren Sie die Checkbox ~Identifizierung virtueller LANs aktivieren~.
+  4) Setzen Sie die ~VLAN-ID~ auf ~10~.
+  5) Schließen Sie die Einstellungen mit ~OK~.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/DHCP-02.png]]
+
+* VLAN für Clone festlegen
+
+Gehen Sie nun in Einstellungen für den Klon.
+  1) Unter ~Netzwerkkarte~ …
+  2) Wählen Sie den ~Default Switch~ unter ~Virtueller Switch~.
+  3) Aktivieren Sie die Checkbox ~Identifizierung virtueller LANs aktivieren~.
+  4) Setzen Sie die ~VLAN-ID~ auf ~10~.
+  5) Schließen Sie die Einstellungen mit ~OK~.
+
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/DHCP-03.png]]
+
+* DHCP-Server-Konfigurations-Skript
+
+** Download
+
+Laden Sie das Skript [[https://github.com/SebastianMeisel/ITS-Net-Lin/blob/main/scripts/dhcpcd_config][dhcp_config (Python-Skript)]] …
+  1) über den Download-Button von GitHub.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/DHCP-04.png]]
+
+** Kopieren
+
+Kopieren Sie das Skript in die Debian-VM:
+
+#+BEGIN_SRC Powershell
+scp .\Downloads\dhcp_config debian:~
+#+END_SRC
+
+
+** Aufrufen
+
+Loggen Sie sich auf Debian ein. Erteilen Sie Ausführungsrechte und rufen Sie das Skript auf:
+
+#+BEGIN_SRC Powershell
+ssh debian
+chmod 777 dhcp_config
+sudo ./dhcp_config
+#+END_SRC
+
+Wählen Sie:
+  1) ~eth1~ als Interface für den DHCP-Server.
+  2) ~eth0~ als Interface für den Externe Verbindungen.
+  3) ~192.168.10.0/24~ als Netzwerkadresse.
+
+#+ATTR_HTML: :width 50%
+#+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
+#+ATTR_ORG: :width 700
+[[file:Bilder/DHCP-05.png]]
+
+* Klon starten
+
+Starten und verbinden Sie sich nun mit ~Clone~ im HyperV-Manager. Nach dem Start sollten Sie nun eine funktionierende
+Internetverbindung haben. Sie können das im Terminal mit =ping example.com= überprüfen.
