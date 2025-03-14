@@ -12,13 +12,16 @@ INCRB="${BACKUP_DIR}/Inkrementell/${DATE}"
 DIFFB="${BACKUP_DIR}/Differentiell/${DATE}"
 LASTB="${BACKUP_DIR}/Latest"
 
+# Wenn Datei mit Auschlussmustern (die nicht gesichert werden existiert, dann nutze sie)
+[[ -f "/home/${SUB_DIR}/.exclude" ]] && EXCLUDE='--exclude-from="/home/${SUB_DIR}/.exclude"' || EXCLUDE=''
+
 # Backup-Art je nach Argument
 case "$1" in
   full)
     # Stelle sicher, dass Zielverzeichnis auf dem Server existiert 
     ssh ${SERVER} "[[ -d ${FULLB} ]] || mkdir -p -m 777 ${FULLB}"
     # Synchronisiere
-    rsync -av ${SOURCE_DIR} ${SERVER}:${FULLB}
+    rsync -av  $EXCLUDE ${SOURCE_DIR} ${SERVER}:${FULLB}
     # Link to Latest
     ssh ${SERVER} "ln -snf ${FULLB} ${LASTB}"
     ;;
@@ -32,7 +35,7 @@ _
     # Stelle sicher, dass Zielverzeichnis existiert 
     ssh ${SERVER} "[[ -d ${INCRB} ]] || mkdir -p -m 777 ${INCRB}"
     # Synchronisiere
-    rsync -av --link-dest=../../Latest ${SOURCE_DIR} ${SERVER}:${INCRB}
+    rsync -av --link-dest=../../Latest  $EXCLUDE ${SOURCE_DIR} ${SERVER}:${INCRB}
     # Link to Latest
     ssh ${SERVER} "ln -snf ${INCRB} ${LASTB}"
     ;;
@@ -40,7 +43,7 @@ _
     # Stelle sicher, dass Zielverzeichnis existiert 
     ssh ${SERVER} "[[ -d ${DIFFB} ]] || mkdir -p -m 777 ${DIFFB}"
     # Synchronisiere
-    rsync -av --link-dest=../../Vollbackup ${SOURCE_DIR} ${SERVER}:${DIFFB}
+    rsync -av --link-dest=../../Vollbackup $EXCLUDE ${SOURCE_DIR} ${SERVER}:${DIFFB}
     # Link to Latest
     ssh ${SERVER} "ln -snf ${DIFFB} ${LASTB}"
     ;;

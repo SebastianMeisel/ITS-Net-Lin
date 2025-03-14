@@ -12,13 +12,16 @@ INCRB="${BACKUP_DIR}/Inkrementell/${DATE}"
 DIFFB="${BACKUP_DIR}/Differentiell/${DATE}"
 LASTB="${BACKUP_DIR}/Latest"
 
+# Wenn Datei mit Auschlussmustern (die nicht gesichert werden existiert, dann nutze sie)
+[[ -f "/home/${SUB_DIR}/.exclude" ]] && EXCLUDE='--exclude-from="/home/${SUB_DIR}/.exclude"' || EXCLUDE=''
+
 # Backup-Art je nach Argument
 case "$1" in
   full)
     # Stelle sicher, dass Zielverzeichnis existiert 
     [[ -d ${FULLB} ]] || mkdir -p -m 777 ${FULLB}
     # Synchronisiere
-    rsync -av ${SOURCE_DIR} ${FULLB}
+    rsync -av $EXCLUDE ${SOURCE_DIR} ${FULLB}
     # Link to Latest
     ln -snf ${FULLB} ${LASTB}
     ;;
@@ -26,7 +29,7 @@ case "$1" in
     # Stelle sicher, dass Zielverzeichnis existiert 
     [[ -d ${INCRB} ]] || mkdir -p -m 777 ${INCRB}
     # Synchronisiere
-    rsync -av --link-dest=../../Latest ${SOURCE_DIR} ${INCRB}
+    rsync -av --link-dest=../../Latest $EXCLUDE ${SOURCE_DIR} ${INCRB}
     # Link to Latest
     ln -snf ${INCRB} ${LASTB}
     ;;
@@ -34,7 +37,7 @@ case "$1" in
     # Stelle sicher, dass Zielverzeichnis existiert 
     [[ -d ${DIFFB} ]] || mkdir -p -m 777 ${DIFFB}
     # Synchronisiere
-    rsync -av --link-dest=../../Vollbackup ${SOURCE_DIR} ${DIFFB}
+    rsync -av --link-dest=../../Vollbackup $EXCLUDE ${SOURCE_DIR} ${DIFFB}
     # Link to Latest
     ln -snf ${DIFFB} ${LASTB}
     ;;
