@@ -1,0 +1,116 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_REVEAL_JS_VERSION: 4
+#+REVEAL_THEME: league
+#+REVEAL_EXTRA_CSS: ./mystyle.css
+#+REVEAL_HLEVEL: 2
+#+OPTIONS: timestamp:nil toc:nil num:nil
+:END:
+
+#+TITLE: Dateisystem einhängen
+# #+SUBTITLE: 
+#+AUTHOR: ITS-Net-Lin
+
+
+
+* 1. Erstellen eines 1 GiB großen Disk-Images
+
+#+BEGIN_SRC bash
+dd if=/dev/zero of=disk.img bs=1M count=1024
+#+END_SRC
+
+Dies erzeugt eine leere Datei mit einer Größe von 1 GB.
+
+#+BEGIN_NOTES
+- ~dd~ ist ein beliebtes Tool um Diskimages zu schreiben oder zu kopieren. Es kopiert Bytes von einer Datei in eine andere.
+- ~if=~ gibt die Quelle an — in diesem Fall ~/dev/zero~ ein virtuelles Gerät, das 0-Bytes ausgibt.
+- ~of=~ gibt das Ziel an, indiesem Fall eine Datei mit dem Namen ~disk.img~.
+- ~bs=~ gibt die Größe die Blöcke an (wieviele Bytes werden jeweils am Stück kopiert). Hier wird jeweils ein MiB als 2²⁰ Bytes kopiert.
+- ~count=~ gibt an, wie viele dieser Blöcke kopiert werden sollen, nämlich 1024, sodass die Datei am Ende ein GiB, also 2³⁰ Bytes groß ist.
+
+*!!! Wichttig !!! : ~dd~ hat keinerlei Sicherheitsfunktionen eingebaut. Datei werden byte-weise überschrieben. Das kann Dateien unbrauchbar machen.*
+#+END_NOTES
+
+* 2. Formatieren des Images mit ext2
+
+#+BEGIN_SRC bash
+mkfs.ext2 disk.img
+#+END_SRC
+
+Die Datei =disk.img= wird nun mit dem ext2-Dateisystem formatiert.
+
+* 3. Mounten des Images mittels Loopback-Device
+
+Erstellen Sie zunächst ein Verzeichnis als Mountpunkt und mounten Sie anschließend das Image:
+
+#+BEGIN_SRC bash
+sudo mkdir -m 777 /mnt/loop1
+sudo mount -o loop disk.img /mnt/loop1
+#+END_SRC
+
+Ab diesem Zeitpunkt wird das Image unter =/mnt/loop1= als Dateisystem eingebunden.
+
+* 4. Erstellen einer Datei im gemounteten Image
+
+#+BEGIN_SRC bash
+sudo touch /mnt/loop1/datei_im_image.txt
+#+END_SRC
+
+Die Datei wird innerhalb des Images gespeichert.
+
+* 5. Mounten des Images an einem anderen Pfad
+
+Zunächst wird das Image ausgehängt:
+
+#+BEGIN_SRC bash
+sudo umount /mnt/loop1
+#+END_SRC
+
+Anschließend kann es an einem anderen Ort eingebunden werden:
+
+#+BEGIN_SRC bash
+mkdir ~/loop
+sudo mount -o loop disk.img ~/loop
+ls ~/loop
+#+END_SRC
+
+Sie werden sehen, dass die zuvor erstellte Datei auch hier verfügbar ist. Der physische Speicherort bleibt derselbe – nur der Zugriffspfad ändert sich.
+
+* 6. Verbergen von Inhalten im Mount-Verzeichnis
+
+Zur Veranschaulichung wird ein weiteres Verzeichnis erstellt, das zunächst eigene Inhalte enthält:
+
+#+BEGIN_SRC bash
+mkdir ~/hide_demo
+echo "Ich bin sichtbar ohne Mount" | sudo tee ~/hide_demo/visible.txt
+ls ~/hide_demo
+#+END_SRC
+
+** Nun wird das Image in dieses Verzeichnis gemountet:
+
+#+BEGIN_SRC bash
+sudo mount -o loop disk.img ~/hide_demo
+ls ~/hide_demo
+#+END_SRC
+
+→ Die Datei =visible.txt= ist nun nicht mehr sichtbar, da das Dateisystem im Image den Inhalt des Verzeichnisses überlagert.
+
+
+** Nach dem Aushängen:
+
+#+BEGIN_SRC bash
+sudo umount /mnt/hide_demo
+ls /mnt/hide_demo
+#+END_SRC
+
+✓ Die ursprüngliche Datei ist wieder sichtbar.
+

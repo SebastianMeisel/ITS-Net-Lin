@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<title>Dateisystem einhängen</title>
+<meta name="author" content="ITS-Net-Lin"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/dist/reveal.css"/>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/dist/theme/league.css" id="theme"/>
+
+<link rel="stylesheet" href="./mystyle.css"/>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Dateisystem einhängen</h1><p class="subtitle"></p>
+<h2 class="author">ITS-Net-Lin</h2>
+</section>
+
+
+
+<section>
+<section id="slide-org184e3ff">
+<h2 id="org184e3ff">1. Erstellen eines 1 GiB großen Disk-Images</h2>
+<div class="org-src-container">
+
+<pre  class="src src-bash"   ><code trim>dd <span style="color: #00d3d0;">if</span>=/dev/zero <span style="color: #00d3d0;">of</span>=disk.img <span style="color: #00d3d0;">bs</span>=1M <span style="color: #00d3d0;">count</span>=1024
+</code></pre>
+</div>
+
+<p>
+Dies erzeugt eine leere Datei mit einer Größe von 1 GB.
+</p>
+
+<aside class="notes">
+<p>
+<code>dd</code> ist ein beliebtes Tool um Diskimages zu schreiben oder zu kopieren. Es kopiert Bytes von einer Datei in eine andere.
+<code>if=</code> gibt die Quelle an — in diesem Fall <code>/dev/zero</code> ein virtuelles Gerät, das 0-Bytes ausgibt.
+<code>of=</code> gibt das Ziel an, indiesem Fall eine Datei mit dem Namen <code>disk.img</code>.
+<code>bs=</code> gibt die Größe die Blöcke an (wieviele Bytes werden jeweils am Stück kopiert). Hier wird jeweils ein MiB als 2²⁰ Bytes kopiert.
+<code>count=</code> gibt an, wie viele dieser Blöcke kopiert werden sollen, nämlich 1024, sodass die Datei am Ende ein GiB, also 2³⁰ Bytes groß ist.
+</p>
+
+<p>
+<b>!!! Wichttig !!! : <code>dd</code> hat keinerlei Sicherheitsfunktionen eingebaut. Datei werden byte-weise überschrieben. Das kann Dateien unbrauchbar machen.</b>
+</p>
+
+</aside>
+
+</section>
+</section>
+<section>
+<section id="slide-orgcff67ba">
+<h2 id="orgcff67ba">2. Formatieren des Images mit ext2</h2>
+<div class="org-src-container">
+
+<pre  class="src src-bash"   ><code trim>mkfs.ext2 disk.img
+</code></pre>
+</div>
+
+<p>
+Die Datei <code>disk.img</code> wird nun mit dem ext2-Dateisystem formatiert.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org8cd76cf">
+<h2 id="org8cd76cf">3. Mounten des Images mittels Loopback-Device</h2>
+<p>
+Erstellen Sie zunächst ein Verzeichnis als Mountpunkt und mounten Sie anschließend das Image:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-bash"   ><code trim>sudo mkdir -m 777 /mnt/loop1
+sudo mount -o loop disk.img /mnt/loop1
+</code></pre>
+</div>
+
+<p>
+Ab diesem Zeitpunkt wird das Image unter <code>/mnt/loop1</code> als Dateisystem eingebunden.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orga1faf21">
+<h2 id="orga1faf21">4. Erstellen einer Datei im gemounteten Image</h2>
+<div class="org-src-container">
+
+<pre  class="src src-bash"   ><code trim>sudo touch /mnt/loop1/datei_im_image.txt
+</code></pre>
+</div>
+
+<p>
+Die Datei wird innerhalb des Images gespeichert.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org602865c">
+<h2 id="org602865c">5. Mounten des Images an einem anderen Pfad</h2>
+<p>
+Zunächst wird das Image ausgehängt:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-bash"   ><code trim>sudo umount /mnt/loop1
+</code></pre>
+</div>
+
+<p>
+Anschließend kann es an einem anderen Ort eingebunden werden:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-bash"   ><code trim>mkdir ~/loop
+sudo mount -o loop disk.img ~/loop
+ls ~/loop
+</code></pre>
+</div>
+
+<p>
+Sie werden sehen, dass die zuvor erstellte Datei auch hier verfügbar ist. Der physische Speicherort bleibt derselbe – nur der Zugriffspfad ändert sich.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org11e12ca">
+<h2 id="org11e12ca">6. Verbergen von Inhalten im Mount-Verzeichnis</h2>
+<p>
+Zur Veranschaulichung wird ein weiteres Verzeichnis erstellt, das zunächst eigene Inhalte enthält:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-bash"   ><code trim>mkdir ~/hide_demo
+<span style="color: #f78fe7;">echo</span> <span style="color: #79a8ff;">"Ich bin sichtbar ohne Mount"</span> | sudo tee ~/hide_demo/visible.txt
+ls ~/hide_demo
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org73cbec9">
+<h3 id="org73cbec9">Nun wird das Image in dieses Verzeichnis gemountet:</h3>
+<div class="org-src-container">
+
+<pre  class="src src-bash"   ><code trim>sudo mount -o loop disk.img ~/hide_demo
+ls ~/hide_demo
+</code></pre>
+</div>
+
+<p>
+➡️ Die Datei <code>visible.txt</code> ist nun nicht mehr sichtbar, da das Dateisystem im Image den Inhalt des Verzeichnisses überlagert.
+</p>
+
+
+</section>
+</section>
+<section>
+<section id="slide-org8b15699">
+<h3 id="org8b15699">Nach dem Aushängen:</h3>
+<div class="org-src-container">
+
+<pre  class="src src-bash"   ><code trim>sudo umount /mnt/hide_demo
+ls /mnt/hide_demo
+</code></pre>
+</div>
+
+<p>
+✅ Die ursprüngliche Datei ist wieder sichtbar.
+</p>
+</section>
+</section>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js/plugin/markdown/markdown.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js/plugin/zoom/zoom.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js/plugin/notes/notes.js"></script>
+
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+plugins: [RevealMarkdown, RevealZoom, RevealNotes]
+});
+
+</script>
+</body>
+</html>
