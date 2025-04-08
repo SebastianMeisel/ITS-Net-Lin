@@ -20,7 +20,7 @@
 #+AUTHOR: Sebastian Meisel
 
 
-*  Geschichte 
+* Geschichte 
 
 #+ATTR_HTML: :width 60% 
 #+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
@@ -28,7 +28,6 @@
 [[file:Bilder/CaveTux.png]]
 
 #+ATTR_HTML: :class left
-
 
 ** Die Anfänge
 #+ATTR_HTML: :width 20% :class right

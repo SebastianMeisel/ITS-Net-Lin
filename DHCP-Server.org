@@ -20,6 +20,11 @@
 #+SUBTITLE: ITS-Net-Lin
 #+AUTHOR: Sebastian Meisel
 
+* Einführung
+Ein DHCP-Server (Dynamic Host Configuration Protocol) ist ein Netzwerkdienst, der automatisch IP-Konfigurationen an Geräte verteilt. Er weist Clients dynamisch IP-Adressen, Subnetzmasken, Standard-Gateways und DNS-Server zu, wenn sie sich mit dem Netzwerk verbinden. Dies erspart die manuelle Konfiguration jedes einzelnen Geräts und vermeidet IP-Adresskonflikte. Der DHCP-Server verwaltet einen Adresspool und vergibt diese temporär (als "Lease"), wodurch die Verwaltung größerer Netzwerke vereinfacht wird und mobile Geräte problemlos zwischen verschiedenen Netzwerken wechseln können.
+
+Da HyperV die Virtuellen Maschinen bei jedem Start eine neue IP-Adresse gibt, ist es sinnvoll einen DHCP-Server zunutzen, um einer verlässliche Kommunikation zwischen den VM's zu erreichen.
+
 * VM Klonen
 
 Klonen Sie zunächst die VM wie unter [[file:VM-Clonen.pdf][VM-Clonen.pdf]] beschrieben.
@@ -63,7 +68,6 @@ Gehen Sie nun in Einstellungen für den Klon.
 [[file:Bilder/DHCP-03.png]]
 
 * DHCP-Server-Konfigurations-Skript
-
 ** Download
 
 Laden Sie das Skript [[https://github.com/SebastianMeisel/ITS-Net-Lin/blob/main/scripts/dhcpcd_config][~dhcp_config~ (Python-Skript)]] …
@@ -81,7 +85,6 @@ Kopieren Sie das Skript in die Debian-VM:
 #+BEGIN_SRC Powershell
 scp .\Downloads\dhcp_config debian:~
 #+END_SRC
-
 
 ** Aufrufen
 
@@ -107,6 +110,35 @@ Wählen Sie:
 #+ATTR_LATEX: :width .65\linewidth :placement [!htpb]
 #+ATTR_ORG: :width 700
 [[file:Bilder/DHCP-15.png]]
+
+** Was tut das Skript
+
+Hier ist eine nummerierte Liste der Funktionen und Abläufe des Skripts:
+
+  1) Überprüft, ob das Skript mit Root-Rechten ausgeführt wird
+  2) Bietet ein Menü mit zwei Optionen: Neue Konfiguration einrichten oder bestehende Konfiguration bereinigen
+  3) Bei Auswahl "Neue Konfiguration einrichten" (Option 1):
+     - Installiert benötigte Pakete (isc-dhcp-server, nftables, network-manager)
+     - Ermittelt verfügbare Netzwerkschnittstellen über NetworkManager/D-Bus
+     - Konfiguriert den DHCP-Server mittels NetworkManager:
+       - Erstellt ein Verbindungsprofil mit statischer IP-Adresse
+       - Konfiguriert die DHCP-Server-Einstellungen in /etc/dhcp/dhcpd.conf
+       - Legt fest, auf welcher Schnittstelle der DHCP-Server läuft
+     - Konfiguriert die Client-Schnittstelle mit DHCP (automatischer IP-Bezug)
+     - Aktiviert IP-Forwarding für Routing zwischen Netzwerken
+     - Richtet NFTables für NAT (Network Address Translation) ein:
+       - Erstellt Masquerading-Regeln, damit Geräte im DHCP-Netzwerk über die externe Schnittstelle ins Internet gelangen können
+       - Definiert Firewall-Regeln für das Forwarding zwischen den Schnittstellen
+       - Aktiviert den NFTables-Dienst
+  4) Bei Auswahl "Konfiguration bereinigen" (Option 2):
+     - Stoppt den DHCP-Server
+     - Setzt DHCP-Konfigurationsdateien zurück
+     - Löscht NFTables-Regeln und erstellt Standardregeln
+     - Deaktiviert IP-Forwarding
+     - Setzt die ausgewählten Netzwerkschnittstellen zurück
+
+
+Das Skript verwendet NetworkManager (über D-Bus und nmcli) zur Konfiguration der Netzwerkschnittstellen anstelle direkter IP-Kommandos, was eine bessere Integration in moderne Linux-Systeme ermöglicht.
 
 * Klon starten
 
