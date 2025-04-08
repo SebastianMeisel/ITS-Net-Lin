@@ -77,6 +77,7 @@
   - Aufgaben: Erkennen von Geräten, Speicherinformationen
   - [[file:LaufwerkeUndDateisysteme.pdf][Laufwerke und Dateisystem (PDF)]]
   - [[file:Hardware][Hardware erkennen und analysieren (PDF)]]
+  - [[file:FilesystemeMounten.pdf][Dateisysteme einbinden / mounten (PDF) [FISI]​]]
 
 ** Virtualisierung (nur FISI)
 :PROPERTIES:
