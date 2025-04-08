@@ -48,6 +48,15 @@ mkfs.ext2 disk.img
 
 Die Datei =disk.img= wird nun mit dem ext2-Dateisystem formatiert.
 
+
+#+BEGIN_NOTES
+
+ - ~ext2~ ist ein einfaches Linux-Dateisystem mit geringem Overhead – es braucht wenig Speicherplatz und Rechenleistung, bietet aber keinen Schutz vor Datenverlust bei Stromausfall.
+ - ~ext3~ und ~ext4~ erweitern ~ext2~ um ein Journal, das eine bessere Wiederherstellung nach Abstürzen ermöglicht.
+ - ~vfat~ ist Windows-kompatibel, unterstützt jedoch keine POSIX-Rechte.
+ - ~XFS~, ~btrfs~ und ~zfs~ bieten moderne Funktionen wie höhere Ausfallsicherheit und Verteilung über mehrere Festplatten.
+#+END_NOTES
+
 * 3. Mounten des Images mittels Loopback-Device
 
 Erstellen Sie zunächst ein Verzeichnis als Mountpunkt und mounten Sie anschließend das Image:
@@ -58,6 +67,10 @@ sudo mount -o loop disk.img /mnt/loop1
 #+END_SRC
 
 Ab diesem Zeitpunkt wird das Image unter =/mnt/loop1= als Dateisystem eingebunden.
+
+#+BEGIN_NOTES
+Loopback-Device sind Dateien auf der Festplatten, die sich als virtuelles Laufwerk einbinden lassen.
+#+END_NOTES
 
 * 4. Erstellen einer Datei im gemounteten Image
 
