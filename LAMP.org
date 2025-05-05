@@ -1,0 +1,193 @@
+:LaTeX_PROPERTIES:
+#+LANGUAGE: de
+#+OPTIONS: d:nil todo:nil pri:nil tags:nil
+#+OPTIONS: H:4
+#+LaTeX_CLASS: orgstandard
+#+LaTeX_CMD: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+:END:
+
+
+#+TITLE: Einführung in den LAMP-Stack
+#+AUTHOR: Sebastian Meisel
+#+LANGUAGE: de
+#+OPTIONS: toc:2
+
+* Was ist der LAMP-Stack?
+
+LAMP steht für:
+
+- *Linux* – das Betriebssystem
+- *Apache* – der Webserver
+- *MySQL* – die Datenbank (oder MariaDB)
+- *PHP* – die serverseitige Scriptsprache
+
+Der LAMP-Stack bildet die Grundlage für viele dynamische Webseiten und Webanwendungen.
+
+* Installation unter Ubuntu
+
+** Apache Webserver installieren
+#+begin_src bash
+sudo apt update
+sudo apt install apache2
+sudo systemctl enable --now apache2
+#+end_src
+
+** PHP und MariaDB installieren
+#+begin_src bash
+sudo apt install php libapache2-mod-php mariadb-server php-mysql
+sudo systemctl enable --now mariadb
+#+end_src
+
+** MariaDB absichern
+
+Das folgende Skript führt einen mit Fragen, durch die Absicherung der Datenbank.
+
+#+begin_src bash
+sudo mysql_secure_installation
+#+end_src
+
+** Test: PHP funktioniert?
+#+begin_src bash
+echo "<?php phpinfo(); ?>" | sudo tee /var/www/html/info.php
+#+end_src
+
+Dann im Browser aufrufen: http://localhost/info.php
+
+* Beispielanwendung: Einfaches Gästebuch
+
+** Datenbank anlegen
+#+begin_src sql :engine mysql :dbhost localhost :user root
+CREATE DATABASE gaestebuch;
+USE gaestebuch;
+CREATE TABLE eintraege (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100),
+  nachricht TEXT,
+  zeitstempel TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+#+end_src
+
+** PHP-Datei erstellen: /var/www/html/gaestebuch.php
+#+begin_src php :tangle lamp-podman/html/gaestebuch.php
+<?php
+$pdo = new PDO("mysql:host=localhost;dbname=gaestebuch", "root", "");
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST["name"];
+    $nachricht = $_POST["nachricht"];
+    $stmt = $pdo->prepare("INSERT INTO eintraege (name, nachricht) VALUES (?, ?)");
+    $stmt->execute([$name, $nachricht]);
+}
+
+$eintraege = $pdo->query("SELECT * FROM eintraege ORDER BY zeitstempel DESC")->fetchAll();
+?>
+<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8"><title>Gästebuch</title></head>
+<body>
+  <h1>Gästebuch</h1>
+  <form method="post">
+    Name: <input type="text" name="name"><br>
+    Nachricht:<br>
+    <textarea name="nachricht"></textarea><br>
+    <input type="submit" value="Eintragen">
+  </form>
+  <h2>Einträge:</h2>
+  <ul>
+    <?php foreach ($eintraege as $e): ?>
+      <li><strong><?= htmlspecialchars($e["name"]) ?></strong> (<?= $e["zeitstempel"] ?>):<br>
+      <?= nl2br(htmlspecialchars($e["nachricht"])) ?></li>
+    <?php endforeach; ?>
+  </ul>
+</body>
+</html>
+#+end_src
+
+** Datei bereitstellen
+#+begin_src bash
+sudo cp gaestebuch.php /var/www/html/
+#+end_src
+
+Dann im Browser öffnen: http://localhost/gaestebuch.php
+
+* Umsetzung mit Podman und podman-compose
+
+** Voraussetzungen
+
+- Installiertes Podman und podman-compose
+#+begin_src bash
+sudo apt install podman podman-compose
+#+end_src
+
+** Projektstruktur
+
+#+begin_example
+lamp-podman/
+├── podman-compose.yml
+├── html/
+│   └── gaestebuch.php
+└── init.sql
+#+end_example
+
+** Datei: podman-compose.yml
+#+begin_src yaml :tangle lamp-podman/podman-compose.yml
+version: "3.8"
+services:
+  web:
+    image: php:8.2-apache
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html:/var/www/html
+    depends_on:
+      - db
+  db:
+    image: mariadb:10.6
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: gaestebuch
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+volumes:
+  mariadb_data:
+#+end_src
+
+** Datei: init.sql (Initialisiert die Datenbank)
+#+begin_src sql :tangle lamp-podman/init.sql
+CREATE TABLE eintraege (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100),
+  nachricht TEXT,
+  zeitstempel TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+#+end_src
+
+** Datei: html/gaestebuch.php
+(Siehe oben im Abschnitt "Beispielanwendung")
+
+** Start der Container
+#+begin_src bash
+cd lamp-podman
+podman-compose up -d
+#+end_src
+
+Dann im Browser aufrufen: http://localhost:8080/gaestebuch.php
+
+** Hinweise
+
+- Die Datenbank wird beim ersten Start durch `init.sql` automatisch eingerichtet.
+- Änderungen am PHP-Code in `html/` wirken sich sofort aus, da das Verzeichnis in den Container gemountet ist.
+- Das System ist portabel und kann auch mit rootless Podman verwendet werden.
+
+
+* Anmerkungen
+
+- Das Skript ist bewusst einfach gehalten und nicht gegen SQL-Injection oder XSS abgesichert – für den Produktiveinsatz müssten Schutzmaßnahmen ergänzt werden.
+- Der Zugriff auf die Datenbank erfolgt als root ohne Passwort – dies sollte ebenfalls angepasst werden.
+- Die Trennung von HTML und PHP wäre bei komplexeren Anwendungen empfehlenswert.
+
+- Für produktive Umgebungen sollten separate Benutzer und sichere Passwörter verwendet werden.
+- Für Mehrsprachigkeit oder Templates empfiehlt sich die Erweiterung mit Werkzeugen wie Twig oder einer kleinen PHP-Frameworklösung. 

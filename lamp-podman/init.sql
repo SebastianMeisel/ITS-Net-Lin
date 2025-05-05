@@ -1,0 +1,6 @@
+CREATE TABLE eintraege (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100),
+  nachricht TEXT,
+  zeitstempel TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
