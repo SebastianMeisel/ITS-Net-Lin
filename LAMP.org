@@ -57,8 +57,16 @@ Dann im Browser aufrufen: http://localhost/info.php
 * Beispielanwendung: Einfaches Gästebuch
 
 ** Datenbank anlegen
+
+Rufen Sie die Datenbank mit =mariadb -u root -p= geben das Passwort ein, dass Sie beim Aufruf von =mysql_secure_installation= angelebt haben und führen Sie folgende Befehle aus:
+
 #+begin_src sql :engine mysql :dbhost localhost :user root
 CREATE DATABASE gaestebuch;
+
+CREATE USER 'guestbook'@'%' IDENTIFIED BY 'geheim';
+GRANT ALL PRIVILEGES ON gaestebuch.* TO 'guestbook'@'%';
+FLUSH PRIVILEGES;
+
 USE gaestebuch;
 CREATE TABLE eintraege (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -71,7 +79,7 @@ CREATE TABLE eintraege (
 ** PHP-Datei erstellen: /var/www/html/gaestebuch.php
 #+begin_src php :tangle lamp-podman/html/gaestebuch.php
 <?php
-$pdo = new PDO("mysql:host=localhost;dbname=gaestebuch", "root", "");
+$pdo = new PDO("mysql:host=localhost;dbname=gaestebuch", "guestbook", "geheim");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST["name"];
@@ -124,32 +132,48 @@ sudo apt install podman podman-compose
 
 #+begin_example
 lamp-podman/
-├── podman-compose.yml
 ├── html/
 │   └── gaestebuch.php
+├── podman-compose.yml
+├── Dockerfile
 └── init.sql
 #+end_example
 
+
+** Dockerfile
+
+#+begin_src Dockerfile :tangle lamp-podman/Dockerfile
+FROM php:8.2-apache
+
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+#+end_src
+
+
 ** Datei: podman-compose.yml
+
+
 #+begin_src yaml :tangle lamp-podman/podman-compose.yml
 version: "3.8"
 services:
   web:
-    image: php:8.2-apache
+    build: .
     ports:
       - "8080:80"
     volumes:
-      - ./html:/var/www/html
+      - ./html:/var/www/html:z
+    command: sh -c "docker-php-ext-install mysqli && docker-php-ext-enable mysqli && apache2-foreground"
     depends_on:
       - db
   db:
     image: mariadb:10.6
+    ports:
+      - 3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: gaestebuch
+      - MARIADB_ROOT_PASSWORD="example"
+      - MARIADB_DATABASE=gaestebuch
     volumes:
       - mariadb_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:z
 
 volumes:
   mariadb_data:
@@ -157,7 +181,14 @@ volumes:
 
 ** Datei: init.sql (Initialisiert die Datenbank)
 #+begin_src sql :tangle lamp-podman/init.sql
-CREATE TABLE eintraege (
+CREATE DATABASE IF NOT EXISTS gaestebuch;
+
+CREATE USER IF NOT EXISTS 'guestbook'@'%' IDENTIFIED BY 'geheim';
+GRANT ALL PRIVILEGES ON gaestebuch.* TO 'guestbook'@'%';
+FLUSH PRIVILEGES;
+
+USE gaestebuch;
+CREATE TABLE IF NOT EXISTS eintraege (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100),
   nachricht TEXT,
@@ -166,7 +197,23 @@ CREATE TABLE eintraege (
 #+end_src
 
 ** Datei: html/gaestebuch.php
-(Siehe oben im Abschnitt "Beispielanwendung")
+Siehe oben im Abschnitt "Beispielanwendung", aber ersetzen Sie die ersten zweilen Zeilen:
+
+#+BEGIN_SRC php
+#+begin_src php :tangle lamp-podman/html/gaestebuch.php
+<?php
+$pdo = new PDO("mysql:host=localhost;dbname=gaestebuch", "guestbook", "geheim");
+#+END_SRC
+
+durch: 
+
+#+BEGIN_SRC php
+#+begin_src php :tangle lamp-podman/html/gaestebuch.php
+<?php
+$pdo = new PDO("mysql:host=mysql;dbname=gaestebuch", "guestbook", "geheim");
+#+END_SRC
+
+So verbindet sich die Seite mit dem MariaDB-Server im Container.
 
 ** Start der Container
 #+begin_src bash
@@ -191,3 +238,5 @@ Dann im Browser aufrufen: http://localhost:8080/gaestebuch.php
 
 - Für produktive Umgebungen sollten separate Benutzer und sichere Passwörter verwendet werden.
 - Für Mehrsprachigkeit oder Templates empfiehlt sich die Erweiterung mit Werkzeugen wie Twig oder einer kleinen PHP-Frameworklösung. 
+
+

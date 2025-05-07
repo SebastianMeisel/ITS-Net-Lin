@@ -1,5 +1,5 @@
 <?php
-$pdo = new PDO("mysql:host=localhost;dbname=gaestebuch", "root", "");
+$pdo = new PDO("mysql:host=db;dbname=gaestebuch", "guestbook", "geheim");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST["name"];

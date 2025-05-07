@@ -1,4 +1,11 @@
-CREATE TABLE eintraege (
+CREATE DATABASE IF NOT EXISTS gaestebuch;
+
+CREATE USER IF NOT EXISTS 'guestbook'@'%' IDENTIFIED BY 'geheim';
+GRANT ALL PRIVILEGES ON gaestebuch.* TO 'guestbook'@'%';
+FLUSH PRIVILEGES;
+
+USE gaestebuch;
+CREATE TABLE IF NOT EXISTS eintraege (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100),
   nachricht TEXT,
