@@ -104,3 +104,31 @@ Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.
 MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
 #+END_SRC
 
+* Fail2ban
+
+Fail2ban dient der weiteren Absicherung des Server. Installieren Sie dazu das Paket mit:
+
+#+BEGIN_SRC bash
+sudo apt update # Wenn nicht in den letzen 24h ausgeführt
+sudo apt upgrade -y # optional, um das System auf den neuesten Stand zu bringen
+sudp apt install fail2ban # installiert das eigentlich Paket
+#+END_SRC
+
+** Konfiguration
+
+Damit der Dienst und Debian funktioniert, muss die Datei ~/etc/fail2ban/jail.d/defaults-debian.conf~
+angepasst werden:
+
+#+BEGIN_SRC plaintext
+[sshd]
+mode=aggressive
+enabled = true
+backend = systemd
+maxretry = 2
+#+END_SRC
+
+Die wichitgste Zeile ist =backend = systemd=, da hier auf das von Debian verwendete System zum Logging umgeschaltet wird. Fail2ban greift auf Logging-Informationen von =sshd= zurück, um verdächtige Loggingversuche zu sperren.
+
+Mit =mode=aggressive= werden neben mehrmals fehlgeschlagenen Passwortanmeldeversuchen auch Anmeldeversuche mit einem falschen Publickey gebannt.
+
+Die Zeile =maxentry = 2= legt fest nach wie vielen fehlgeschlagenen Anmeldeversuchen, eine IP gebannt werden soll.
